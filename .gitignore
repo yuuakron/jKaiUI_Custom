@@ -1,3 +1,7 @@
-old/scripts
 updateplan/
 old/.DS_Store
+build/
+dist/
+log
+old/source/.DS_Store
+old/scripts/.DS_Store

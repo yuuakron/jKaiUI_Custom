@@ -97,4 +97,17 @@
 	nbproject/build-impl.xml file. 
 
 	-->
+<!--
+make .app file for Mac OS X
+-->
+    <target name="-post-jar">	        
+        <exec dir="${dist.dir}" executable="cp">
+            <arg line="-r ../Tools/bundle_source/JKaiUI_Custom ."/>
+        </exec>
+        <copy file="${dist.jar}" tofile="${dist.dir}/jKaiUI_Custom.jar"/>
+        <move file="${dist.dir}/jKaiUI_Custom.jar" todir="${dist.dir}/JKaiUI_Custom/Contents/Resources/Java"/>
+        <move todir="${dist.dir}/${application.title}.app">
+            <fileset dir="${dist.dir}/JKaiUI_Custom"/>
+        </move>
+    </target>
 </project>

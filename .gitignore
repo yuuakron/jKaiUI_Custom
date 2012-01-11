@@ -2,6 +2,8 @@ updateplan/
 old/.DS_Store
 build/
 dist/
-log
+log/
 old/source/.DS_Store
 old/scripts/.DS_Store
+/nbproject/private/
+!/src/pt/jkaiui/tools/log/

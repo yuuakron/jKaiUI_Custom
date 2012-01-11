@@ -6,6 +6,10 @@
 
 package pt.jkaiui;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.Vector;
 import java.util.Enumeration;
@@ -61,7 +65,7 @@ public class JKaiUI {
     
     private static final String uiname = "JKaiUI Custom";
     private static final String version = " ver.0.5.1(2011/11/12)";
-    private static final String version2 = "0.5";
+    private static final String version2 = "0.5.1";
     private static String KaiEngineVersion;
     public static boolean develflag = false;//true: devel verion false:normal version
     
@@ -104,7 +108,30 @@ public class JKaiUI {
 
         mainUI.repaint();
         mainUI.setVisible(true);
-
+      
+        //setting folder
+        File settingFolder = new File(JKaiUI.getConfig().getConfigSettingFolder());
+        File settingSaveFolder = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/setting");
+        File soundFolder = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/sound");
+        File emoticonsFolder = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/emoticons");
+        
+        try {
+            if (!settingFolder.exists()) {
+                settingFolder.mkdir();
+            }
+            if (!settingSaveFolder.exists()) {
+                settingSaveFolder.mkdir();
+            }
+            if (!soundFolder.exists()) {
+                soundFolder.mkdir();
+            }
+            if (!emoticonsFolder.exists()) {
+                emoticonsFolder.mkdir();
+            }
+        } catch (Exception e) {
+            System.out.println("setting folder open err:"+e);
+        }
+        
         connect();
     }
     

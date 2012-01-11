@@ -1241,7 +1241,7 @@ private void buttonSaveSettingFileActionPerformed(java.awt.event.ActionEvent evt
     JFileChooser fc = new JFileChooser();
 
     fc.setFileFilter(new FileNameExtensionFilter("*.conf", "conf"));
-    File cd = new File("setting");
+    File cd = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/setting");
     fc.setCurrentDirectory(cd);
 
 //    File conffile = new File("");
@@ -1279,7 +1279,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
     JFileChooser fc = new JFileChooser();
 
     fc.setFileFilter(new FileNameExtensionFilter("*.conf", "conf"));
-    File cd = new File("setting");
+    File cd = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/setting");
     fc.setCurrentDirectory(cd);
     
     if (fc.showOpenDialog(panelCommonFooter) == JFileChooser.APPROVE_OPTION) {
@@ -1563,7 +1563,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
         comboModeratorChat.setSelectedItem("default");
         comboSend.setSelectedItem("default");
         
-        File dir = new File("./sound");
+        File dir = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/sound");
         if(dir.exists()){
             File[] soundfiles = dir.listFiles();
             for (int i = 0; i < soundfiles.length; i++) {

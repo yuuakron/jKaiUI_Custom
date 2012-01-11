@@ -26,7 +26,7 @@ public class UserLog  extends Log{
     
     protected void init() {
 //        System.out.println("userlog");
-        logfile = new File(format(JKaiUI.getConfig().getConfigString(UserLogFile)));
+        logfile = new File(format(JKaiUI.getConfig().getConfigFile(UserLogFile)));
         userset = new HashSet();
         super.init();
         readlog();

@@ -99,11 +99,14 @@ public class ChatManager {
 
         // Load local info!
         String className = this.getClass().getName().replace('.', '/');
+//        System.out.println("className:"+className);
         String classPath = this.getClass().getResource("/" + className + ".class").toString();
-        String urls[] = classPath.split(className + ".class");
-        url = urls[0].substring(0, urls[0].length() - 1);
+//        System.out.println("className:"+classPath);
+        url = classPath.replace("/"+className + ".class", "");
+//        System.out.println("className:"+url);
 
-        //_logger.fine("URL (this should point to jar file:" + url);
+//        String settingpath = new File(url).getParent();
+//        _logger.fine("path:" + url);
         initSoundFile();
 
         chathistory = new LinkedList();
@@ -113,7 +116,7 @@ public class ChatManager {
 
     public void initSoundFile() {
         MessageSoundUrl = new URL[10];
-        File soundfileholder = new File("./sound/");
+        File soundfileholder = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/sound");
 //        System.out.println("sf:" + soundfileholder.getPath());
         try {
             if (!soundfileholder.exists()) {
@@ -443,53 +446,56 @@ public class ChatManager {
         
         _logger.severe("url icon:"+url);
         
+        String settingfolder = JKaiUI.getConfig().getConfigSettingFolder() +"/";
+        
+        
         //WebUIÇ©ÇÁíäèo        
-        tmp.add(":arrr:,file:./emoticons/arrr.gif");
-        tmp.add(":awe:,file:./emoticons/awe.gif");
-        tmp.add(":blink:,file:./emoticons/blink.gif");
-        tmp.add(":boogie:,file:./emoticons/boogie.gif");
-        tmp.add(":bored:,file:./emoticons/bored.gif");
-        tmp.add(":censored:,file:./emoticons/censored.gif");
-        tmp.add(":cheers:,file:./emoticons/cheers.gif");
-        tmp.add(":cheerup:,file:./emoticons/cheerup.gif");
-        tmp.add(":cool:,file:./emoticons/cool.gif");
-        tmp.add(":cry:,file:./emoticons/cry.gif");
-        tmp.add(":dunno:,file:./emoticons/dunno.gif");
-        tmp.add(":fu:,file:./emoticons/fu.gif");
-        tmp.add(":hahano:,file:./emoticons/hahano.gif");
-        tmp.add(":hmm:,file:./emoticons/hmm.gif");
-        tmp.add(":huh:,file:./emoticons/huh.gif");
-        tmp.add(":ignore:,file:./emoticons/ignore.gif");
-        tmp.add(":lick:,file:./emoticons/lick.gif");
-        tmp.add(":lol:,file:./emoticons/lol.gif");
-        tmp.add(":loser:,file:./emoticons/loser.gif");
-        tmp.add(":nana:,file:./emoticons/nana.gif");
-        tmp.add(":ninja:,file:./emoticons/ninja.gif");
-        tmp.add(":ohmy:,file:./emoticons/ohmy.gif");
-        tmp.add(":poke:,file:./emoticons/poke.gif");
-        tmp.add(":psycho:,file:./emoticons/psycho.gif");
-        tmp.add(":razz:,file:./emoticons/razz.gif");
-        tmp.add(":roll:,file:./emoticons/roll.gif");
-        tmp.add(":sad:,file:./emoticons/sad.gif");
-        tmp.add(":scared:,file:./emoticons/scared.gif");
-        tmp.add(":shout:,file:./emoticons/shout.gif");
-        tmp.add(":thumbsup:,file:./emoticons/thumbsup.gif");
-        tmp.add(":unsure:,file:./emoticons/unsure.gif");
-        tmp.add(":yahoo:,file:./emoticons/yahoo.gif");
-        tmp.add(":yammer:,file:./emoticons/yammer.gif");
-        tmp.add(":yawn:,file:./emoticons/yawn.gif");
-        tmp.add(":zzz:,file:./emoticons/zzz.gif");
-        tmp.add(":p,file:./emoticons/tongue.gif");
-        tmp.add(":P,file:./emoticons/tongue.gif");
-        tmp.add(":),file:./emoticons/smile.gif");
-        tmp.add(";),file:./emoticons/wink.gif");
-        tmp.add(":|,file:./emoticons/mellow.gif");
-        tmp.add(":k,file:./emoticons/mkay.gif");
-        tmp.add(":D,file:./emoticons/lol.gif");
-        tmp.add(":(,file:./emoticons/sad.gif");
-        tmp.add("8),file:./emoticons/cool.gif");
-        tmp.add(":s,file:./emoticons/confused.gif");
-        tmp.add(":S,file:./emoticons/confused.gif");
+        tmp.add(":arrr:,file:"+settingfolder+"emoticons/arrr.gif");
+        tmp.add(":awe:,file:"+settingfolder+"emoticons/awe.gif");
+        tmp.add(":blink:,file:"+settingfolder+"emoticons/blink.gif");
+        tmp.add(":boogie:,file:"+settingfolder+"emoticons/boogie.gif");
+        tmp.add(":bored:,file:"+settingfolder+"emoticons/bored.gif");
+        tmp.add(":censored:,file:"+settingfolder+"emoticons/censored.gif");
+        tmp.add(":cheers:,file:"+settingfolder+"emoticons/cheers.gif");
+        tmp.add(":cheerup:,file:"+settingfolder+"emoticons/cheerup.gif");
+        tmp.add(":cool:,file:"+settingfolder+"emoticons/cool.gif");
+        tmp.add(":cry:,file:"+settingfolder+"emoticons/cry.gif");
+        tmp.add(":dunno:,file:"+settingfolder+"emoticons/dunno.gif");
+        tmp.add(":fu:,file:"+settingfolder+"emoticons/fu.gif");
+        tmp.add(":hahano:,file:"+settingfolder+"emoticons/hahano.gif");
+        tmp.add(":hmm:,file:"+settingfolder+"emoticons/hmm.gif");
+        tmp.add(":huh:,file:"+settingfolder+"emoticons/huh.gif");
+        tmp.add(":ignore:,file:"+settingfolder+"emoticons/ignore.gif");
+        tmp.add(":lick:,file:"+settingfolder+"emoticons/lick.gif");
+        tmp.add(":lol:,file:"+settingfolder+"emoticons/lol.gif");
+        tmp.add(":loser:,file:"+settingfolder+"emoticons/loser.gif");
+        tmp.add(":nana:,file:"+settingfolder+"emoticons/nana.gif");
+        tmp.add(":ninja:,file:"+settingfolder+"emoticons/ninja.gif");
+        tmp.add(":ohmy:,file:"+settingfolder+"emoticons/ohmy.gif");
+        tmp.add(":poke:,file:"+settingfolder+"emoticons/poke.gif");
+        tmp.add(":psycho:,file:"+settingfolder+"emoticons/psycho.gif");
+        tmp.add(":razz:,file:"+settingfolder+"emoticons/razz.gif");
+        tmp.add(":roll:,file:"+settingfolder+"emoticons/roll.gif");
+        tmp.add(":sad:,file:"+settingfolder+"emoticons/sad.gif");
+        tmp.add(":scared:,file:"+settingfolder+"emoticons/scared.gif");
+        tmp.add(":shout:,file:"+settingfolder+"emoticons/shout.gif");
+        tmp.add(":thumbsup:,file:"+settingfolder+"emoticons/thumbsup.gif");
+        tmp.add(":unsure:,file:"+settingfolder+"emoticons/unsure.gif");
+        tmp.add(":yahoo:,file:"+settingfolder+"emoticons/yahoo.gif");
+        tmp.add(":yammer:,file:"+settingfolder+"emoticons/yammer.gif");
+        tmp.add(":yawn:,file:"+settingfolder+"emoticons/yawn.gif");
+        tmp.add(":zzz:,file:"+settingfolder+"emoticons/zzz.gif");
+        tmp.add(":p,file:"+settingfolder+"emoticons/tongue.gif");
+        tmp.add(":P,file:"+settingfolder+"emoticons/tongue.gif");
+        tmp.add(":),file:"+settingfolder+"emoticons/smile.gif");
+        tmp.add(";),file:"+settingfolder+"emoticons/wink.gif");
+        tmp.add(":|,file:"+settingfolder+"emoticons/mellow.gif");
+        tmp.add(":k,file:"+settingfolder+"emoticons/mkay.gif");
+        tmp.add(":D,file:"+settingfolder+"emoticons/lol.gif");
+        tmp.add(":(,file:"+settingfolder+"emoticons/sad.gif");
+        tmp.add("8),file:"+settingfolder+"emoticons/cool.gif");
+        tmp.add(":s,file:"+settingfolder+"emoticons/confused.gif");
+        tmp.add(":S,file:"+settingfolder+"emoticons/confused.gif");
 
         for (int i = 0; i < tmp.size(); i++) {
             if (checkEmotIconFile((String) tmp.get(i))) {

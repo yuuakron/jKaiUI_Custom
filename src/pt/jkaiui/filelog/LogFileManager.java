@@ -104,7 +104,7 @@ public class LogFileManager {
                 logfiles.put("Chat", new ChatLog());
             }
             tmp = (ChatLog) this.getLog("Chat");
-            if (!(tmp.format(JKaiUI.getConfig().getConfigString(ChatLogFile)).equals(tmp.logfile.getPath()))) {
+            if (!(tmp.format(JKaiUI.getConfig().getConfigFile(ChatLogFile)).equals(tmp.logfile.getPath()))) {
                 tmp.update();
             }
         }
@@ -115,7 +115,7 @@ public class LogFileManager {
                     logfiles.put("All", new AllLog());
                 }
                 tmp = (AllLog) this.getLog("All");
-                if (!(tmp.format(JKaiUI.getConfig().getConfigString(AllLogFile)).equals(tmp.logfile.getPath()))) {
+                if (!(tmp.format(JKaiUI.getConfig().getConfigFile(AllLogFile)).equals(tmp.logfile.getPath()))) {
                     tmp.update();
                 }
             }
@@ -124,7 +124,7 @@ public class LogFileManager {
                     logfiles.put("User", new UserLog());
                 }
                 tmp = (UserLog) this.getLog("User");
-                if (!(tmp.format(JKaiUI.getConfig().getConfigString(UserLogFile)).equals(tmp.logfile.getPath()))) {
+                if (!(tmp.format(JKaiUI.getConfig().getConfigFile(UserLogFile)).equals(tmp.logfile.getPath()))) {
                     tmp.update();
                 }
             }
@@ -133,7 +133,7 @@ public class LogFileManager {
                     logfiles.put("Room", new RoomLog());
                 }
                 tmp = (RoomLog) this.getLog("Room");
-                if (!(tmp.format(JKaiUI.getConfig().getConfigString(RoomLogFile)).equals(tmp.logfile.getPath()))) {
+                if (!(tmp.format(JKaiUI.getConfig().getConfigFile(RoomLogFile)).equals(tmp.logfile.getPath()))) {
                     tmp.update();
                 }
             }
@@ -143,7 +143,7 @@ public class LogFileManager {
                     logfiles.put("Friend", new FriendLog());
                 }
                 tmp = (FriendLog) this.getLog("Friend");
-                if (!(tmp.format(JKaiUI.getConfig().getConfigString(FriendLogFile)).equals(tmp.logfile.getPath()))) {
+                if (!(tmp.format(JKaiUI.getConfig().getConfigFile(FriendLogFile)).equals(tmp.logfile.getPath()))) {
                     tmp.update();
                 }
             }
@@ -152,7 +152,7 @@ public class LogFileManager {
                     logfiles.put("MAC", new MACLog());
                 }
                 tmp = (MACLog) this.getLog("MAC");
-                if (!(tmp.format(JKaiUI.getConfig().getConfigString(MACLogFile)).equals(tmp.logfile.getPath()))) {
+                if (!(tmp.format(JKaiUI.getConfig().getConfigFile(MACLogFile)).equals(tmp.logfile.getPath()))) {
                     tmp.update();
                 }
             }

@@ -30,7 +30,7 @@ public class RoomLog  extends Log{
     
     protected void init(){
 //        System.out.println("roomlog");
-        logfile = new File(format(JKaiUI.getConfig().getConfigString(RoomLogFile)));
+        logfile = new File(format(JKaiUI.getConfig().getConfigFile(RoomLogFile)));
         roomset = new HashSet();
         super.init();
         readlog();

@@ -26,6 +26,7 @@ public class KaiConfig {
     
     private static final String PREFERENCES = "/pt/jkaiui";    
     private static Preferences preferences;
+    private static String settingfolder;
 
     private HashMap configs;
     private HashMap initconfigs;
@@ -53,6 +54,7 @@ public class KaiConfig {
         
         AutoHostSetting,
         AutoArenaMoving,
+//        SettingFolder,
         
         AllLog,
         ChatLog,
@@ -166,9 +168,10 @@ public class KaiConfig {
         
         initconfigs.put(ConfigTag.AutoHostSetting, new Pair(ConfigAttri.OTHER, false));
         initconfigs.put(ConfigTag.AutoArenaMoving, new Pair(ConfigAttri.OTHER, false));
+ //       initconfigs.put(ConfigTag.SettingFolder, new Pair(ConfigAttri.NON, "~/jKaiUI"));
         
         initconfigs.put(ConfigTag.ChatLog, new Pair(ConfigAttri.LOG, false));
-        initconfigs.put(ConfigTag.ChatLogFile, new Pair(ConfigAttri.LOG, "./log/Chatlog-%Y%M%D.txt"));
+        initconfigs.put(ConfigTag.ChatLogFile, new Pair(ConfigAttri.LOG, "log/Chatlog-%Y%M%D.txt"));
         initconfigs.put(ConfigTag.ChatLogPattern, new Pair(ConfigAttri.LOG, "%T;%K;%R;%S;%M"));
         
         if (JKaiUI.develflag) {
@@ -178,11 +181,11 @@ public class KaiConfig {
             initconfigs.put(ConfigTag.FriendLog, new Pair(ConfigAttri.LOG, false));
             initconfigs.put(ConfigTag.MACLog, new Pair(ConfigAttri.LOG, false));
             
-            initconfigs.put(ConfigTag.AllLogFile, new Pair(ConfigAttri.LOG, "./log/Alllog-%Y%M%D.txt"));
-            initconfigs.put(ConfigTag.UserLogFile, new Pair(ConfigAttri.LOG, "./log/Userlog-%Y%M%D.txt"));
-            initconfigs.put(ConfigTag.RoomLogFile, new Pair(ConfigAttri.LOG, "./log/Roomlog-%Y%M%D.txt"));
-            initconfigs.put(ConfigTag.FriendLogFile, new Pair(ConfigAttri.LOG, "./log/Friendlog-%Y%M%D.txt"));
-            initconfigs.put(ConfigTag.MACLogFile, new Pair(ConfigAttri.LOG, "./log/MAClog-%Y%M%D.txt"));
+            initconfigs.put(ConfigTag.AllLogFile, new Pair(ConfigAttri.LOG, "log/Alllog-%Y%M%D.txt"));
+            initconfigs.put(ConfigTag.UserLogFile, new Pair(ConfigAttri.LOG, "log/Userlog-%Y%M%D.txt"));
+            initconfigs.put(ConfigTag.RoomLogFile, new Pair(ConfigAttri.LOG, "log/Roomlog-%Y%M%D.txt"));
+            initconfigs.put(ConfigTag.FriendLogFile, new Pair(ConfigAttri.LOG, "log/Friendlog-%Y%M%D.txt"));
+            initconfigs.put(ConfigTag.MACLogFile, new Pair(ConfigAttri.LOG, "log/MAClog-%Y%M%D.txt"));
             
             initconfigs.put(ConfigTag.AllLogPattern, new Pair(ConfigAttri.LOG, "%T;%M"));
             initconfigs.put(ConfigTag.UserLogPattern, new Pair(ConfigAttri.LOG, "%N"));
@@ -226,6 +229,13 @@ public class KaiConfig {
         initconfigs.put(ConfigTag.SendSoundFile, new Pair(ConfigAttri.SOUND, "default"));
                
         configs = (HashMap)initconfigs.clone();
+        
+        //settingfoler
+        String className = this.getClass().getName().replace('.', '/');
+        String classPath = this.getClass().getResource("/" + className + ".class").toString();
+        String url = classPath.replace("/" + className + ".class", "");
+        settingfolder = (new File(url).getParent()).replaceFirst("jar:", "").replaceFirst("file:", "");
+//        System.out.println("setting folder"+settingfolder);
     }
     
     
@@ -262,6 +272,26 @@ public class KaiConfig {
         } catch (Exception e) {
             System.out.println("setting error4:" + ConfigTag);
             return 0;
+        }
+    }
+    
+    public String getConfigSettingFolder() {
+//        try {
+//          String folder = (String)((Pair)configs.get(ConfigTag.SettingFolder)).second;
+//            return folder.replaceFirst("~", System.getProperty("user.home"));
+//        } catch (Exception e) {
+//            System.out.println("setting error5:" + ConfigTag.SettingFolder);
+//            return null;
+//        }
+        return settingfolder;
+    }
+    
+    public String getConfigFile(Enum ConfigTag) {
+        try {
+            return getConfigSettingFolder()+"/"+((String)((Pair)configs.get(ConfigTag)).second);
+        } catch (Exception e) {
+            System.out.println("setting error6:" + ConfigTag);
+            return null;
         }
     }
     

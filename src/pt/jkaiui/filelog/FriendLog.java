@@ -22,7 +22,7 @@ public class FriendLog extends Log{
 
     protected void init() {
 //        System.out.println("friendlog");
-        logfile = new File(format(JKaiUI.getConfig().getConfigString(FriendLogFile)));
+        logfile = new File(format(JKaiUI.getConfig().getConfigFile(FriendLogFile)));
         super.init();
     }
 

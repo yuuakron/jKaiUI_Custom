@@ -68,7 +68,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
     private static Hashtable avatars;
     private static Hashtable loading = new Hashtable();
     
-    private String fixedphrasefile = "./setting/fixedphrese.txt";
+    private String fixedphrasefile = JKaiUI.getConfig().getConfigSettingFolder() + "/setting/fixedphrese.txt";
 
     /** Creates new form MainUI */
     public MainUI() {

@@ -22,7 +22,7 @@ public class AllLog extends Log{
         
 //        System.out.println("alllog");
         
-        logfile = new File(format(JKaiUI.getConfig().getConfigString(AllLogFile)));
+        logfile = new File(format(JKaiUI.getConfig().getConfigFile(AllLogFile)));
         super.init();
     }
     

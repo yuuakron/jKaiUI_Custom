@@ -27,7 +27,7 @@ public class MACLog extends Log {
     }
 
     protected void init() {
-        logfile = new File(format(JKaiUI.getConfig().getConfigString(MACLogFile)));
+        logfile = new File(format(JKaiUI.getConfig().getConfigFile(MACLogFile)));
         macset = new HashSet();
         super.init();
         readlog();

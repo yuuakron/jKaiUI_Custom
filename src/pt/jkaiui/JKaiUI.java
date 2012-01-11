@@ -63,9 +63,7 @@ public class JKaiUI {
     private static final String version = " ver.0.5.1(2011/11/12)";
     private static final String version2 = "0.5";
     private static String KaiEngineVersion;
-    public static final boolean develflag = true;//true: devel verion false:normal version
-//    public static final boolean develflag = false;//true: devel verion false:normal version
-
+    public static boolean develflag = false;//true: devel verion false:normal version
     
     /** Creates a new instance of JKaiUI */
     public JKaiUI(){
@@ -116,6 +114,11 @@ public class JKaiUI {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        //switch normal, devel mode depend on argments
+        if(args.length > 0 && args[0].equals("devel")){
+            develflag = true;
+        }
         
         if (isMac()) {
             // JFrameにメニューをつけるのではなく、一般的なOSXアプリ同様に画面上端のスクリーンメニューにする.

@@ -6,8 +6,6 @@
             <name>jKaiUI_Custom_ver.0.5.1</name>
             <source-roots>
                 <root id="src.updateplan.dir"/>
-                <root id="src.info.dir"/>
-                <root id="src.setting.dir"/>
                 <root id="src.dir"/>
             </source-roots>
             <test-roots/>

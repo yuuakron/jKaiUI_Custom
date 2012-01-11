@@ -97,10 +97,11 @@
 	nbproject/build-impl.xml file. 
 
 	-->
+
+    <target name="-post-jar">
 <!--
 make .app file for Mac OS X
--->
-    <target name="-post-jar">	        
+-->	        
         <exec dir="${dist.dir}" executable="cp">
             <arg line="-r ../Tools/bundle_source/JKaiUI_Custom ."/>
         </exec>
@@ -109,5 +110,21 @@ make .app file for Mac OS X
         <move todir="${dist.dir}/${application.title}.app">
             <fileset dir="${dist.dir}/JKaiUI_Custom"/>
         </move>
+<!--
+make dmg file for Mac OS X
+-->
+        <mkdir dir="${dist.dir}/dmgtmp"/>
+        <exec dir="${dist.dir}" executable="ln">
+            <arg line="-s /Applications dmgtmp"/>
+        </exec>
+        <exec dir="${dist.dir}" executable="cp">
+            <arg line="-r ${application.title}.app dmgtmp"/>
+        </exec>
+        <exec dir="${dist.dir}" executable="hdiutil">
+            <arg line="create -srcfolder dmgtmp -fs HFS+ -volname JKaiUI_Custom JKaiUI_Custom.dmg"/>
+        </exec>
+        <exec dir="${dist.dir}" executable="rm">
+            <arg line="-r dmgtmp"/>
+        </exec>
     </target>
 </project>

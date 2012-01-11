@@ -5,8 +5,6 @@ dist/
 log/
 old/source/.DS_Store
 old/scripts/.DS_Store
-/nbproject/private/
 !/src/pt/jkaiui/tools/log/
 Tools/bundle_source/.DS_Store
 .DS_Store
-

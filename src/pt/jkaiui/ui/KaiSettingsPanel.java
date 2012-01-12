@@ -137,27 +137,6 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         comboArenaPM = new javax.swing.JComboBox();
         comboModeratorChat = new javax.swing.JComboBox();
         comboSend = new javax.swing.JComboBox();
-        panelLogger = new javax.swing.JPanel();
-        radioAllLogger = new javax.swing.JRadioButton();
-        radioChatLogger = new javax.swing.JRadioButton();
-        radioUserLogger = new javax.swing.JRadioButton();
-        radioRoomLogger = new javax.swing.JRadioButton();
-        radioFriendLogger = new javax.swing.JRadioButton();
-        radioMACLogger = new javax.swing.JRadioButton();
-        labelLogdirectory = new javax.swing.JLabel();
-        fieldAllLog = new javax.swing.JTextField();
-        fieldChatLog = new javax.swing.JTextField();
-        fieldUserLog = new javax.swing.JTextField();
-        fieldRoomLog = new javax.swing.JTextField();
-        fieldFriendLog = new javax.swing.JTextField();
-        fieldMACLog = new javax.swing.JTextField();
-        labelLogPattern = new javax.swing.JLabel();
-        fieldChatLogPattern = new javax.swing.JTextField();
-        fieldUserLogPattern = new javax.swing.JTextField();
-        fieldRoomLogPattern = new javax.swing.JTextField();
-        fieldFriendLogPattern = new javax.swing.JTextField();
-        fieldAllLogPattern = new javax.swing.JTextField();
-        fieldMACLogPattern = new javax.swing.JTextField();
         panelChatPM = new javax.swing.JPanel();
         checkShowLatestChat = new javax.swing.JCheckBox();
         checkHideServerMessage = new javax.swing.JCheckBox();
@@ -194,6 +173,32 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         panelAutoSetting = new javax.swing.JPanel();
         checkAutoHostSetting = new javax.swing.JCheckBox();
         checkAutoArenaMoving = new javax.swing.JCheckBox();
+        panelGeneral = new javax.swing.JPanel();
+        fieldSettingFolder = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        panelLogging = new javax.swing.JPanel();
+        panelLogger = new javax.swing.JPanel();
+        radioAllLogger = new javax.swing.JRadioButton();
+        radioChatLogger = new javax.swing.JRadioButton();
+        radioUserLogger = new javax.swing.JRadioButton();
+        radioRoomLogger = new javax.swing.JRadioButton();
+        radioFriendLogger = new javax.swing.JRadioButton();
+        radioMACLogger = new javax.swing.JRadioButton();
+        labelLogdirectory = new javax.swing.JLabel();
+        fieldAllLog = new javax.swing.JTextField();
+        fieldChatLog = new javax.swing.JTextField();
+        fieldUserLog = new javax.swing.JTextField();
+        fieldRoomLog = new javax.swing.JTextField();
+        fieldFriendLog = new javax.swing.JTextField();
+        fieldMACLog = new javax.swing.JTextField();
+        labelLogPattern = new javax.swing.JLabel();
+        fieldChatLogPattern = new javax.swing.JTextField();
+        fieldUserLogPattern = new javax.swing.JTextField();
+        fieldRoomLogPattern = new javax.swing.JTextField();
+        fieldFriendLogPattern = new javax.swing.JTextField();
+        fieldAllLogPattern = new javax.swing.JTextField();
+        fieldMACLogPattern = new javax.swing.JTextField();
         panelCommonFooter = new javax.swing.JPanel();
         jButtonSave = new javax.swing.JButton();
         jButtonClose = new javax.swing.JButton();
@@ -206,13 +211,14 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         toggleAppearance = new javax.swing.JToggleButton();
         toggleMisc = new javax.swing.JToggleButton();
         toggleOriginal = new javax.swing.JToggleButton();
+        jToggleButton1 = new javax.swing.JToggleButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle"); // NOI18N
         setName(bundle.getString("LBL_Config_Header")); // NOI18N
         setLayout(new java.awt.GridBagLayout());
 
         jLabelHeader.setBackground(new java.awt.Color(200, 221, 242));
-        jLabelHeader.setFont(new java.awt.Font("Bitstream Vera Sans", 1, 24));
+        jLabelHeader.setFont(new java.awt.Font("Bitstream Vera Sans", 1, 24)); // NOI18N
         jLabelHeader.setForeground(new java.awt.Color(255, 255, 255));
         jLabelHeader.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelHeader.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pt/jkaiui/ui/resources/config.png"))); // NOI18N
@@ -318,7 +324,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         panelLogin.setLayout(new java.awt.GridBagLayout());
 
         fieldPassword.setColumns(10);
-        fieldPassword.setFont(new java.awt.Font("Tahoma", 0, 11));
+        fieldPassword.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -372,7 +378,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         panelIcons.add(checkboxShowIcons, gridBagConstraints);
 
-        spinnerCacheTime.setFont(new java.awt.Font("Tahoma", 0, 11));
+        spinnerCacheTime.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         spinnerCacheTime.setModel(new SpinnerNumberModel(3, 0, 30, 1));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -606,205 +612,11 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         panelSound.add(comboSend, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         panelOriginal.add(panelSound, gridBagConstraints);
-
-        panelLogger.setBorder(javax.swing.BorderFactory.createTitledBorder("Logger"));
-        panelLogger.setLayout(new java.awt.GridBagLayout());
-
-        radioAllLogger.setText("All");
-        radioAllLogger.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                radioAllLoggerStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(radioAllLogger, gridBagConstraints);
-
-        radioChatLogger.setText("Chat");
-        radioChatLogger.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                radioChatLoggerStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(radioChatLogger, gridBagConstraints);
-
-        radioUserLogger.setText("User");
-        radioUserLogger.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                radioUserLoggerStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(radioUserLogger, gridBagConstraints);
-
-        radioRoomLogger.setText("Room");
-        radioRoomLogger.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                radioRoomLoggerStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(radioRoomLogger, gridBagConstraints);
-
-        radioFriendLogger.setText("Friend");
-        radioFriendLogger.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                radioFriendLoggerStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(radioFriendLogger, gridBagConstraints);
-
-        radioMACLogger.setText("MAC");
-        radioMACLogger.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                radioMACLoggerStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(radioMACLogger, gridBagConstraints);
-
-        labelLogdirectory.setText("Folder of Log File");
-        labelLogdirectory.setAlignmentX(0.5F);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(labelLogdirectory, gridBagConstraints);
-
-        fieldAllLog.setText("./log/Alllog-%Y%M%D.txt");
-        fieldAllLog.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldAllLog, gridBagConstraints);
-
-        fieldChatLog.setText("./log/Chatlog-%Y%M%D.txt");
-        fieldChatLog.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldChatLog, gridBagConstraints);
-
-        fieldUserLog.setText("./log/Userlog-%Y%M%D.txt");
-        fieldUserLog.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldUserLog, gridBagConstraints);
-
-        fieldRoomLog.setText("./log/Roomlog-%Y%M%D.txt");
-        fieldRoomLog.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldRoomLog, gridBagConstraints);
-
-        fieldFriendLog.setText("./log/Friendlog-%Y%M%D.txt");
-        fieldFriendLog.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldFriendLog, gridBagConstraints);
-
-        fieldMACLog.setText("./log/MAClog-%Y%M%D.txt");
-        fieldMACLog.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldMACLog, gridBagConstraints);
-
-        labelLogPattern.setText("Log Pattern");
-        labelLogPattern.setAlignmentX(0.5F);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(labelLogPattern, gridBagConstraints);
-
-        fieldChatLogPattern.setText("%T;%K;%R;%S;%M");
-        fieldChatLogPattern.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldChatLogPattern, gridBagConstraints);
-
-        fieldUserLogPattern.setText("%N");
-        fieldUserLogPattern.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldUserLogPattern, gridBagConstraints);
-
-        fieldRoomLogPattern.setText("%V;%C;%S;%P;%M;%D");
-        fieldRoomLogPattern.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldRoomLogPattern, gridBagConstraints);
-
-        fieldFriendLogPattern.setText("%T;%K;%N");
-        fieldFriendLogPattern.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldFriendLogPattern, gridBagConstraints);
-
-        fieldAllLogPattern.setText("%T;%M");
-        fieldAllLogPattern.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldAllLogPattern, gridBagConstraints);
-
-        fieldMACLogPattern.setText("%N;%A");
-        fieldMACLogPattern.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelLogger.add(fieldMACLogPattern, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        panelOriginal.add(panelLogger, gridBagConstraints);
 
         panelChatPM.setBorder(javax.swing.BorderFactory.createTitledBorder("Chat/PM"));
         panelChatPM.setLayout(new java.awt.GridBagLayout());
@@ -991,7 +803,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         panelOriginal.add(panelChatPM, gridBagConstraints);
@@ -1024,8 +836,8 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         panelRoomUser.add(panelRoomFont, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         panelOriginal.add(panelRoomUser, gridBagConstraints);
 
@@ -1045,12 +857,242 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         panelAutoSetting.add(checkAutoArenaMoving, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         panelOriginal.add(panelAutoSetting, gridBagConstraints);
 
+        panelGeneral.setBorder(javax.swing.BorderFactory.createTitledBorder("General"));
+        panelGeneral.setLayout(new java.awt.GridBagLayout());
+
+        fieldSettingFolder.setText("default:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        panelGeneral.add(fieldSettingFolder, gridBagConstraints);
+
+        jLabel10.setText("Settings Folder");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        panelGeneral.add(jLabel10, gridBagConstraints);
+
+        jLabel11.setText("\"~\":Home Folder \"default:\":default");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        panelGeneral.add(jLabel11, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        panelOriginal.add(panelGeneral, gridBagConstraints);
+
         panelMainContent.add(panelOriginal, "OriginalCard");
+
+        panelLogging.setLayout(new java.awt.GridBagLayout());
+
+        panelLogger.setBorder(javax.swing.BorderFactory.createTitledBorder("Logging"));
+        panelLogger.setLayout(new java.awt.GridBagLayout());
+
+        radioAllLogger.setText("All");
+        radioAllLogger.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radioAllLoggerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(radioAllLogger, gridBagConstraints);
+
+        radioChatLogger.setText("Chat");
+        radioChatLogger.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radioChatLoggerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(radioChatLogger, gridBagConstraints);
+
+        radioUserLogger.setText("User");
+        radioUserLogger.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radioUserLoggerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(radioUserLogger, gridBagConstraints);
+
+        radioRoomLogger.setText("Room");
+        radioRoomLogger.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radioRoomLoggerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(radioRoomLogger, gridBagConstraints);
+
+        radioFriendLogger.setText("Friend");
+        radioFriendLogger.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radioFriendLoggerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(radioFriendLogger, gridBagConstraints);
+
+        radioMACLogger.setText("MAC");
+        radioMACLogger.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radioMACLoggerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(radioMACLogger, gridBagConstraints);
+
+        labelLogdirectory.setText("Folder of Log File");
+        labelLogdirectory.setAlignmentX(0.5F);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(labelLogdirectory, gridBagConstraints);
+
+        fieldAllLog.setText("log/Alllog-%Y%M%D.txt");
+        fieldAllLog.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldAllLog, gridBagConstraints);
+
+        fieldChatLog.setText("log/Chatlog-%Y%M%D.txt");
+        fieldChatLog.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldChatLog, gridBagConstraints);
+
+        fieldUserLog.setText("log/Userlog-%Y%M%D.txt");
+        fieldUserLog.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldUserLog, gridBagConstraints);
+
+        fieldRoomLog.setText("log/Roomlog-%Y%M%D.txt");
+        fieldRoomLog.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldRoomLog, gridBagConstraints);
+
+        fieldFriendLog.setText("log/Friendlog-%Y%M%D.txt");
+        fieldFriendLog.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldFriendLog, gridBagConstraints);
+
+        fieldMACLog.setText("log/MAClog-%Y%M%D.txt");
+        fieldMACLog.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldMACLog, gridBagConstraints);
+
+        labelLogPattern.setText("Log Pattern");
+        labelLogPattern.setAlignmentX(0.5F);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(labelLogPattern, gridBagConstraints);
+
+        fieldChatLogPattern.setText("%T;%K;%R;%S;%M");
+        fieldChatLogPattern.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldChatLogPattern, gridBagConstraints);
+
+        fieldUserLogPattern.setText("%N");
+        fieldUserLogPattern.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldUserLogPattern, gridBagConstraints);
+
+        fieldRoomLogPattern.setText("%V;%C;%S;%P;%M;%D");
+        fieldRoomLogPattern.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldRoomLogPattern, gridBagConstraints);
+
+        fieldFriendLogPattern.setText("%T;%K;%N");
+        fieldFriendLogPattern.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldFriendLogPattern, gridBagConstraints);
+
+        fieldAllLogPattern.setText("%T;%M");
+        fieldAllLogPattern.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldAllLogPattern, gridBagConstraints);
+
+        fieldMACLogPattern.setText("%N;%A");
+        fieldMACLogPattern.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelLogger.add(fieldMACLogPattern, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        panelLogging.add(panelLogger, gridBagConstraints);
+
+        panelMainContent.add(panelLogging, "LoggingCard");
 
         scrollerPane.setViewportView(panelMainContent);
 
@@ -1155,7 +1197,18 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         panelSwitchers.add(toggleOriginal, gridBagConstraints);
+
+        choiceSelectCategory.add(jToggleButton1);
+        jToggleButton1.setText("Logging");
+        jToggleButton1.setActionCommand("LoggingCard");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        panelSwitchers.add(jToggleButton1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1361,6 +1414,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JPasswordField fieldPassword;
     private javax.swing.JTextField fieldRoomLog;
     private javax.swing.JTextField fieldRoomLogPattern;
+    private javax.swing.JTextField fieldSettingFolder;
     private javax.swing.JTextField fieldUserLog;
     private javax.swing.JTextField fieldUserLogPattern;
     private javax.swing.JTextField fieldXTag;
@@ -1370,6 +1424,8 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JButton jButtonSave;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1383,6 +1439,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JLabel labelCacheTime;
     private javax.swing.JLabel labelEngineAddress;
     private javax.swing.JLabel labelEnginePort;
@@ -1400,8 +1457,10 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JPanel panelConnection;
     private javax.swing.JPanel panelEngineConnection;
     private javax.swing.JPanel panelEngineSettings;
+    private javax.swing.JPanel panelGeneral;
     private javax.swing.JPanel panelIcons;
     private javax.swing.JPanel panelLogger;
+    private javax.swing.JPanel panelLogging;
     private javax.swing.JPanel panelLogin;
     private javax.swing.JPanel panelLookAndFeel;
     private javax.swing.JPanel panelMainContent;
@@ -1487,6 +1546,8 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
         choiceStoreWindowPosition.setSelected(kaiConfig.getConfigBoolean(STOREWINDOWSIZEPOSITION));
         
         choicePlayMessageSound.setSelected(kaiConfig.getConfigBoolean(PLAYMESSAGESOUND));
+        
+        fieldSettingFolder.setText(kaiConfig.getConfigString(SettingFolder));
         
 //        choiceHtmlUnicode.setSelected(kaiConfig.getConfigBoolean("HtmlUnicode());
         choiceURLDecode.setSelected(kaiConfig.getConfigBoolean(URLDecode));
@@ -1627,6 +1688,8 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
         kaiConfig.setConfig(SHOWSERVERSTATS, choiceShowServerStats.isSelected());
         kaiConfig.setConfig(STOREWINDOWSIZEPOSITION, choiceStoreWindowPosition.isSelected());
         kaiConfig.setConfig(PLAYMESSAGESOUND, choicePlayMessageSound.isSelected());
+        
+        kaiConfig.setConfig(SettingFolder, fieldSettingFolder.getText());
         
 //        kaiConfig.setConfig(HtmlUnicode(choiceHtmlUnicode.isSelected());
         kaiConfig.setConfig(URLDecode, choiceURLDecode.isSelected());

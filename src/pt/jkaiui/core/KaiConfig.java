@@ -54,7 +54,7 @@ public class KaiConfig {
         
         AutoHostSetting,
         AutoArenaMoving,
-//        SettingFolder,
+        SettingFolder,
         
         AllLog,
         ChatLog,
@@ -168,7 +168,7 @@ public class KaiConfig {
         
         initconfigs.put(ConfigTag.AutoHostSetting, new Pair(ConfigAttri.OTHER, false));
         initconfigs.put(ConfigTag.AutoArenaMoving, new Pair(ConfigAttri.OTHER, false));
- //       initconfigs.put(ConfigTag.SettingFolder, new Pair(ConfigAttri.NON, "~/jKaiUI"));
+        initconfigs.put(ConfigTag.SettingFolder, new Pair(ConfigAttri.NON, "default:"));
         
         initconfigs.put(ConfigTag.ChatLog, new Pair(ConfigAttri.LOG, false));
         initconfigs.put(ConfigTag.ChatLogFile, new Pair(ConfigAttri.LOG, "log/Chatlog-%Y%M%D.txt"));
@@ -276,14 +276,17 @@ public class KaiConfig {
     }
     
     public String getConfigSettingFolder() {
-//        try {
-//          String folder = (String)((Pair)configs.get(ConfigTag.SettingFolder)).second;
-//            return folder.replaceFirst("~", System.getProperty("user.home"));
-//        } catch (Exception e) {
-//            System.out.println("setting error5:" + ConfigTag.SettingFolder);
-//            return null;
-//        }
-        return settingfolder;
+        try {
+          String folder = (String)((Pair)configs.get(ConfigTag.SettingFolder)).second;
+          if(folder.equalsIgnoreCase("default:")){
+              return settingfolder;
+          }else{
+              return folder.replaceFirst("~", System.getProperty("user.home"));
+          }
+        } catch (Exception e) {
+            System.out.println("setting error5:" + ConfigTag.SettingFolder);
+            return null;
+        }
     }
     
     public String getConfigFile(Enum ConfigTag) {

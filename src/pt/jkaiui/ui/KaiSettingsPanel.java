@@ -112,7 +112,6 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         jComboBox1 = new javax.swing.JComboBox();
         panelMiscellaneous = new javax.swing.JPanel();
         choiceShowTimestamps = new javax.swing.JCheckBox();
-        choiceAnonymousStatistics = new javax.swing.JCheckBox();
         fieldNTPServer = new javax.swing.JTextField();
         labelNTPServer = new javax.swing.JLabel();
         choiceStoreWindowPosition = new javax.swing.JCheckBox();
@@ -436,14 +435,6 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         panelMiscellaneous.add(choiceShowTimestamps, gridBagConstraints);
-
-        choiceAnonymousStatistics.setText(bundle.getString("LBL_AllowStatistics")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelMiscellaneous.add(choiceAnonymousStatistics, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -1383,7 +1374,6 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JCheckBox checkShowImageMouseover;
     private javax.swing.JCheckBox checkShowLatestChat;
     private javax.swing.JCheckBox checkboxShowIcons;
-    private javax.swing.JCheckBox choiceAnonymousStatistics;
     private javax.swing.ButtonGroup choiceChatStyle;
     private javax.swing.ButtonGroup choiceEngineConnection;
     private javax.swing.JCheckBox choicePlayMessageSound;
@@ -1540,7 +1530,6 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
         File cacheLocation = new File(kaiConfig.getConfigString(AVATARCACHE));
         buttonClearCache.setEnabled(cacheLocation.exists());
         fieldNTPServer.setText(kaiConfig.getConfigString(NTPSERVER));
-        choiceAnonymousStatistics.setSelected(kaiConfig.getConfigBoolean(ALLOWSTATISTICS));
         choiceShowTimestamps.setSelected(kaiConfig.getConfigBoolean(SHOWTIMESTAMPS));
         choiceShowServerStats.setSelected(kaiConfig.getConfigBoolean(SHOWSERVERSTATS));
         choiceStoreWindowPosition.setSelected(kaiConfig.getConfigBoolean(STOREWINDOWSIZEPOSITION));
@@ -1683,7 +1672,6 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
 //        kaiConfig.setPlaySoundTiming(Integer.parseInt(choicePlaySoundTiming.getSelection().getActionCommand()));
 
         kaiConfig.setConfig(NTPSERVER, fieldNTPServer.getText());
-        kaiConfig.setConfig(ALLOWSTATISTICS, choiceAnonymousStatistics.isSelected());
         kaiConfig.setConfig(SHOWTIMESTAMPS, choiceShowTimestamps.isSelected());
         kaiConfig.setConfig(SHOWSERVERSTATS, choiceShowServerStats.isSelected());
         kaiConfig.setConfig(STOREWINDOWSIZEPOSITION, choiceStoreWindowPosition.isSelected());

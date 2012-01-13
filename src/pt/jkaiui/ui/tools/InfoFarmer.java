@@ -30,6 +30,9 @@ import java.util.Locale;
  * </ol>
  *
  * @author jicksta
+ * 
+ * not used 2012/1/14 yuu@akron
+ * 
  */
 
 public class InfoFarmer {

@@ -97,10 +97,6 @@ public class ActionExecuter {
         else if (msg instanceof EngineHere){
             _logger.info("Attaching to engine");
             manager.send(new AttachEngine());
-            
-            // If allowed, start the InfoFarmer thread which contacts our php database frontend
-            if(JKaiUI.getConfig().getConfigBoolean(ALLOWSTATISTICS))
-                pt.jkaiui.ui.tools.InfoFarmer.start();
         }
         
         // Engine -> UI -- Attached

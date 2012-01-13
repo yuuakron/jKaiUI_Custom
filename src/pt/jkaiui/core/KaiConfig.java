@@ -154,7 +154,6 @@ public class KaiConfig {
         initconfigs.put(ConfigTag.NTPSERVER, new Pair(ConfigAttri.ORIGINAL, "ntp1.ptb.de"));
         initconfigs.put(ConfigTag.AUTOMATICALLYDETECTED, new Pair(ConfigAttri.ORIGINAL, true));
         initconfigs.put(ConfigTag.CACHEDAYS, new Pair(ConfigAttri.ORIGINAL, 3));
-        initconfigs.put(ConfigTag.ALLOWSTATISTICS, new Pair(ConfigAttri.ORIGINAL, true));
         initconfigs.put(ConfigTag.SHOWTIMESTAMPS, new Pair(ConfigAttri.ORIGINAL, false));
         initconfigs.put(ConfigTag.SHOWSERVERSTATS, new Pair(ConfigAttri.ORIGINAL, false));
         initconfigs.put(ConfigTag.STOREWINDOWSIZEPOSITION, new Pair(ConfigAttri.ORIGINAL, false));

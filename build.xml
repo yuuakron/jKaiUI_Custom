@@ -110,6 +110,7 @@ make .app file for Mac OS X
         <move todir="${dist.dir}/${application.title}.app">
             <fileset dir="${dist.dir}/JKaiUI_Custom"/>
         </move>
+        <delete dir="${dist.dir}/JKaiUI_Custom"/>
 <!--
 make dmg file for Mac OS X
 -->
@@ -121,10 +122,10 @@ make dmg file for Mac OS X
             <arg line="-r ${application.title}.app JkaiUI_Custom"/>
         </exec>
         <exec dir="${dist.dir}" executable="cp">
-            <arg line="../resources/ReadMe JkaiUI_Custom"/>
+            <arg line="../resources/ReadMe.txt JkaiUI_Custom"/>
         </exec>
         <exec dir="${dist.dir}" executable="cp">
-            <arg line="../resources/UpdateHistory JkaiUI_Custom"/>
+            <arg line="../resources/UpdateHistory.txt JkaiUI_Custom"/>
         </exec>
         <exec dir="${dist.dir}" executable="hdiutil">
             <arg line="create -srcfolder JkaiUI_Custom -fs HFS+ -volname JKaiUI_Custom JKaiUI_Custom.dmg"/>

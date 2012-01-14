@@ -728,6 +728,7 @@
                                 <StringItem index="2" value="save&#x30dc;&#x30bf;&#x30f3;&#x3067;&#x4fdd;&#x5b58;&#x3067;&#x304d;&#x307e;&#x3059;"/>
                               </StringArray>
                             </Property>
+                            <Property name="selectionMode" type="int" value="0"/>
                           </Properties>
                           <Events>
                             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="PhraseListMouseClicked"/>

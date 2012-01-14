@@ -70,10 +70,29 @@ public class JKaiUI {
     public static boolean develflag = false;//true: devel verion false:normal version
     
     /** Creates a new instance of JKaiUI */
-    public JKaiUI(){
+//    public JKaiUI(){
+//        init();
+//    }
+    
+    public JKaiUI(String[] args){
+                //switch normal, devel mode depend on argments
+        if(args.length > 0 && args[0].equals("devel")){
+            develflag = true;
+        }
+        
+        if (isMac()) {
+            // JFrameにメニューをつけるのではなく、一般的なOSXアプリ同様に画面上端のスクリーンメニューにする.
+           System.setProperty("apple.laf.useScreenMenuBar", "true");
+
+            // スクリーンメニュー左端に表記されるアプリケーション名を設定する
+            // (何も設定しないとクラス名になる。)
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name",JKaiUI.getUIName());
+        }
+        
+        System.out.println(Locale.getDefault().getDisplayCountry());
+        
         init();
     }
-    
     
     private void init() {
 
@@ -142,29 +161,9 @@ public class JKaiUI {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        //switch normal, devel mode depend on argments
-        if(args.length > 0 && args[0].equals("devel")){
-            develflag = true;
-        }
-        
-        if (isMac()) {
-            // JFrameにメニューをつけるのではなく、一般的なOSXアプリ同様に画面上端のスクリーンメニューにする.
-           System.setProperty("apple.laf.useScreenMenuBar", "true");
-
-            // スクリーンメニュー左端に表記されるアプリケーション名を設定する
-            // (何も設定しないとクラス名になる。)
-            System.setProperty(
-                    "com.apple.mrj.application.apple.menu.about.name",
-                    JKaiUI.getUIName());
-
-        }
-        
-        
-        System.out.println(Locale.getDefault().getDisplayCountry());
-        
         //javax.swing.SwingUtilities.invokeLater(new Runnable() {
         //  public void run() {
-        new JKaiUI();
+        new JKaiUI(args);
         //  }
         //});
     }

@@ -216,7 +216,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         versionMenu = new javax.swing.JMenu();
         menuitemVersion = new javax.swing.JMenuItem();
 
-        jMenuItemUserProfile.setFont(new java.awt.Font("Dialog", 0, 10));
+        jMenuItemUserProfile.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         jMenuItemUserProfile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pt/jkaiui/ui/resources/user_profile.png"))); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle"); // NOI18N
         jMenuItemUserProfile.setText(bundle.getString("LBL_UserProfile")); // NOI18N
@@ -227,7 +227,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         });
         jPopupMenuChatUsers.add(jMenuItemUserProfile);
 
-        jMenuItemAddBuddy.setFont(new java.awt.Font("Dialog", 0, 10));
+        jMenuItemAddBuddy.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         jMenuItemAddBuddy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pt/jkaiui/ui/resources/add_buddy.png"))); // NOI18N
         jMenuItemAddBuddy.setText(bundle.getString("LBL_AddBuddy")); // NOI18N
         jMenuItemAddBuddy.addActionListener(new java.awt.event.ActionListener() {
@@ -237,7 +237,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         });
         jPopupMenuChatUsers.add(jMenuItemAddBuddy);
 
-        jMenuItemChatUser.setFont(new java.awt.Font("Dialog", 0, 10));
+        jMenuItemChatUser.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         jMenuItemChatUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pt/jkaiui/ui/resources/chat.png"))); // NOI18N
         jMenuItemChatUser.setText(bundle.getString("LBL_OpenChat")); // NOI18N
         jMenuItemChatUser.addActionListener(new java.awt.event.ActionListener() {
@@ -390,7 +390,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         toolbarTimeLabel.setText(" ");
         footerToolbarContainer.add(toolbarTimeLabel, java.awt.BorderLayout.EAST);
 
-        toolbarRawStatsLabel.setFont(new java.awt.Font("Dialog", 0, 12));
+        toolbarRawStatsLabel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         toolbarRawStatsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 toolbarRawStatsLabelMouseClicked(evt);
@@ -422,7 +422,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
 
         jPanelMessengerMode.setLayout(new java.awt.BorderLayout());
 
-        JListChatUsers.setFont(new java.awt.Font("Dialog", 0, 10));
+        JListChatUsers.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         JListChatUsers.setModel(ListModelChatUsers);
         JListChatUsers.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         JListChatUsers.setFocusable(false);
@@ -439,13 +439,13 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
 
         jPanelArenaMode.setLayout(new java.awt.BorderLayout());
 
-        jListArenaUsers.setFont(new java.awt.Font("Dialog", 0, 10));
+        jListArenaUsers.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         jListArenaUsers.setModel(ListModelArenaUsers);
         jScrollPane2.setViewportView(jListArenaUsers);
 
         jPanelArenaMode.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        jLabel2.setFont(new java.awt.Font("Dialog", 0, 10));
+        jLabel2.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         jLabel2.setText("Arena Users");
         jPanelArenaMode.add(jLabel2, java.awt.BorderLayout.NORTH);
 
@@ -460,7 +460,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         jTabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         jTabbedPane.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         jTabbedPane.setFocusable(false);
-        jTabbedPane.setFont(new java.awt.Font("Dialog", 0, 10));
+        jTabbedPane.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         jTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jTabbedPaneStateChanged(evt);
@@ -500,7 +500,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
 
         jPanel2.add(jPanel3, java.awt.BorderLayout.WEST);
 
-        jPanel5.setLayout(new java.awt.GridLayout());
+        jPanel5.setLayout(new java.awt.GridLayout(1, 0));
 
         jPanel4.setLayout(new java.awt.CardLayout());
 
@@ -509,6 +509,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        PhraseList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         PhraseList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 PhraseListMouseClicked(evt);
@@ -526,7 +527,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
 
         jPanel5.add(jPanel4);
 
-        jPanel6.setLayout(new java.awt.GridLayout());
+        jPanel6.setLayout(new java.awt.GridLayout(1, 0));
 
         EmotIconPane.setContentType("text/html");
         EmotIconPane.setEditable(false);
@@ -548,9 +549,9 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         getContentPane().add(centerPanel, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("Menu");
-        jMenu1.setFont(new java.awt.Font("Dialog", 0, 12));
+        jMenu1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
 
-        jMenuItemLog.setFont(new java.awt.Font("Dialog", 0, 12));
+        jMenuItemLog.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jMenuItemLog.setText("Log Window");
         jMenuItemLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -559,7 +560,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         });
         jMenu1.add(jMenuItemLog);
 
-        jMenuItemSettings.setFont(new java.awt.Font("Dialog", 0, 12));
+        jMenuItemSettings.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jMenuItemSettings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openSettings(evt);
@@ -568,7 +569,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         jMenu1.add(jMenuItemSettings);
         jMenu1.add(jSeparator1);
 
-        jMenuItemExit.setFont(new java.awt.Font("Dialog", 0, 12));
+        jMenuItemExit.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jMenuItemExit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 JMenuItemExitPressed(evt);
@@ -587,7 +588,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         jMenuBar1.add(jMenu1);
 
         bookmarkMenu.setText(bundle.getString("MENU_Bookmark")); // NOI18N
-        bookmarkMenu.setFont(new java.awt.Font("Dialog", 0, 12));
+        bookmarkMenu.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         bookmarkMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bookmarkMenuActionPerformed(evt);
@@ -596,7 +597,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         jMenuBar1.add(bookmarkMenu);
 
         versionMenu.setText("Version");
-        versionMenu.setFont(new java.awt.Font("Dialog", 0, 12));
+        versionMenu.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
 
         menuitemVersion.setText("version");
         menuitemVersion.addActionListener(new java.awt.event.ActionListener() {

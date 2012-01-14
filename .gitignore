@@ -2,7 +2,10 @@ updateplan/
 old/.DS_Store
 build/
 dist/
+log/
 old/source/.DS_Store
 old/scripts/.DS_Store
 !/src/pt/jkaiui/tools/log/
 .DS_Store
+/resources/.ReadMe/
+resources/assets.file:--localhost-Users-yuuakron-Dropbox-source-java-jKaiUI_Custom-resources-.plist

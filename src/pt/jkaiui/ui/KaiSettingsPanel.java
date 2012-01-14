@@ -118,24 +118,6 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         choiceShowServerStats = new javax.swing.JCheckBox();
         choicePlayMessageSound = new javax.swing.JCheckBox();
         panelOriginal = new javax.swing.JPanel();
-        panelSound = new javax.swing.JPanel();
-        radioChat = new javax.swing.JRadioButton();
-        radioPMOpen = new javax.swing.JRadioButton();
-        radioFriendPM = new javax.swing.JRadioButton();
-        radioFriendChat = new javax.swing.JRadioButton();
-        radioFriendOnline = new javax.swing.JRadioButton();
-        radioArenaPM = new javax.swing.JRadioButton();
-        radioModeratorChat = new javax.swing.JRadioButton();
-        radioSend = new javax.swing.JRadioButton();
-        labelSoundFile = new javax.swing.JLabel();
-        comboChat = new javax.swing.JComboBox();
-        comboPMOpen = new javax.swing.JComboBox();
-        comboFriendPM = new javax.swing.JComboBox();
-        comboFriendChat = new javax.swing.JComboBox();
-        comboFriendOnline = new javax.swing.JComboBox();
-        comboArenaPM = new javax.swing.JComboBox();
-        comboModeratorChat = new javax.swing.JComboBox();
-        comboSend = new javax.swing.JComboBox();
         panelChatPM = new javax.swing.JPanel();
         checkShowLatestChat = new javax.swing.JCheckBox();
         checkHideServerMessage = new javax.swing.JCheckBox();
@@ -176,7 +158,6 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         fieldSettingFolder = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        panelLogging = new javax.swing.JPanel();
         panelLogger = new javax.swing.JPanel();
         radioAllLogger = new javax.swing.JRadioButton();
         radioChatLogger = new javax.swing.JRadioButton();
@@ -198,6 +179,25 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         fieldFriendLogPattern = new javax.swing.JTextField();
         fieldAllLogPattern = new javax.swing.JTextField();
         fieldMACLogPattern = new javax.swing.JTextField();
+        panelSounds = new javax.swing.JPanel();
+        panelSound = new javax.swing.JPanel();
+        radioChat = new javax.swing.JRadioButton();
+        radioPMOpen = new javax.swing.JRadioButton();
+        radioFriendPM = new javax.swing.JRadioButton();
+        radioFriendChat = new javax.swing.JRadioButton();
+        radioFriendOnline = new javax.swing.JRadioButton();
+        radioArenaPM = new javax.swing.JRadioButton();
+        radioModeratorChat = new javax.swing.JRadioButton();
+        radioSend = new javax.swing.JRadioButton();
+        labelSoundFile = new javax.swing.JLabel();
+        comboChat = new javax.swing.JComboBox();
+        comboPMOpen = new javax.swing.JComboBox();
+        comboFriendPM = new javax.swing.JComboBox();
+        comboFriendChat = new javax.swing.JComboBox();
+        comboFriendOnline = new javax.swing.JComboBox();
+        comboArenaPM = new javax.swing.JComboBox();
+        comboModeratorChat = new javax.swing.JComboBox();
+        comboSend = new javax.swing.JComboBox();
         panelCommonFooter = new javax.swing.JPanel();
         jButtonSave = new javax.swing.JButton();
         jButtonClose = new javax.swing.JButton();
@@ -476,139 +476,6 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
 
         panelOriginal.setLayout(new java.awt.GridBagLayout());
 
-        panelSound.setBorder(javax.swing.BorderFactory.createTitledBorder("Sound"));
-        panelSound.setLayout(new java.awt.GridBagLayout());
-
-        radioChat.setText("Chat");
-        radioChat.setActionCommand("1");
-        radioChat.setOpaque(true);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(radioChat, gridBagConstraints);
-
-        radioPMOpen.setText("PM Open");
-        radioPMOpen.setActionCommand("3");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(radioPMOpen, gridBagConstraints);
-
-        radioFriendPM.setText("Friend PM");
-        radioFriendPM.setActionCommand("2");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(radioFriendPM, gridBagConstraints);
-
-        radioFriendChat.setText("Friend Chat");
-        radioFriendChat.setActionCommand("4");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(radioFriendChat, gridBagConstraints);
-
-        radioFriendOnline.setText("Friend Online");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(radioFriendOnline, gridBagConstraints);
-
-        radioArenaPM.setText("ArenaPM");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(radioArenaPM, gridBagConstraints);
-
-        radioModeratorChat.setText("Moderator Chat");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(radioModeratorChat, gridBagConstraints);
-
-        radioSend.setText("Send Chat");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(radioSend, gridBagConstraints);
-
-        labelSoundFile.setText("SoundFile");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        panelSound.add(labelSoundFile, gridBagConstraints);
-
-        comboChat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(comboChat, gridBagConstraints);
-
-        comboPMOpen.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(comboPMOpen, gridBagConstraints);
-
-        comboFriendPM.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(comboFriendPM, gridBagConstraints);
-
-        comboFriendChat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(comboFriendChat, gridBagConstraints);
-
-        comboFriendOnline.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(comboFriendOnline, gridBagConstraints);
-
-        comboArenaPM.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(comboArenaPM, gridBagConstraints);
-
-        comboModeratorChat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(comboModeratorChat, gridBagConstraints);
-
-        comboSend.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelSound.add(comboSend, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        panelOriginal.add(panelSound, gridBagConstraints);
-
         panelChatPM.setBorder(javax.swing.BorderFactory.createTitledBorder("Chat/PM"));
         panelChatPM.setLayout(new java.awt.GridBagLayout());
 
@@ -829,6 +696,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         panelOriginal.add(panelRoomUser, gridBagConstraints);
 
@@ -848,7 +716,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         panelAutoSetting.add(checkAutoArenaMoving, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         panelOriginal.add(panelAutoSetting, gridBagConstraints);
@@ -880,14 +748,10 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         panelGeneral.add(jLabel11, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         panelOriginal.add(panelGeneral, gridBagConstraints);
-
-        panelMainContent.add(panelOriginal, "OriginalCard");
-
-        panelLogging.setLayout(new java.awt.GridBagLayout());
 
         panelLogger.setBorder(javax.swing.BorderFactory.createTitledBorder("Logging"));
         panelLogger.setLayout(new java.awt.GridBagLayout());
@@ -1081,9 +945,141 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        panelLogging.add(panelLogger, gridBagConstraints);
+        panelOriginal.add(panelLogger, gridBagConstraints);
 
-        panelMainContent.add(panelLogging, "LoggingCard");
+        panelMainContent.add(panelOriginal, "OriginalCard");
+
+        panelSounds.setLayout(new java.awt.GridBagLayout());
+
+        panelSound.setBorder(javax.swing.BorderFactory.createTitledBorder("Sound"));
+        panelSound.setLayout(new java.awt.GridBagLayout());
+
+        radioChat.setText("Chat");
+        radioChat.setActionCommand("1");
+        radioChat.setOpaque(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(radioChat, gridBagConstraints);
+
+        radioPMOpen.setText("PM Open");
+        radioPMOpen.setActionCommand("3");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(radioPMOpen, gridBagConstraints);
+
+        radioFriendPM.setText("Friend PM");
+        radioFriendPM.setActionCommand("2");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(radioFriendPM, gridBagConstraints);
+
+        radioFriendChat.setText("Friend Chat");
+        radioFriendChat.setActionCommand("4");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(radioFriendChat, gridBagConstraints);
+
+        radioFriendOnline.setText("Friend Online");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(radioFriendOnline, gridBagConstraints);
+
+        radioArenaPM.setText("ArenaPM");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(radioArenaPM, gridBagConstraints);
+
+        radioModeratorChat.setText("Moderator Chat");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(radioModeratorChat, gridBagConstraints);
+
+        radioSend.setText("Send Chat");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(radioSend, gridBagConstraints);
+
+        labelSoundFile.setText("SoundFile");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        panelSound.add(labelSoundFile, gridBagConstraints);
+
+        comboChat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(comboChat, gridBagConstraints);
+
+        comboPMOpen.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(comboPMOpen, gridBagConstraints);
+
+        comboFriendPM.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(comboFriendPM, gridBagConstraints);
+
+        comboFriendChat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(comboFriendChat, gridBagConstraints);
+
+        comboFriendOnline.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(comboFriendOnline, gridBagConstraints);
+
+        comboArenaPM.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(comboArenaPM, gridBagConstraints);
+
+        comboModeratorChat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(comboModeratorChat, gridBagConstraints);
+
+        comboSend.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        panelSound.add(comboSend, gridBagConstraints);
+
+        panelSounds.add(panelSound, new java.awt.GridBagConstraints());
+
+        panelMainContent.add(panelSounds, "SoundCard");
 
         scrollerPane.setViewportView(panelMainContent);
 
@@ -1192,8 +1188,8 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         panelSwitchers.add(toggleOriginal, gridBagConstraints);
 
         choiceSelectCategory.add(jToggleButton1);
-        jToggleButton1.setText("Logging");
-        jToggleButton1.setActionCommand("LoggingCard");
+        jToggleButton1.setText("Sound");
+        jToggleButton1.setActionCommand("SoundCard");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
@@ -1450,7 +1446,6 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JPanel panelGeneral;
     private javax.swing.JPanel panelIcons;
     private javax.swing.JPanel panelLogger;
-    private javax.swing.JPanel panelLogging;
     private javax.swing.JPanel panelLogin;
     private javax.swing.JPanel panelLookAndFeel;
     private javax.swing.JPanel panelMainContent;
@@ -1459,6 +1454,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JPanel panelRoomFont;
     private javax.swing.JPanel panelRoomUser;
     private javax.swing.JPanel panelSound;
+    private javax.swing.JPanel panelSounds;
     private javax.swing.JPanel panelSwitchers;
     private javax.swing.JRadioButton radioAllLogger;
     private javax.swing.JRadioButton radioArenaPM;

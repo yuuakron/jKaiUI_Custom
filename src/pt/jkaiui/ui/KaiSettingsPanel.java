@@ -661,7 +661,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         panelOriginal.add(panelChatPM, gridBagConstraints);
@@ -694,8 +694,8 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         panelRoomUser.add(panelRoomFont, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         panelOriginal.add(panelRoomUser, gridBagConstraints);
@@ -716,9 +716,9 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         panelAutoSetting.add(checkAutoArenaMoving, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         panelOriginal.add(panelAutoSetting, gridBagConstraints);
 
         panelGeneral.setBorder(javax.swing.BorderFactory.createTitledBorder("General"));
@@ -748,8 +748,8 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         panelGeneral.add(jLabel11, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         panelOriginal.add(panelGeneral, gridBagConstraints);
 
@@ -942,7 +942,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         panelOriginal.add(panelLogger, gridBagConstraints);

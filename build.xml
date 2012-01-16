@@ -103,59 +103,59 @@
 make app file for Mac OS X
 -->	        
         <exec dir="${dist.dir}" executable="cp">
-            <arg line="-r ../resources/bundle_source/JKaiUI_Custom ."/>
+            <arg line="-r ../resources/bundle_source/JKaiUI_Custom ./${application.title}"/>
         </exec>
         <copy file="${dist.jar}" tofile="${dist.dir}/jKaiUI_Custom.jar"/>
-        <move file="${dist.dir}/jKaiUI_Custom.jar" todir="${dist.dir}/JKaiUI_Custom/Contents/Resources/Java"/>
+        <move file="${dist.dir}/jKaiUI_Custom.jar" todir="${dist.dir}/${application.title}/Contents/Resources/Java"/>
         <move todir="${dist.dir}/${application.title}.app">
-            <fileset dir="${dist.dir}/JKaiUI_Custom"/>
+            <fileset dir="${dist.dir}/${application.title}"/>
         </move>
         <!--
 make devel version app file for Mac OS X
 -->	        
         <exec dir="${dist.dir}" executable="cp">
-            <arg line="-r ../resources/bundle_source/JKaiUI_Custom ."/>
+            <arg line="-r ../resources/bundle_source/JKaiUI_Custom ./${application.title}"/>
         </exec>
         <exec dir="${dist.dir}" executable="cp">
-            <arg line="../resources/Info.plist JKaiUI_Custom/Contents"/>
+            <arg line="../resources/Info.plist ${application.title}/Contents"/>
         </exec>
         <copy file="${dist.jar}" tofile="${dist.dir}/jKaiUI_Custom.jar"/>
-        <move file="${dist.dir}/jKaiUI_Custom.jar" todir="${dist.dir}/JKaiUI_Custom/Contents/Resources/Java"/>
+        <move file="${dist.dir}/jKaiUI_Custom.jar" todir="${dist.dir}/${application.title}/Contents/Resources/Java"/>
         <move todir="${dist.dir}/${application.title}-devel.app">
-            <fileset dir="${dist.dir}/JKaiUI_Custom"/>
+            <fileset dir="${dist.dir}/${application.title}"/>
         </move>
 <!--
 make dmg file for Mac OS X
 -->
-        <mkdir dir="${dist.dir}/JkaiUI_Custom"/>
+        <mkdir dir="${dist.dir}/${application.title}"/>
         <exec dir="${dist.dir}" executable="ln">
-            <arg line="-s /Applications JkaiUI_Custom"/>
+            <arg line="-s /Applications ${application.title}"/>
         </exec>
         <exec dir="${dist.dir}" executable="cp">
-            <arg line="-r ${application.title}.app JkaiUI_Custom"/>
+            <arg line="-r ${application.title}.app ${application.title}"/>
         </exec>
         <exec dir="${dist.dir}" executable="cp">
-            <arg line="-r ../resources/ReadMe JkaiUI_Custom/.ReadMe"/>
+            <arg line="-r ../resources/JKaiUI_ReadMe ${application.title}/.JKaiUI_ReadMe"/>
         </exec>
         <exec dir="${dist.dir}" executable="cp">
-            <arg line=" ../resources/ReadMe.html JkaiUI_Custom"/>
+            <arg line=" ../resources/ReadMe.html ${application.title}"/>
         </exec>
         <exec dir="${dist.dir}" executable="hdiutil">
-            <arg line="create -srcfolder JkaiUI_Custom -fs HFS+ -volname JKaiUI_Custom JKaiUI_Custom.dmg"/>
+            <arg line="create -srcfolder ${application.title} -fs HFS+ -volname ${application.title} ${application.title}.dmg"/>
         </exec>
         <exec dir="${dist.dir}" executable="rm">
-            <arg line="-r JkaiUI_Custom/${application.title}.app"/>
+            <arg line="-r ${application.title}/${application.title}.app"/>
         </exec>
         <exec dir="${dist.dir}" executable="rm">
-            <arg line="JkaiUI_Custom/Applications"/>
+            <arg line="${application.title}/Applications"/>
         </exec>
         <!--
 make zip file for Windows
 -->
-        <copy file="${dist.jar}" todir="${dist.dir}/JKaiUI_Custom"/>
-        <zip destfile="${dist.dir}/${application.title}.zip" basedir="${dist.dir}/JKaiUI_Custom"/>
+        <copy file="${dist.jar}" todir="${dist.dir}/${application.title}"/>
+        <zip destfile="${dist.dir}/${application.title}.zip" basedir="${dist.dir}/${application.title}"/>
         <exec dir="${dist.dir}" executable="rm">
-            <arg line="-r JkaiUI_Custom"/>
+            <arg line="-r ${application.title}"/>
         </exec>
     </target>
 </project>

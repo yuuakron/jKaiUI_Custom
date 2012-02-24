@@ -1,6 +1,8 @@
 package pt.jkaiui.tools.log;
 
-import java.util.logging.*;
+import java.util.logging.Filter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 public class MyFilter implements Filter {
 
@@ -15,6 +17,7 @@ public class MyFilter implements Filter {
     this._level = level;
   }
 
+    @Override
   public synchronized boolean isLoggable(LogRecord record) {
     // return true if the record should be logged;
     // false otherwise.

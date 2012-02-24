@@ -4,12 +4,13 @@
  */
 package pt.jkaiui.filelog;
         
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.BufferedWriter;
 import java.io.PrintWriter;
-import java.util.*;
-import java.text.*;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  *

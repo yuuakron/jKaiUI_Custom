@@ -7,7 +7,6 @@
 package pt.jkaiui.core.messages;
 
 import pt.jkaiui.core.KaiString;
-
 import pt.jkaiui.manager.I_OutMessage;
 
 /**
@@ -68,6 +67,7 @@ public class ArenaPMOut extends Message implements I_OutMessage {
     }
     
     
+    @Override
     public String send() {
         
         String out = "KAI_CLIENT_ARENA_PM;" + getUser() + ";"+ getMessage() +";";

@@ -21,6 +21,7 @@ public class ArenaStatus extends Message implements I_InMessage {
     public ArenaStatus() {
     }
     
+    @Override
     public Message parse(String s) {
         
         Pattern p = Pattern.compile("KAI_CLIENT_ARENA_STATUS;(.*);(.*);");

@@ -4,10 +4,10 @@
  */
 package pt.jkaiui.filelog;
 
-import pt.jkaiui.JKaiUI;
-        
 import java.io.File;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.JKaiUI;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.AllLogFile;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.AllLogPattern;
 
 /**
  *
@@ -26,6 +26,7 @@ public class AllLog extends Log{
         super.init();
     }
     
+    @Override
     public void println(String s){
         if(!datecheck()){
             update();

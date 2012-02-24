@@ -28,6 +28,7 @@ public class RoomLog  extends Log{
         this.init();
     }
     
+    @Override
     protected void init(){
 //        System.out.println("roomlog");
         logfile = new File(format(JKaiUI.getConfig().getConfigFile(RoomLogFile)));
@@ -36,6 +37,7 @@ public class RoomLog  extends Log{
         readlog();
     }
     
+    @Override
     public void println(Object room) {
         if (!datecheck()) {
             update();

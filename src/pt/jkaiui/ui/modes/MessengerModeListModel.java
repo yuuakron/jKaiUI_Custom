@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 import javax.swing.AbstractListModel;
-
 import pt.jkaiui.core.User;
 
 /**
@@ -34,6 +33,7 @@ public class MessengerModeListModel extends AbstractListModel {
      * @return  the number of components in this list
      * @see #size()
      */
+    @Override
     public int getSize() {
         return delegate.size();
     }
@@ -52,6 +52,7 @@ public class MessengerModeListModel extends AbstractListModel {
      *             list
      * @see #get(int)
      */
+    @Override
     public Object getElementAt(int index) {
 		try {
                         //System.out.println("getElementAt"+delegate.size()+":" +index);
@@ -394,6 +395,7 @@ public class MessengerModeListModel extends AbstractListModel {
      *
      * @return a String representation of this object
      */
+    @Override
     public String toString() {
         return delegate.toString();
     }
@@ -530,8 +532,9 @@ public class MessengerModeListModel extends AbstractListModel {
             
             // WARNING: IF DOES NOT EXIST, RETURN THE ORIGINAL OBJECT!
             
-            if (index == -1)
-                return obj;
+            if (index == -1) {
+            return obj;
+        }
             
             return getElementAt(index);
     }

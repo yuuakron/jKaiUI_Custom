@@ -9,6 +9,7 @@ package pt.jkaiui.manager;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import pt.jkaiui.JKaiUI;
 import pt.jkaiui.tools.log.ConfigLog;
@@ -25,7 +26,7 @@ public class Connection extends Thread {
     private InetAddress ia;
     private DatagramSocket csocket;
     private String indir;
-    int port;
+    private int port;
     
     public Connection(String indir,int port){
         
@@ -70,7 +71,7 @@ public class Connection extends Thread {
                 csocket.send(dp);
             } catch (Exception e) {
                 System.out.println("Connection Send:" + e);
-                _logger.severe(" Error sending string: " + e.getMessage());
+                _logger.log(Level.SEVERE, " Error sending string: {0}", e.getMessage());
             }
         }
     }
@@ -83,10 +84,12 @@ public class Connection extends Thread {
             System.out.println("Connection close:"+e);
         }
     }
+    @Override
     public void finalize(){
         close();
     }
     
+    @Override
     public void run(){
         
         _logger.config("Connecting to kaid");
@@ -110,7 +113,7 @@ public class Connection extends Thread {
             }
             catch (Exception e) {
                 System.out.println("Connection run:"+e);
-                _logger.severe("Error in receiver thread: "+ e.getMessage() + ": "+ str.trim());
+                _logger.log(Level.SEVERE, "Error in receiver thread: {0}: {1}", new Object[]{e.getMessage(), str.trim()});
             }
         }
         

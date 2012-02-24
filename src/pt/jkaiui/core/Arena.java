@@ -181,6 +181,7 @@ public class Arena extends KaiObject {
         this.user = user;
     }
     
+    @Override
     public String toString() {
 	return vector;
     }

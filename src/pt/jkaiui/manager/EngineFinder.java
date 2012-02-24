@@ -10,10 +10,14 @@
 
 package pt.jkaiui.manager;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketTimeoutException;
 import java.util.Collection;
 import java.util.Vector;
-import java.net.*;
-import java.io.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import pt.jkaiui.tools.log.ConfigLog;
 
@@ -47,12 +51,15 @@ public class EngineFinder {
         timeout *= 1000;
         
         ThreadGroup engineListeners = new ThreadGroup("Engine Echo Listeners");
-        for(int i = 0; i < PLACES_TO_SCAN.length; i++)
+        for(int i = 0; i < PLACES_TO_SCAN.length; i++) {
             new Thread(engineListeners, new EngineReceiver(PLACES_TO_SCAN[i], engines, timeout), "EngineReceiver for " + PLACES_TO_SCAN[i]).start();
+        }
         
         try {
             // We want to tie up the thread until everything's done.
-            while(engineListeners.activeCount() > 0) Thread.sleep(250);
+            while(engineListeners.activeCount() > 0) {
+                Thread.sleep(250);
+            }
         } catch(InterruptedException ie) {
             System.out.println("EngineFinder:"+ie);
         }
@@ -64,9 +71,9 @@ public class EngineFinder {
     
     class EngineReceiver implements Runnable {
         
-        Collection results;
-        String address;
-        int timeout;
+        private Collection results;
+        private String address;
+        private int timeout;
         
         EngineReceiver(String address, Collection results, int timeout) {
             this.address = address;
@@ -74,6 +81,7 @@ public class EngineFinder {
             this.timeout = timeout;
         }
         
+        @Override
         public void run() {
             DatagramSocket locateConnection;
             DatagramPacket packet;
@@ -98,7 +106,7 @@ public class EngineFinder {
                         String address = packet.getAddress().getHostAddress();
                         if(!engines.contains(address)) {
                             engines.add(address);
-                            _logger.info("Engine found at " + address);
+                            _logger.log(Level.INFO, "Engine found at {0}", address);
                         }
                     }
                 } catch (SocketTimeoutException ste) {

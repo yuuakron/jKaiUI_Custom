@@ -31,6 +31,7 @@ public class ArenaPM extends Message implements I_InMessage {
     public ArenaPM() {
     }
     
+    @Override
     public Message parse(String s) {
         
         Pattern p = Pattern.compile("KAI_CLIENT_ARENA_PM;(.*);(.*);");

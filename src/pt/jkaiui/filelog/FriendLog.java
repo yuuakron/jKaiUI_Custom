@@ -4,12 +4,12 @@
  */
 package pt.jkaiui.filelog;
 
-import pt.jkaiui.JKaiUI;
-        
 import java.io.File;
-
-import pt.jkaiui.core.messages.*;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.JKaiUI;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.FriendLogFile;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.FriendLogPattern;
+import pt.jkaiui.core.messages.ContactOffline;
+import pt.jkaiui.core.messages.ContactOnline;
 /**
  *
  * @author yuu@akron
@@ -20,12 +20,14 @@ public class FriendLog extends Log{
         this.init();
     }
 
+    @Override
     protected void init() {
 //        System.out.println("friendlog");
         logfile = new File(format(JKaiUI.getConfig().getConfigFile(FriendLogFile)));
         super.init();
     }
 
+    @Override
     public void println(Object friend) {
         if (!datecheck()) {
             update();

@@ -14,21 +14,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import pt.jkaiui.JKaiUI;
 import pt.jkaiui.core.Arena;
 import pt.jkaiui.core.KaiObject;
 import pt.jkaiui.core.User;
+import pt.jkaiui.manager.Manager;
 import pt.jkaiui.ui.ChatPanel;
+import pt.jkaiui.ui.MainUI;
 /**
  *
  * @author  pedro
@@ -57,6 +52,7 @@ public abstract class MainMode extends javax.swing.JPanel implements I_MainMode,
         
         list.addMouseListener(
                 new MouseAdapter(){
+            @Override
             public void mouseClicked(MouseEvent me){
                 
                 // Display menu if right mouse button clicked
@@ -97,14 +93,15 @@ public abstract class MainMode extends javax.swing.JPanel implements I_MainMode,
                         // enter arena
                         Arena arena = (Arena) obj;
                         
-                        JKaiUI.getManager().enterArena(arena);
+                        Manager.enterArena(arena);
                         
                     }
                 }
                 
                 Object selected = JKaiUI.getMainUI().jTabbedPane.getSelectedComponent();
-                if(selected instanceof ChatPanel)
+                if(selected instanceof ChatPanel) {
                     ((ChatPanel)selected).getInputField().requestFocus();
+                }
             }
         }
         );
@@ -131,13 +128,14 @@ public abstract class MainMode extends javax.swing.JPanel implements I_MainMode,
         JKaiUI.getMainUI().SetModeTitle(modeName);
     }
     
+    @Override
     public abstract String getName();
     
     public abstract ListModel getListModel();
     
     public void previewMode(){
         
-        _logger.fine("Previewing "+ getName());
+        _logger.log(Level.FINE, "Previewing {0}", getName());
         
         setModeName(getName() + " - " + java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_Preview"));
         
@@ -152,7 +150,7 @@ public abstract class MainMode extends javax.swing.JPanel implements I_MainMode,
     
     public void selectMode(){
         
-        _logger.fine("Selecting "+ getName());
+        _logger.log(Level.FINE, "Selecting {0}", getName());
         
         
         JKaiUI.getMainUI().getJPanelMode().removeAll();
@@ -165,7 +163,7 @@ public abstract class MainMode extends javax.swing.JPanel implements I_MainMode,
         
         // Setting special commands
         
-        JPanel panel = JKaiUI.getMainUI().getSpecialCommandsPanel();
+        JPanel panel = MainUI.getSpecialCommandsPanel();
         panel.removeAll();
         
         _logger.config("Adding special commands");
@@ -181,6 +179,7 @@ public abstract class MainMode extends javax.swing.JPanel implements I_MainMode,
         
     }
     
+    @Override
     public Insets getInsets(){
         
         return new Insets(0,3,3,0);

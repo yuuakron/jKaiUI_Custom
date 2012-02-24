@@ -26,6 +26,7 @@ public class AdminPrivileges extends Message implements I_InMessage {
     public AdminPrivileges() {
     }
     
+    @Override
     public Message parse(String s) {
         
         Pattern p = Pattern.compile("KAI_CLIENT_ADMIN_PRIVILEGES;(.*);");

@@ -1,9 +1,10 @@
 
 package pt.jkaiui.ui.tools;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.Socket;
 import pt.jkaiui.JKaiUI;
-import java.net.*;
-import java.io.*;
 import pt.jkaiui.core.KaiConfig;
 
 /** 
@@ -40,7 +41,7 @@ public class NTPClient {
      */
     public static long getNTPTime(String serverAddress) {
         
-        Socket connection = null;
+        Socket connection;
         
         try {
             // Try opening a Socket to the specified address on the NTP port
@@ -63,13 +64,17 @@ public class NTPClient {
             
             // Attempt to close the socket. If it doesn't close, oh well.  :)
             try {
-                if(connection != null) connection.close();
+                if(connection != null) {
+                    connection.close();
+                }
             } catch(IOException ioe) {
                 System.out.println("NTPClient:"+ioe);
             }
             
             // Check if any of the bytes were the EOF integer (-1)
-            if((b1 | b2 | b3 | b4) < 0) throw new Exception("The time received was an invalid negative \"long\" number.");
+            if((b1 | b2 | b3 | b4) < 0) {
+                throw new Exception("The time received was an invalid negative \"long\" number.");
+            }
             
             // Lastly, we multiply the time retrieved from the NTP server by 1000
             // to convert it to milliseconds, add the delay it took to actually

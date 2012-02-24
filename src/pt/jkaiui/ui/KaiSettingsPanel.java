@@ -5,25 +5,21 @@
  */
 package pt.jkaiui.ui;
 
-import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
-import java.io.File;
+import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.Enumeration;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.JFileChooser;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import pt.jkaiui.JKaiUI;
 import pt.jkaiui.core.KaiConfig;
-import pt.jkaiui.tools.log.ConfigLog;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.io.PrintWriter;
-import java.io.FileReader;
-import java.io.BufferedReader;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.tools.log.ConfigLog;
 
 /**
  *
@@ -42,6 +38,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
 
         ActionListener radioListener = new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 ((CardLayout) panelMainContent.getLayout()).show(panelMainContent, evt.getActionCommand());
                 choiceSelectCategory.setSelected(((AbstractButton) evt.getSource()).getModel(), true);
@@ -1229,7 +1226,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
         File cacheLocation = new File(kaiConfig.getConfigString(AVATARCACHE));
         if (cacheLocation.exists()) {
             boolean result = cacheLocation.delete();
-            _logger.fine("Cache clear was " + (result ? "successful" : "unsuccessful"));
+            _logger.log(Level.FINE, "Cache clear was {0}", (result ? "successful" : "unsuccessful"));
             if (result) {
                 buttonClearCache.setEnabled(false);
             }
@@ -1628,22 +1625,22 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
                 if (soundfiles[i].getName().equals((kaiConfig.getConfigString(PMOpenSoundFile)))) {
                     comboPMOpen.setSelectedItem(kaiConfig.getConfigString(PMOpenSoundFile));
                 }
-                if (soundfiles[i].getName().equals((String) (kaiConfig.getConfigString(FriendPMSoundFile)))) {
+                if (soundfiles[i].getName().equals(kaiConfig.getConfigString(FriendPMSoundFile))) {
                     comboFriendPM.setSelectedItem(kaiConfig.getConfigString(FriendPMSoundFile));
                 }
-                if (soundfiles[i].getName().equals((String) (kaiConfig.getConfigString(FriendChatSoundFile)))) {
+                if (soundfiles[i].getName().equals(kaiConfig.getConfigString(FriendChatSoundFile))) {
                     comboFriendChat.setSelectedItem(kaiConfig.getConfigString(FriendChatSoundFile));
                 }
-                if (soundfiles[i].getName().equals((String) (kaiConfig.getConfigString(FriendOnlineSoundFile)))) {
+                if (soundfiles[i].getName().equals(kaiConfig.getConfigString(FriendOnlineSoundFile))) {
                     comboFriendOnline.setSelectedItem(kaiConfig.getConfigString(FriendOnlineSoundFile));
                 }
-                if (soundfiles[i].getName().equals((String) (kaiConfig.getConfigString(ArenaPMSoundFile)))) {
+                if (soundfiles[i].getName().equals(kaiConfig.getConfigString(ArenaPMSoundFile))) {
                     comboArenaPM.setSelectedItem(kaiConfig.getConfigString(ArenaPMSoundFile));
                 }
-                if (soundfiles[i].getName().equals((String) (kaiConfig.getConfigString(ModeratorChatSoundFile)))) {
+                if (soundfiles[i].getName().equals(kaiConfig.getConfigString(ModeratorChatSoundFile))) {
                     comboModeratorChat.setSelectedItem(kaiConfig.getConfigString(ModeratorChatSoundFile));
                 }
-                if (soundfiles[i].getName().equals((String) (kaiConfig.getConfigString(SendSoundFile)))) {
+                if (soundfiles[i].getName().equals(kaiConfig.getConfigString(SendSoundFile))) {
                     comboSend.setSelectedItem(kaiConfig.getConfigString(SendSoundFile));
                 }
             }
@@ -1747,6 +1744,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
         JKaiUI.getChatManager().setInputFieldFontSize(((Integer)spinnerInputFieldFontSize.getValue()).intValue());
     }
 
+    @Override
     public boolean equals(Object other) {
         return (other != null) && (other instanceof KaiSettingsPanel);
     }

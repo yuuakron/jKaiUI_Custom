@@ -36,6 +36,7 @@ public class ArenaPing extends Message implements I_InMessage {
     public ArenaPing() {
     }
     
+    @Override
     public Message parse(String s) {
         
         Pattern p = Pattern.compile("KAI_CLIENT_ARENA_PING;(.*);(.*);(.*);(.*);(.*);");

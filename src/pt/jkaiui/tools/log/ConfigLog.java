@@ -1,7 +1,8 @@
 package pt.jkaiui.tools.log;
 
-import java.util.logging.*;
-import javax.swing.JTextPane;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 
 public class ConfigLog {

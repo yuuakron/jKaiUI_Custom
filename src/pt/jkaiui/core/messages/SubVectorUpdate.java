@@ -36,6 +36,7 @@ public class SubVectorUpdate extends Message implements I_InMessage {
     public SubVectorUpdate() {
     }
     
+    @Override
     public Message parse(String s) {
         
         Pattern p = Pattern.compile("KAI_CLIENT_SUB_VECTOR_UPDATE;(.*);(.*);(.*);");

@@ -1,9 +1,7 @@
 package pt.jkaiui.tools.log;
 
-import java.util.logging.*;
-import java.io.IOException;
 import java.io.ByteArrayOutputStream;
-import javax.swing.JTextPane;
+import java.util.logging.*;
 import javax.swing.JEditorPane;
 
 public class LogManager {

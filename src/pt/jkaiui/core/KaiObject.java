@@ -47,6 +47,7 @@ public class KaiObject implements Comparable {
     
     
     
+    @Override
     public int compareTo(Object obj) {
         
         String prefix1 = generatePrefix(this);
@@ -59,36 +60,28 @@ public class KaiObject implements Comparable {
         
     }
     
-    private String generatePrefix(Object obj){
-        
-        String prefix ="";
-        
-        if (obj instanceof User){
+    private String generatePrefix(Object obj) {
+
+        String prefix = "";
+
+        if (obj instanceof User) {
             User u = (User) obj;
-            if(u.isOnline())
+            if (u.isOnline()) {
                 return "USER_AAA_";
-            else
+            } else {
                 return "USER_BBB_";
-        }
-        else if( obj instanceof Arena){
+            }
+        } else if (obj instanceof Arena) {
             return "AAAAA_";
-        }
-        else
+        } else {
             return "";
-        
-        
+        }
     }
     
     
+    @Override
     public boolean equals(Object obj) {
-        
-        
         KaiObject u = (KaiObject) obj;
         return this.getName().equals(u.getName());
-        
     }
-    
-    
-    
-    
 }

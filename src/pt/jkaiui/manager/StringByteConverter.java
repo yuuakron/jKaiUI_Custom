@@ -4,8 +4,8 @@
  */
 package pt.jkaiui.manager;
 import pt.jkaiui.JKaiUI;
-import sun.misc.*;
 import pt.jkaiui.core.KaiString;
+import sun.misc.HexDumpEncoder;
 
 /**
  *
@@ -15,7 +15,7 @@ public class StringByteConverter {
 
     //htmlencodeä÷êîÅ@Ç©Ç»ÇËÇƒÇ´Ç∆Ç§
     private static String HtmlUnicodeencode(String s, int radix) {
-        StringBuffer sb = new StringBuffer("");
+        StringBuilder sb = new StringBuilder("");
         char ch[] = s.toCharArray();
         for (int i = 0; i < ch.length; i++) {
             if (Character.getNumericValue(ch[i]) >= 1) {
@@ -27,7 +27,8 @@ public class StringByteConverter {
                 if (radix == 16) {
                     sb.append("x");
                 }
-                sb.append(Integer.toString(ch[i], radix) + ";");
+                sb.append(Integer.toString(ch[i], radix));
+                sb.append(";");
             }
         }
         return sb.toString();
@@ -72,7 +73,7 @@ public class StringByteConverter {
     
             //htmlencodeä÷êîÅ@Ç©Ç»ÇËÇƒÇ´Ç∆Ç§
     private static String HtmlUnicodeencode(byte[] s, int radix) {
-        StringBuffer sb = new StringBuffer("");
+        StringBuilder sb = new StringBuilder("");
 //        char ch[] = s.toCharArray();
         for (int i = 0; i < s.length; i++) {
             if (Character.getNumericValue(s[i]) >= 1) {
@@ -84,7 +85,8 @@ public class StringByteConverter {
                 if (radix == 16) {
                     sb.append("x");
                 }
-                sb.append(Integer.toString(s[i], radix) + ";");
+                sb.append(Integer.toString(s[i], radix));
+                sb.append(";");
             }
         }
         return sb.toString();

@@ -12,7 +12,7 @@ package pt.jkaiui.core;
  */
 public class KaiString {
     
-    String s;
+    private String s;
     
     /** Creates a new instance of KaiString */
     public KaiString(String s) {
@@ -26,6 +26,7 @@ public class KaiString {
         
     }
     
+    @Override
     public String toString(){
         
         return s;

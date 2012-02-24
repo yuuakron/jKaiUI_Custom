@@ -6,8 +6,8 @@
 
 package pt.jkaiui.ui;
 import java.awt.GridBagConstraints;
-import javax.swing.SwingUtilities;
 import java.util.ResourceBundle;
+import javax.swing.SwingUtilities;
 import pt.jkaiui.JKaiUI;
 import pt.jkaiui.ui.tools.ScrollGames;
 
@@ -17,7 +17,7 @@ import pt.jkaiui.ui.tools.ScrollGames;
  */
 public class InfoPanel extends javax.swing.JPanel {
 	
-	ResourceBundle resourceBundle;
+	private ResourceBundle resourceBundle;
 	private ScrollGames ScrollGames1;
 	
 	/** Creates new form InfoPanel */
@@ -205,9 +205,10 @@ public class InfoPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 	
 	public void setUser(String s) {
-                if(JKaiUI.MODERATORS.contains(s))
-                    s = "<html><body>" + s + " - <font color=\"red\">"
-                    + ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_Moderator") + "</font></body></html>";
+                if(JKaiUI.MODERATORS.contains(s)) {
+            s = "<html><body>" + s + " - <font color=\"red\">"
+            + ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_Moderator") + "</font></body></html>";
+        }
 		jLabelInfoUser.setText(s);
 	}
 	

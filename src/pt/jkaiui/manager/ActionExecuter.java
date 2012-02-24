@@ -7,25 +7,22 @@
 package pt.jkaiui.manager;
 
 import java.awt.MediaTracker;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.io.*;
+import java.util.Arrays;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-
 import pt.jkaiui.JKaiUI;
-import pt.jkaiui.core.Arena;
-import pt.jkaiui.core.ChatMessage;
-import pt.jkaiui.core.Diags;
-import pt.jkaiui.core.InMessage; 
-import pt.jkaiui.core.KaiString;
-import pt.jkaiui.core.User;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.core.*;
 import pt.jkaiui.core.messages.*;
 import pt.jkaiui.tools.log.ConfigLog;
 import pt.jkaiui.ui.InfoPanel;
-import pt.jkaiui.ui.modes.*;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.ui.modes.MessengerMode;
+import pt.jkaiui.ui.modes.MessengerModeListModel;
 
 /**
  * @author  pedro
@@ -42,7 +39,7 @@ public class ActionExecuter {
     /** Creates a new instance of ActionExecuter */
     public ActionExecuter( Manager manager ) {
         _logger = ConfigLog.getLogger(this.getClass().getName());
-        this.manager = manager;
+        ActionExecuter.manager = manager;
     }
     
     
@@ -76,7 +73,7 @@ public class ActionExecuter {
             // just send the message
             KaiVectorParent vec = (KaiVectorParent) msg;
             
-            _logger.config("Entering arena "+ vec.getVector());
+            _logger.log(Level.CONFIG, "Entering arena {0}", vec.getVector());
             
             KaiVectorOut out = new KaiVectorOut();
             out.setVector(vec.getVector());
@@ -127,7 +124,7 @@ public class ActionExecuter {
         else if (msg instanceof ClientNotLoggedIn){
             
             ClientNotLoggedIn m = (ClientNotLoggedIn) msg;
-            _logger.finest("Client not logged in; User: " + m.getUser().decode() + "; Auto: " + (m.isAuto()?"on":"off") );
+            _logger.log(Level.FINEST, "Client not logged in; User: {0}; Auto: {1}", new Object[]{m.getUser().decode(), m.isAuto()?"on":"off"});
             LoginMessage login = new LoginMessage();
             login.setLogin(new KaiString(JKaiUI.getConfig().getConfigString(TAG)));
             login.setPassword(new KaiString(JKaiUI.getConfig().getConfigString(PASSWORD)));
@@ -143,7 +140,7 @@ public class ActionExecuter {
         else if (msg instanceof Status){
             
             Status m = (Status) msg;
-            _logger.info("Status: " + m.getMessage().decode());
+            _logger.log(Level.INFO, "Status: {0}", m.getMessage().decode());
         }
         
         
@@ -179,12 +176,9 @@ public class ActionExecuter {
             String[] admins = m.getUsers().decode().split("/");
             
             JKaiUI.ADMINISTRATORS.clear();
+            JKaiUI.ADMINISTRATORS.addAll(Arrays.asList(admins));
             
-            for( int i=0; i<admins.length; i++){
-                JKaiUI.ADMINISTRATORS.add(admins[i]);
-            }
-            
-            _logger.config("Administrators: "+ m.getUsers().decode());
+            _logger.log(Level.CONFIG, "Administrators: {0}", m.getUsers().decode());
             
         }
         
@@ -198,12 +192,9 @@ public class ActionExecuter {
             String[] moderators = m.getUsers().decode().split("/");
             
             JKaiUI.MODERATORS.clear();
+            JKaiUI.MODERATORS.addAll(Arrays.asList(moderators));
             
-            for( int i=0; i<moderators.length; i++){
-                JKaiUI.MODERATORS.add(moderators[i]);
-            }
-            
-            _logger.config("Moderators: "+ m.getUsers().decode());
+            _logger.log(Level.CONFIG, "Moderators: {0}", m.getUsers().decode());
             
         }
         
@@ -458,7 +449,6 @@ public class ActionExecuter {
                     KaiVectorOut vecOut = new KaiVectorOut();
                     vecOut.setVector(new KaiString(CurrentArena));
                     execute(vecOut);
-                    System.out.println("AutoArenaMoving");
                 }
             } else {
                 KaiVectorOutFlag = false;
@@ -466,7 +456,7 @@ public class ActionExecuter {
 
             
             KaiVectorIn vec = (KaiVectorIn) msg;
-            _logger.info("Entered arena: " + vec.getVector().decode());
+            _logger.log(Level.INFO, "Entered arena: {0}", vec.getVector().decode());
             
             
             // Now that we are inside, do the other operations
@@ -485,8 +475,9 @@ public class ActionExecuter {
             // Enable or disable creating sub arenas
             JKaiUI.getArenaMode().enableCreateArena(vec.isCreatable());
             
-            if (vec.getVector().decode().length()>0)
+            if (vec.getVector().decode().length()>0) {
                 JKaiUI.ARENA = vec.getVector().decode();
+            }
             
             // Enable or disable the "go parent"
             JKaiUI.getArenaMode().enableGoParentArena(! JKaiUI.ARENA.equals("Arena"));
@@ -655,7 +646,7 @@ public class ActionExecuter {
             user.setName(contact.getUser().decode());
             user.setOnline(false);
             
-            _logger.info("User "+ contact.getUser().decode() + " removed successfully");
+            _logger.log(Level.INFO, "User {0} removed successfully", contact.getUser().decode());
             
             MessengerModeListModel model = (MessengerModeListModel) JKaiUI.getMessengerMode().getListModel();
             model.removeElement(user);
@@ -796,8 +787,9 @@ public class ActionExecuter {
             Avatar avatar = (Avatar) msg;
             
             // only makes sense if we have an url!!
-            if ( avatar.getUrl().decode().length() == 0 )
+            if ( avatar.getUrl().decode().length() == 0 ) {
                 return;
+            }
             
             User user = new User();
             user.setName(avatar.getUser().decode());
@@ -806,7 +798,9 @@ public class ActionExecuter {
             ImageIcon icon = null;
             
             File cacheFolder = new File(JKaiUI.getConfig().getConfigString(AVATARCACHE) + File.separator + "users");
-            if(!cacheFolder.exists()) cacheFolder.mkdirs();
+            if(!cacheFolder.exists()) {
+                cacheFolder.mkdirs();
+            }
             
             File iconLocation = new File(cacheFolder, user.getName().toLowerCase() + ".ii");
             
@@ -830,7 +824,7 @@ public class ActionExecuter {
                     url = new URL(avatar.getUrl().decode());
                 } catch (MalformedURLException e){
                     System.out.println("Avatar:"+e);
-                    _logger.severe("Malformed image url for user " + avatar.getUser().decode() +": " + e.getMessage());
+                    _logger.log(Level.SEVERE, "Malformed image url for user {0}: {1}", new Object[]{avatar.getUser().decode(), e.getMessage()});
                 }
                 icon = new ImageIcon(url);
                 
@@ -864,7 +858,7 @@ public class ActionExecuter {
             Diags diag = new Diags();
             
             diag.setName(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DiagEngine"));
-            diag.setIcon(diag.ICON_DIAG_ENGINE);
+            diag.setIcon(Diags.ICON_DIAG_ENGINE);
             diag.setValue1(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DiagVersion") + " " + metrics.getVersion().toString());
             diag.setValue2(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DiagPlatform") + " " + metrics.getPlatform().toString());
             if (model.contains(diag)) {
@@ -874,7 +868,7 @@ public class ActionExecuter {
             
             diag = new Diags();
             diag.setName(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DiagHardware"));
-            diag.setIcon(diag.ICON_DIAG_HARDWARE);
+            diag.setIcon(Diags.ICON_DIAG_HARDWARE);
             diag.setValue1(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DiagNetCard") + " " + metrics.getNetCard().toString());
             diag.setValue2(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DiagTechnology") + " " + metrics.getTechnology().toString());
             if (model.contains(diag)) {
@@ -884,7 +878,7 @@ public class ActionExecuter {
             
             diag = new Diags();
             diag.setName(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DiagNetwork"));
-            diag.setIcon(diag.ICON_DIAG_NETWORK);
+            diag.setIcon(Diags.ICON_DIAG_NETWORK);
             diag.setValue1(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DiagIP") + " " + metrics.getIP().toString() + " " + java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DiagPort") + " " + metrics.getPort().toString());
             // You can uncomment the line below and comment out the line above if you want the IP/Port to be seperated with a colon (ie 192.168.1.1:30000)
             //diag.setValue1(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DiagIP") + " " + metrics.getIP() + ":" + metrics.getPort());
@@ -896,7 +890,7 @@ public class ActionExecuter {
             
             diag = new Diags();
             diag.setName(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DiagOrbServer"));
-            diag.setIcon(diag.ICON_DIAG_ORBSERVER);
+            diag.setIcon(Diags.ICON_DIAG_ORBSERVER);
             diag.setValue1(metrics.getOrbServer().toString());
             if (model.contains(diag)) {
                 model.removeElement(diag);

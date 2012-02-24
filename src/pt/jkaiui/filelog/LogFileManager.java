@@ -4,11 +4,10 @@
  */
 package pt.jkaiui.filelog;
 
-import java.util.*;
-
+import java.util.HashMap;
 import pt.jkaiui.JKaiUI;
-import pt.jkaiui.core.messages.*;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.core.messages.*;
 
 /**
  *

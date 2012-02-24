@@ -6,8 +6,10 @@
  */
 
 package pt.jkaiui.ui.tools;
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Locale;
 
 /**
@@ -126,21 +128,30 @@ public class InfoFarmer {
     public static void start() {
 
         updater = new Thread(new Runnable() {
+            @Override
             public void run() {
                 try {
                     boolean successful = false;
                     while(!successful) {
                         successful = establishInitialization();
-                        if(successful) Thread.sleep(UPDATE_DELAY);
-                        else Thread.sleep(UPDATE_DELAY / 6);
+                        if(successful) {
+                            Thread.sleep(UPDATE_DELAY);
+                        }
+                        else {
+                            Thread.sleep(UPDATE_DELAY / 6);
+                        }
                     }
                     
                     
                     while(true) {
-                        if(sendUpdate()) Thread.sleep(UPDATE_DELAY);
+                        if(sendUpdate()) {
+                            Thread.sleep(UPDATE_DELAY);
+                        }
                         // If the update wasn't successful, let's not wait the
                         // full time to send another response. Let's try again soon.
-                        else Thread.sleep(UPDATE_DELAY / 3);
+                        else {
+                            Thread.sleep(UPDATE_DELAY / 3);
+                        }
                     }
                 } catch (InterruptedException ie) {
                     System.out.println("infoFarmer:"+ie);

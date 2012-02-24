@@ -9,9 +9,15 @@
  */
 
 package pt.jkaiui.ui.tools;
-import java.util.*;
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 
 
 /** 
@@ -32,7 +38,7 @@ public class XLinkNetworkRawStatsParser {
 	try {
 	    URL domain = new URL("http://www.teamxlink.co.uk/rawstats.php?show=1");
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(domain.openStream()));
-	    String stats = reader.readLine();
+	    String stats;
 	    stats = reader.readLine();
             
             if(stats.equals("")){
@@ -46,9 +52,13 @@ public class XLinkNetworkRawStatsParser {
 		String currentValue = st.nextToken();
 		if(i == 2) {
 		    int removeIndex = currentValue.indexOf("Online - ");
-		    if(removeIndex >= 0) currentValue = currentValue.substring(removeIndex + 9);
+		    if(removeIndex >= 0) {
+                        currentValue = currentValue.substring(removeIndex + 9);
+                    }
 		}
-		else if(i == 7) currentValue += "%";
+		else if(i == 7) {
+                    currentValue += "%";
+                }
 		ret.put(currentName, currentValue);
 	    }
 	

@@ -12,22 +12,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
-
+import javax.swing.*;
 import pt.jkaiui.JKaiUI;
 import pt.jkaiui.core.*;
 import pt.jkaiui.core.messages.*;
+import pt.jkaiui.manager.ActionExecuter;
+import pt.jkaiui.manager.Manager;
 import pt.jkaiui.tools.log.ConfigLog;
 
 /**
@@ -96,6 +86,7 @@ public class ArenaMode extends MainMode {
         // TODO: Should this hoverToggle MouseAdapter object be applied to all the
         // other UI buttons that contain this same code?
         MouseAdapter hoverToggler = new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent me) {
                 if(me.getSource() instanceof JButton) {
                     JButton source = (JButton) me.getSource();
@@ -106,6 +97,7 @@ public class ArenaMode extends MainMode {
                 }
             }
             
+            @Override
             public void mouseExited(MouseEvent me) {
                 if(me.getSource() instanceof JButton) {
                     JButton source = (JButton) me.getSource();
@@ -169,25 +161,30 @@ public class ArenaMode extends MainMode {
     }
     
     
+    @Override
     public String getName(){
         return NAME;
     }
     
+    @Override
     public void processMessage(Message message) throws ModeException {
         
         // Do nothing
         
     }
     
+    @Override
     public ListModel getListModel() {
-        if(listModel == null)
+        if(listModel == null) {
             listModel = new MessengerModeListModel();
+        }
         
         return listModel;
     }
     
     
     
+    @Override
     protected JPopupMenu getPopupMenu(KaiObject obj){
         
         JPopupMenu popup = new JPopupMenu();
@@ -291,6 +288,7 @@ public class ArenaMode extends MainMode {
     }
     
     
+    @Override
     public void actionPerformed(ActionEvent ev){
         
         Object source = ev.getSource();
@@ -303,14 +301,14 @@ public class ArenaMode extends MainMode {
                 AddContactOut out = new AddContactOut();
                 out.setUser(new KaiString(user.getUser()));
                 
-                JKaiUI.getManager().getExecuter().execute(out);
+                ActionExecuter.execute(out);
                 
             } else if (source == jmiEnterArena){
                 
                 Arena arena = (Arena) list.getSelectedValue();
                 
-                JKaiUI.getManager().enterArena(arena);
-                this.arena = arena;
+                Manager.enterArena(arena);
+                ArenaMode.arena = arena;
                 
                 
             } else if (source == jmiParentArena || source == goBackButton){
@@ -324,7 +322,7 @@ public class ArenaMode extends MainMode {
 
                 KaiVectorParent vector = new KaiVectorParent();
                 vector.setVector(new KaiString(JKaiUI.ARENA));
-                JKaiUI.getManager().getExecuter().execute(vector);
+                ActionExecuter.execute(vector);
                 
             } else if (source == jmiChat){
                 
@@ -341,10 +339,11 @@ public class ArenaMode extends MainMode {
                 statusMsg.setStatus(status);
                 statusMsg.setPlayers(1); // TODO: SUPPORT MORE LOCAL PLAYERS
                 
-                JKaiUI.getManager().getExecuter().execute(statusMsg);
+                ActionExecuter.execute(statusMsg);
                 
-            } else if (source == createArenaButton)
+            } else if (source == createArenaButton) {
                 createArenaPane();
+            }
             
             else if (source == jmiUserProfile) {
                 User user = (User) list.getSelectedValue();
@@ -380,8 +379,8 @@ public class ArenaMode extends MainMode {
     }
     
     
-    public Vector getSpecialComponents(){
-        
+    @Override
+    public Vector getSpecialComponents(){        
         return components;
     }
     
@@ -400,6 +399,7 @@ public class ArenaMode extends MainMode {
      * to the selected value and returns the label, set up
      * to display the text and image.
      */
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             //Get the selected index. (The index param isn't
             //always valid, so just use the value.)
@@ -533,7 +533,7 @@ public class ArenaMode extends MainMode {
         out.setMaxPlayers(maxPlayers);
         
         
-        JKaiUI.getManager().getExecuter().execute(out);
+        ActionExecuter.execute(out);
         
         if (hostmodeCheckBox.isSelected()) {
             arenaModeComboBox.setSelectedIndex(1);

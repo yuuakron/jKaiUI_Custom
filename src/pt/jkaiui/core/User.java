@@ -6,7 +6,6 @@
 
 package pt.jkaiui.core;
 
-import java.util.HashSet;
 import javax.swing.ImageIcon;
 import pt.jkaiui.JKaiUI;
 
@@ -120,11 +119,13 @@ public class User extends KaiObject implements Comparable {
         this.ping = ping;
     }
     
+    @Override
     public int compareTo(Object obj) {
         
         // If it is an arena, give it priority
-        if (obj instanceof Arena)
+        if (obj instanceof Arena) {
             return 1;
+        }
         
         User u = (User) obj;
         
@@ -220,6 +221,7 @@ public class User extends KaiObject implements Comparable {
         
     }
 
+    @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof User)){
             return false;

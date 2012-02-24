@@ -46,6 +46,7 @@ public class SubVector extends Message implements I_InMessage {
     public SubVector() {
     }
     
+    @Override
     public Message parse(String s) {
         
         Pattern p = Pattern.compile("KAI_CLIENT_SUB_VECTOR;(.*);(.*);(.*);(.*);(.*);");

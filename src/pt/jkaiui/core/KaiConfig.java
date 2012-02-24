@@ -6,16 +6,16 @@
 
 package pt.jkaiui.core;
 
-import java.util.prefs.Preferences;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.util.Collections;
-import java.util.Vector;
-import java.util.Iterator;
-import java.awt.*;
-import java.awt.datatransfer.*;
-
-import pt.jkaiui.JKaiUI;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
+import java.util.prefs.Preferences;
+import pt.jkaiui.JKaiUI;
 
 /**
  *
@@ -124,10 +124,12 @@ public class KaiConfig {
             return new Pair<U1, U2>(first, second);
         }
 
+        @Override
         public String toString() {
             return "[" + first + "," + second + "]";
         }
 
+        @Override
         public boolean equals(Object o) {
             if (o instanceof Pair) {
                 Pair other = (Pair) o;
@@ -358,11 +360,11 @@ public class KaiConfig {
 
     public String copyconfig(String kinds) {
 
-        StringBuffer strbuf = new StringBuffer("");//ï€ë∂Ç∑ÇÈê›íËèÓïÒ
+        StringBuilder strbuf = new StringBuilder("");//ï€ë∂Ç∑ÇÈê›íËèÓïÒ
         if (kinds.equalsIgnoreCase("all")) {
 
             strbuf.append("Setting information \n\n");
-            strbuf.append(JKaiUI.getVersion() + "\n");
+            strbuf.append(JKaiUI.getVersion()).append("\n");
 
             strbuf.append(copyconfig("original"));
             strbuf.append(copyconfig("other"));
@@ -406,11 +408,11 @@ public class KaiConfig {
                     Pair pair = (Pair) initconfigs.get(key);
                     if (pair.first.equals(tmp)) {
                         if (pair.second instanceof String) {
-                            strbuf.append(key + ":" + preferences.get(key.name(), (String) pair.second) + "\n");
+                            strbuf.append(key).append(":").append(preferences.get(key.name(), (String) pair.second)).append("\n");
                         } else if (pair.second instanceof Integer) {
-                            strbuf.append(key + ":" + preferences.getInt(key.name(), ((Integer) pair.second).intValue()) + "\n");
+                            strbuf.append(key).append(":").append(preferences.getInt(key.name(), ((Integer) pair.second).intValue())).append("\n");
                         } else if (pair.second instanceof Boolean) {
-                            strbuf.append(key + ":" + preferences.getBoolean(key.name(), ((Boolean) pair.second).booleanValue()) + "\n");
+                            strbuf.append(key).append(":").append(preferences.getBoolean(key.name(), ((Boolean) pair.second).booleanValue())).append("\n");
                         }
                     }
                 }
@@ -423,7 +425,7 @@ public class KaiConfig {
     //save file configóp 
     public String savetoFileConfig() {
 
-        StringBuffer strbuf = new StringBuffer("");//ï€ë∂Ç∑ÇÈê›íËèÓïÒ
+        StringBuilder strbuf = new StringBuilder("");//ï€ë∂Ç∑ÇÈê›íËèÓïÒ
 
 
         ConfigTag[] keys = ConfigTag.values();
@@ -432,11 +434,11 @@ public class KaiConfig {
             if (configs.containsKey(key)) {
                 Pair pair = (Pair) initconfigs.get(key);
                 if (pair.second instanceof String) {
-                    strbuf.append(key + ":" + preferences.get(key.name(), (String) pair.second) + "\n");
+                    strbuf.append(key).append(":").append(preferences.get(key.name(), (String) pair.second)).append("\n");
                 } else if (pair.second instanceof Integer) {
-                    strbuf.append(key + ":" + preferences.getInt(key.name(), ((Integer) pair.second).intValue()) + "\n");
+                    strbuf.append(key).append(":").append(preferences.getInt(key.name(), ((Integer) pair.second).intValue())).append("\n");
                 } else if (pair.second instanceof Boolean) {
-                    strbuf.append(key + ":" + preferences.getBoolean(key.name(), ((Boolean) pair.second).booleanValue()) + "\n");
+                    strbuf.append(key).append(":").append(preferences.getBoolean(key.name(), ((Boolean) pair.second).booleanValue())).append("\n");
                 }
             }
         }
@@ -446,11 +448,11 @@ public class KaiConfig {
         if (configs.containsKey(key)) {
             Pair pair = (Pair) initconfigs.get(key);
             if (pair.second instanceof String) {
-                strbuf.append(key + ":" + preferences.get(key.name(), (String) pair.second));
+                strbuf.append(key).append(":").append(preferences.get(key.name(), (String) pair.second));
             } else if (pair.second instanceof Integer) {
-                strbuf.append(key + ":" + preferences.getInt(key.name(), ((Integer) pair.second).intValue()));
+                strbuf.append(key).append(":").append(preferences.getInt(key.name(), ((Integer) pair.second).intValue()));
             } else if (pair.second instanceof Boolean) {
-                strbuf.append(key + ":" + preferences.getBoolean(key.name(), ((Boolean) pair.second).booleanValue()));
+                strbuf.append(key).append(":").append(preferences.getBoolean(key.name(), ((Boolean) pair.second).booleanValue()));
             }
         }
 

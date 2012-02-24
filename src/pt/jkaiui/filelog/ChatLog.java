@@ -4,10 +4,10 @@
  */
 package pt.jkaiui.filelog;
 
-import pt.jkaiui.JKaiUI;
 import java.io.File;
-import pt.jkaiui.core.messages.*;
+import pt.jkaiui.JKaiUI;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.core.messages.*;
 
 /**
  *
@@ -25,6 +25,7 @@ public class ChatLog extends Log {
         super.init();
     }
 
+    @Override
     public void println(Object chat, Object CurrentArena) {
         if (!datecheck()) {
             update();
@@ -56,6 +57,7 @@ public class ChatLog extends Log {
         logfilepw.println(pattern);
     }
 
+    @Override
     public void println(Object chat) {
         if (!datecheck()) {
             update();

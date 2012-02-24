@@ -3,56 +3,40 @@
  *
  * Created on November 16, 2004, 4:09 PM
  */
-
 package pt.jkaiui.ui;
 
-import java.io.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import javax.swing.*;
-import java.util.*;
-import java.util.logging.*;
 import java.awt.*;
-
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
+import java.util.*;
+import java.util.logging.Logger;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.ImageIcon;
-import pt.jkaiui.core.Diags;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkEvent.EventType;
+import pt.jkaiui.JKaiUI;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.core.*;
+import pt.jkaiui.core.messages.AddContactOut;
+import pt.jkaiui.core.messages.GetMetrics;
+import pt.jkaiui.core.messages.GetUserProfile;
+import pt.jkaiui.core.messages.KaiVectorOut;
+import pt.jkaiui.manager.ActionExecuter;
+import pt.jkaiui.manager.Manager;
 import pt.jkaiui.ui.modes.*;
 import pt.jkaiui.ui.tools.XLinkNetworkRawStatsParser;
 
-import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
-import javax.swing.JList;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkEvent.EventType;
-import java.util.Vector;
-import java.util.HashMap;
-import java.net.URL;
-import java.io.File;
-import java.awt.Toolkit;
-import java.awt.CardLayout;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-
-import pt.jkaiui.JKaiUI;
-import pt.jkaiui.core.ChatMessage;
-import pt.jkaiui.core.OutMessage;
-import pt.jkaiui.core.User;
-import pt.jkaiui.core.messages.*;
-import pt.jkaiui.core.KaiString;
-import pt.jkaiui.core.Arena;
-import pt.jkaiui.ui.modes.MessengerModeListModel;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
-
 /**
  *
- * @author  pedro
+ * @author pedro
  */
 public class MainUI extends javax.swing.JFrame implements WindowListener {
-    
+
     private static final long serialVersionUID = 123413;
     private final String ARENA_URL_PREFIX = "http://www.teamxlink.co.uk/media/avatars/";
     private final ImageIcon ARENA_IMAGE_ICON = new ImageIcon(getClass().getResource("/pt/jkaiui/ui/resources/agame.png"));
@@ -60,72 +44,72 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
     private final ImageIcon DISCONNECT_ICON = new ImageIcon(getClass().getResource("/pt/jkaiui/ui/resources/disconnect.png"));
     private final ImageIcon PRIVATE_OVERLAY = new ImageIcon(getClass().getResource("/pt/jkaiui/ui/resources/private_overlay.png"));
     private final ImageIcon LOCKED_OVERLAY = new ImageIcon(getClass().getResource("/pt/jkaiui/ui/resources/locked_overlay.png"));
-    
     private static Logger _logger;
     private static PreviewMode previewMode;
     private static ResourceBundle resourceBundle;
     private static RawStatsSetter statsSetter;
     private static Hashtable avatars;
     private static Hashtable loading = new Hashtable();
-    
     private String fixedphrasefile = JKaiUI.getConfig().getConfigSettingFolder() + "/setting/fixedphrese.txt";
 
-    /** Creates new form MainUI */
+    /**
+     * Creates new form MainUI
+     */
     public MainUI() {
-        
+
         // Check to see if JKaiUI is running on OSX or Windows. If so, use their
         // appropriate System Look&Feel. The default Look&Feel for Linux is the
         // GTK Theme which looks like absolute garbage and is often unstable.
-        if((System.getProperty("mrj.version") != null) || System.getProperty("os.name").startsWith("Windows")) {
+        if ((System.getProperty("mrj.version") != null) || System.getProperty("os.name").startsWith("Windows")) {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception e) {
-                System.out.println("MainUI:"+e);
+                System.out.println("MainUI:" + e);
             }
         }
-        
+
         resourceBundle = ResourceBundle.getBundle("pt/jkaiui/ui/Bundle");
-        
+
         initComponents();
         // Init preview mode
         previewMode = new PreviewMode();
-        
+
         jMenuItemSettings.setText(resourceBundle.getString("PROP_MenuConfig"));
         jMenuItemExit.setText(resourceBundle.getString("PROP_MenuExit"));
         jMenuItemLog.setText(resourceBundle.getString("LBL_LogWindow"));
-        
+
         InfoPanel.setVisible(false);
-        
+
         TitledBorder logBorder = (TitledBorder) logScrollPane.getBorder();
         logBorder.setTitle(resourceBundle.getString("LBL_LogWindow"));
         logBorder.setTitleFont(new java.awt.Font("Dialog", 0, 10));
         logScrollPane.setVisible(false);
-        
+
         jButtonMessengerMode.setToolTipText(resourceBundle.getString("MSG_MessengerButtonTooltip"));
         jButtonArenaMode.setToolTipText(resourceBundle.getString("MSG_ArenaButtonTooltip"));
-        
+
         jButtonMessengerMode.setToolTipText(resourceBundle.getString("MSG_MessengerButtonTooltip"));
         jButtonArenaMode.setToolTipText(resourceBundle.getString("MSG_ArenaButtonTooltip"));
         jButtonDiagMode.setToolTipText(resourceBundle.getString("MSG_DiagButtonTooltip"));
-        
+
         addWindowListener(this);
-        
+
         // Get Bookmarks
         String BookmarksAtStart = JKaiUI.getConfig().getConfigString(BOOKMARKS);
-        if(!BookmarksAtStart.equals("") && BookmarksAtStart != null) {
-            String[] sTemp = BookmarksAtStart.substring(0,BookmarksAtStart.length()).split(";");
-            for (int i=0; i<sTemp.length; i++) {
+        if (!BookmarksAtStart.equals("") && BookmarksAtStart != null) {
+            String[] sTemp = BookmarksAtStart.substring(0, BookmarksAtStart.length()).split(";");
+            for (int i = 0; i < sTemp.length; i++) {
                 Arena tmpArena = new Arena();
                 tmpArena.setUser(false);
                 tmpArena.setVector(sTemp[i]);
                 addBookmark(tmpArena, false);
             }
         }
-        
+
         // Start the timer to keep the UT in the toolbar. It refreshes every 10 seconds.
         // Before start JKaiUI.getConfig() has to be called (is done at 'Get Bookmarks')
         new UniversalTimeSetter(toolbarTimeLabel).start();
-        
+
         // Start the timer to scroll the stats at the bottom.
         if (JKaiUI.getConfig().getConfigBoolean(SHOWSERVERSTATS)) {
             statsSetter = new RawStatsSetter(toolbarRawStatsLabel);
@@ -136,24 +120,22 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
             this.setSize(JKaiUI.getConfig().getConfigInt(WINDOWWIDTH), JKaiUI.getConfig().getConfigInt(WINDOWHEIGTH));
             this.setLocation(JKaiUI.getConfig().getConfigInt(WINDOWX), JKaiUI.getConfig().getConfigInt(WINDOWY));
         }
-        
+
         buttonCopyInfo.setVisible(false);
         jTabbedPane.setComponentPopupMenu(jPopupMenuTabs);
         jPanel2.setVisible(false);
         buttonSavePhrase.setVisible(false);
         fixedphraseinit();
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">
-    
     //private void initComponents() {
     //    java.awt.GridBagConstraints gridBagConstraints;
-    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -614,17 +596,17 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-871)/2, (screenSize.height-657)/2, 871, 657);
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void jButtonConnectDisconnectMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonConnectDisconnectMouseExited
         jButtonConnectDisconnect.setBorderPainted(false);
         jButtonConnectDisconnect.setContentAreaFilled(false);
     }//GEN-LAST:event_jButtonConnectDisconnectMouseExited
-    
+
     private void jButtonConnectDisconnectMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonConnectDisconnectMouseEntered
         jButtonConnectDisconnect.setBorderPainted(true);
         jButtonConnectDisconnect.setContentAreaFilled(true);
     }//GEN-LAST:event_jButtonConnectDisconnectMouseEntered
-    
+
     private void jButtonConnectDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConnectDisconnectActionPerformed
         if (JKaiUI.status == JKaiUI.CONNECTED) {
             JKaiUI.disconnect();
@@ -632,20 +614,22 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
             JKaiUI.connect();
         }
     }//GEN-LAST:event_jButtonConnectDisconnectActionPerformed
-    
+
     private void openSettings(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSettings
         // TODO: Find a good icon for settings to be displayed in the tab!
         Component[] children = jTabbedPane.getComponents();
-        for (int i = 0; i < children.length; i++)
-            if(children[i] instanceof KaiSettingsPanel)
+        for (int i = 0; i < children.length; i++) {
+            if (children[i] instanceof KaiSettingsPanel) {
                 return;
-        
+            }
+        }
+
         KaiSettingsPanel newSettingsPanel = new KaiSettingsPanel();
         jTabbedPane.addTab(ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_Config_Header"), new ImageIcon(getClass().getResource("/pt/jkaiui/ui/resources/settings_tabicon.png")), newSettingsPanel);
         jTabbedPane.setSelectedComponent(newSettingsPanel);
-        
+
     }//GEN-LAST:event_openSettings
-    
+
     private void bookmarkMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookmarkMenuActionPerformed
     }//GEN-LAST:event_bookmarkMenuActionPerformed
         private void jMenuChatUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuChatUsersActionPerformed
@@ -663,108 +647,106 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
             } else if (source == jMenuItemAddBuddy) {
                 AddContactOut out = new AddContactOut();
                 out.setUser(new KaiString(user.getUser()));
-                JKaiUI.getManager().getExecuter().execute(out);
+                ActionExecuter.execute(out);
             }
     }//GEN-LAST:event_jMenuChatUsersActionPerformed
-        
+
     private void JListChatUsersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JListChatUsersMousePressed
         if (SwingUtilities.isRightMouseButton(evt)) {
             JListChatUsers.setSelectedIndex(JListChatUsers.locationToIndex(evt.getPoint()));
             jPopupMenuChatUsers.show(JListChatUsers, evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_JListChatUsersMousePressed
-    
+
     private void toolbarRawStatsLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_toolbarRawStatsLabelMouseClicked
         statsSetter.setNextString(true);
     }//GEN-LAST:event_toolbarRawStatsLabelMouseClicked
-    
+
     private void jMenuItemExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItemExitMouseClicked
-        
     }//GEN-LAST:event_jMenuItemExitMouseClicked
-    
+
     private void jMenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExitActionPerformed
         this.windowClosing(null);
     }//GEN-LAST:event_jMenuItemExitActionPerformed
-    
+
 	private void diagModeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_diagModeMouseExited
             //previewMode.startTimer();
             jButtonDiagMode.setBorderPainted(false);
             jButtonDiagMode.setContentAreaFilled(false);
 	}//GEN-LAST:event_diagModeMouseExited
-        
+
 	private void diagModeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_diagModeMouseEntered
             //previewMode(JKaiUI.DIAG_MODE);
-            if(jButtonDiagMode.isEnabled()) {
+            if (jButtonDiagMode.isEnabled()) {
                 jButtonDiagMode.setBorderPainted(true);
                 jButtonDiagMode.setContentAreaFilled(true);
             }
 	}//GEN-LAST:event_diagModeMouseEntered
-        
+
 	private void jButtonDiagModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDiagModeActionPerformed
             selectDiagMode();
-            
-            JKaiUI.getManager().send( new GetMetrics() );
+
+            JKaiUI.getManager().send(new GetMetrics());
             jButtonArenaMode.setEnabled(true);
             jButtonMessengerMode.setEnabled(true);
             jButtonDiagMode.setEnabled(false);
             JKaiUI.CURRENT_MODE = JKaiUI.DIAG_MODE;
             // vector must be changed if switching from messenger to diag and back to messenger mode
-/*            KaiVectorOut vector = new KaiVectorOut();
-            if (JKaiUI.ARENA == null)
-                vector.setVector(new KaiString("Arena"));
-            else
-                vector.setVector(new KaiString(JKaiUI.ARENA));
-            JKaiUI.getManager().getExecuter().execute(vector);
-*/            
+/*
+             * KaiVectorOut vector = new KaiVectorOut(); if (JKaiUI.ARENA ==
+             * null) vector.setVector(new KaiString("Arena")); else
+             * vector.setVector(new KaiString(JKaiUI.ARENA));
+             * JKaiUI.getManager().getExecuter().execute(vector);
+             */
 	}//GEN-LAST:event_jButtonDiagModeActionPerformed
-        
+
     private void arenaModeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_arenaModeMouseExited
         //previewMode.startTimer();
         jButtonArenaMode.setBorderPainted(false);
         jButtonArenaMode.setContentAreaFilled(false);
     }//GEN-LAST:event_arenaModeMouseExited
-    
+
     private void arenaModeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_arenaModeMouseEntered
         //previewMode(JKaiUI.ARENA_MODE);
-        if(jButtonArenaMode.isEnabled()) {
+        if (jButtonArenaMode.isEnabled()) {
             jButtonArenaMode.setBorderPainted(true);
             jButtonArenaMode.setContentAreaFilled(true);
         }
     }//GEN-LAST:event_arenaModeMouseEntered
-    
+
     private void messengerModeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_messengerModeMouseExited
         previewMode.startTimer();
         jButtonMessengerMode.setBorderPainted(false);
         jButtonMessengerMode.setContentAreaFilled(false);
     }//GEN-LAST:event_messengerModeMouseExited
-    
+
     private void messengerModeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_messengerModeMouseEntered
-        if(jButtonMessengerMode.isEnabled()) {
+        if (jButtonMessengerMode.isEnabled()) {
             jButtonMessengerMode.setBorderPainted(true);
             jButtonMessengerMode.setContentAreaFilled(true);
         }
-        if(JKaiUI.CURRENT_MODE == JKaiUI.ARENA_MODE){
+        if (JKaiUI.CURRENT_MODE == JKaiUI.ARENA_MODE) {
             previewMode(JKaiUI.MESSENGER_MODE);
         }
-        
+
     }//GEN-LAST:event_messengerModeMouseEntered
-    
+
     private void jTabbedPaneFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTabbedPaneFocusGained
-        
-        if(evt.getSource() instanceof ChatPanel) {
+
+        if (evt.getSource() instanceof JTabbedPane) {
             JTabbedPane pane = (JTabbedPane) evt.getSource();
             ChatPanel panel = (ChatPanel) pane.getSelectedComponent();
             panel.jTextFieldInput.requestFocus();
-            
+
             JKaiUI.getChatManager().disableIcon(panel);
         }
     }//GEN-LAST:event_jTabbedPaneFocusGained
-    
+
     private void jButtonArenaModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonArenaModeActionPerformed
-        
-        
+
+
         selectArenaMode();
-        
+
         if (JKaiUI.CURRENT_MODE == JKaiUI.MESSENGER_MODE) {
             KaiVectorOut vector = new KaiVectorOut();
 
@@ -775,63 +757,64 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
                 vector.setVector(new KaiString(JKaiUI.ARENA));
             }
 
-            JKaiUI.getManager().getExecuter().execute(vector);
+            ActionExecuter.execute(vector);
         }
         jButtonArenaMode.setEnabled(false);
         jButtonMessengerMode.setEnabled(true);
         jButtonDiagMode.setEnabled(true);
 
         JKaiUI.CURRENT_MODE = JKaiUI.ARENA_MODE;
-        
+
     }//GEN-LAST:event_jButtonArenaModeActionPerformed
-    
+
     private void jButtonMessengerModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMessengerModeActionPerformed
-        
+
         selectMessengerMode();
-        
+
         // Go back to messenger mode
         KaiVectorOut vector = new KaiVectorOut();
         vector.setVector(new KaiString(""));
-        JKaiUI.getManager().getExecuter().execute(vector);
-        
+        ActionExecuter.execute(vector);
+
         jButtonArenaMode.setEnabled(true);
         jButtonMessengerMode.setEnabled(false);
         jButtonDiagMode.setEnabled(true);
-        
-        
+
+
         JKaiUI.CURRENT_MODE = JKaiUI.MESSENGER_MODE;
-        
+
     }//GEN-LAST:event_jButtonMessengerModeActionPerformed
-    
+
     private void jMenuItemLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLogActionPerformed
-        
-        if(jMenuItemLog.isSelected())
+
+        if (jMenuItemLog.isSelected()) {
             logScrollPane.setVisible(true);
-        else
+        } else {
             logScrollPane.setVisible(false);
-        
+        }
+
         paintAll(getGraphics());
-        
+
     }//GEN-LAST:event_jMenuItemLogActionPerformed
-    
+
     private void JMenuItemExitPressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JMenuItemExitPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_JMenuItemExitPressed
 
 private void menuitemVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuitemVersionActionPerformed
-        //JOptionPane.showConfirmDialog(null, JKaiUI.getVersion()+"\nOriginal jKaiUI:http://jkaiui.sourceforge.net/downloads/\nJKaiUI Modification:https://sites.google.com/site/yuuakron/", "jKaiUI version", JOptionPane.CLOSED_OPTION);
+    //JOptionPane.showConfirmDialog(null, JKaiUI.getVersion()+"\nOriginal jKaiUI:http://jkaiui.sourceforge.net/downloads/\nJKaiUI Modification:https://sites.google.com/site/yuuakron/", "jKaiUI version", JOptionPane.CLOSED_OPTION);
     String objects[] = {"Close", "Copy Version"};
-    
+
     int result = JOptionPane.showOptionDialog(
-            this, 
-            JKaiUI.getUIName()+JKaiUI.getVersion() + "\nOriginal jKaiUI:http://jkaiui.sourceforge.net/downloads/\n"+JKaiUI.getUIName()+":https://sites.google.com/site/yuuakron/", 
-            "jKaiUI version", 
-            JOptionPane.CANCEL_OPTION, 
-            JOptionPane.INFORMATION_MESSAGE, 
-            null, 
-            objects, 
+            this,
+            JKaiUI.getUIName() + JKaiUI.getVersion() + "\nOriginal jKaiUI:http://jkaiui.sourceforge.net/downloads/\n" + JKaiUI.getUIName() + ":https://sites.google.com/site/yuuakron/",
+            "jKaiUI version",
+            JOptionPane.CANCEL_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            null,
+            objects,
             objects[0]);
-    if(result == 1){
+    if (result == 1) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         StringSelection selection = new StringSelection(JKaiUI.getVersion());
         clipboard.setContents(selection, null);
@@ -841,32 +824,44 @@ private void menuitemVersionActionPerformed(java.awt.event.ActionEvent evt) {//G
 private void buttonCopyInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCopyInfoActionPerformed
 
     MessengerModeListModel model = (MessengerModeListModel) JKaiUI.getDiagMode().getListModel();
-        StringBuffer strbuf = new StringBuffer("Diags infomation \n\n");//保存する設定情報
-        
+    StringBuilder strbuf = new StringBuilder("Diags infomation \n\n");//保存する設定情報
+
 
     Diags diags = (Diags) model.get(0);
-    strbuf.append("OrbServer: "+diags.getValue1() + "\n");
+    strbuf.append("OrbServer: ");
+    strbuf.append(diags.getValue1());
+    strbuf.append("\n");
     diags = (Diags) model.get(1);
 //    strbuf.append("Network: "+diags.getValue1()+" "+diags.getValue2() + "\n");
-    strbuf.append("Network: "+diags.getValue2() + "\n");
+    strbuf.append("Network: ");
+    strbuf.append(diags.getValue2());
+    strbuf.append("\n");
     diags = (Diags) model.get(2);
-    strbuf.append("Hardware: "+diags.getValue1()+ " " +diags.getValue2()+ "\n");
+    strbuf.append("Hardware: ");
+    strbuf.append(diags.getValue1());
+    strbuf.append(" ");
+    strbuf.append(diags.getValue2());
+    strbuf.append("\n");
     diags = (Diags) model.get(3);
-    strbuf.append("Engine: "+diags.getValue1()+ " " +diags.getValue2() + "\n");
-    
+    strbuf.append("Engine: ");
+    strbuf.append(diags.getValue1());
+    strbuf.append(" ");
+    strbuf.append(diags.getValue2());
+    strbuf.append("\n");
+
     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     StringSelection selection = new StringSelection(strbuf.toString());
     clipboard.setContents(selection, null);
 }//GEN-LAST:event_buttonCopyInfoActionPerformed
 
 private void menuClosePMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuClosePMActionPerformed
-    ((ChatPanel)this.jTabbedPane.getSelectedComponent()).jButtonClose.doClick();
+    ((ChatPanel) this.jTabbedPane.getSelectedComponent()).jButtonClose.doClick();
 }//GEN-LAST:event_menuClosePMActionPerformed
 
 private void jTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPaneStateChanged
     if (jTabbedPane.getSelectedIndex() == 0) {
         menuClosePM.setVisible(false);
-    }else{
+    } else {
         menuClosePM.setVisible(true);
     }
 //    System.out.println(jTabbedPane.getSelectedIndex());
@@ -887,29 +882,26 @@ private void PhraseListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:
         JList list = (JList) evt.getComponent();
         Object obj = list.getSelectedValue();
 
-        
-        String text = (String)obj;
+
+        String text = (String) obj;
 
         if (text.length() == 0) {
             return;
         }
-/*
-        text = JKaiUIcommand(text);
-        if (text == null) {
-            return;
-        }
-*/        
+        /*
+         * text = JKaiUIcommand(text); if (text == null) { return; }
+         */
         // Build a OutMessage and pass it to ChatManager
 
         // Now Im testing a few messages
         OutMessage msg = new OutMessage();
 
-        if(!(jTabbedPane.getSelectedComponent() instanceof ChatPanel)){
+        if (!(jTabbedPane.getSelectedComponent() instanceof ChatPanel)) {
             return;
         }
-        
-        ChatPanel tmp = (ChatPanel)jTabbedPane.getSelectedComponent();
-        
+
+        ChatPanel tmp = (ChatPanel) jTabbedPane.getSelectedComponent();
+
         if (!tmp.isClosable()) {
             msg.setType(ChatMessage.PUBLIC_MESSAGE);
         } else {
@@ -926,12 +918,12 @@ private void PhraseListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:
 private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_EmotIconPaneHyperlinkUpdate
 
     String tooltipbuf = "";
-    
+
     if (evt.getEventType() == EventType.ACTIVATED) {	//クリックされた時
         URL url = evt.getURL();
 
 //        System.err.println(url.toString());
-        
+
         if (url.toString().matches("^(https://sites.google.com/site/yuuakron/dummy/)(.*)")) {
             //絵文字をチャット入力欄にコピー
 //            System.out.print("user");
@@ -939,8 +931,8 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
             if (!(jTabbedPane.getSelectedComponent() instanceof ChatPanel)) {
                 return;
             }
-            
-            ChatPanel tmp = (ChatPanel)jTabbedPane.getSelectedComponent();
+
+            ChatPanel tmp = (ChatPanel) jTabbedPane.getSelectedComponent();
             try {
                 tmp.jTextFieldInput.getDocument().insertString(tmp.jTextFieldInput.getCaretPosition(), url.toString().replace("https://sites.google.com/site/yuuakron/dummy/", ""), null);
             } catch (Exception e) {
@@ -951,7 +943,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         tooltipbuf = EmotIconPane.getToolTipText();
         EmotIconPane.setToolTipText(null);
         URL url = evt.getURL();
-        EmotIconPane.setToolTipText(url.toExternalForm().replace("https://sites.google.com/site/yuuakron/dummy/", "" ));
+        EmotIconPane.setToolTipText(url.toExternalForm().replace("https://sites.google.com/site/yuuakron/dummy/", ""));
     } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {//リンク上から離れたとき
         EmotIconPane.setToolTipText(tooltipbuf);
     }
@@ -960,66 +952,70 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
     public void openSettings() {
         openSettings(null);
     }
-    
+
     public ImageIcon getBookmarkIcon(Arena arena) {
-        
+
         File iconLocation = new File(JKaiUI.getConfig().getConfigString(AVATARCACHE), arena.getVector().replace('/', File.separatorChar).toLowerCase() + ".ii");
         ImageIcon avatar = null;
-        
+
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(iconLocation));
             avatar = (ImageIcon) ois.readObject();
             ois.close();
-        } catch(Exception e) {
-            System.out.println("MainUI openSetting:"+e);
+        } catch (Exception e) {
+            System.out.println("MainUI openSetting:" + e);
         }
-        
+
         return avatar;
     }
-    
-    private ImageIcon overlapGraphics(ImageIcon originalIcon, ImageIcon overIcon){
-        
+
+    private ImageIcon overlapGraphics(ImageIcon originalIcon, ImageIcon overIcon) {
+
         // Original Image
-        
+
         Image image = originalIcon.getImage();
         Image image2 = overIcon.getImage();
-        
+
         BufferedImage originalImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_4BYTE_ABGR);
-        
+
         Graphics g = originalImage.createGraphics();
         //g.setColor(Color.WHITE);
         //g.fillRect(0,0,image.getWidth(null),image.getHeight(null));
         g.drawImage(image, 0, 0, null);
         g.drawImage(image2, 0, 0, null);
-        
+
         g.dispose();
-        
+
         return new ImageIcon(originalImage);
     }
-    
+
     public void addBookmark(Arena arena) {
         addBookmark(arena, true);
     }
-    
+
     public void addBookmark(Arena arena, boolean store) {
         final JMenuItem item;
-        if(!isBookmark(arena)) {
+        if (!isBookmark(arena)) {
             bookmarkVector.add(arena);
             item = new JMenuItem(arena.getName());
             item.setFont(bookmarkMenu.getFont());
             bookmarkMenu.add(item);
-            if (store)
+            if (store) {
                 JKaiUI.getConfig().saveBookmarks(bookmarkVector);
+            }
             item.setIcon(this.getBookmarkIcon(arena));
-            item.addActionListener(new java.awt.event.ActionListener(){
+            item.addActionListener(new java.awt.event.ActionListener() {
+
+                @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    Arena arena = new Arena();
-                    for(int i=0;i<bookmarkVector.size();i++){
-                        arena = (Arena)bookmarkVector.get(i);
-                        if (arena.getName().equals(item.getText())){
-                            if (JKaiUI.CURRENT_MODE != JKaiUI.ARENA_MODE)
+                    Arena arena;
+                    for (int i = 0; i < bookmarkVector.size(); i++) {
+                        arena = (Arena) bookmarkVector.get(i);
+                        if (arena.getName().equals(item.getText())) {
+                            if (JKaiUI.CURRENT_MODE != JKaiUI.ARENA_MODE) {
                                 jButtonArenaModeActionPerformed(null);
-                            JKaiUI.getManager().enterArena(arena);
+                            }
+                            Manager.enterArena(arena);
                             return;
                         }
                     }
@@ -1027,127 +1023,138 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
             });
         }
     }
-    
+
     public boolean isBookmark(Arena arena) {
-        if(bookmarkVector.isEmpty() || !bookmarkVector.contains(arena)) {
+        if (bookmarkVector.isEmpty() || !bookmarkVector.contains(arena)) {
             return false;
         }
         return true;
     }
+
     public void deleteBookmark(Arena arena) {
-        
+
         int index = bookmarkVector.indexOf(arena);
-        if (index == -1) return;
-        
+        if (index == -1) {
+            return;
+        }
+
         bookmarkVector.remove(index);
         JKaiUI.getConfig().saveBookmarks(bookmarkVector);
-        
-        for(int i=0; i < bookmarkMenu.getItemCount() ; i++) {
-            if(arena.getName().equals(bookmarkMenu.getItem(i).getText())) {
+
+        for (int i = 0; i < bookmarkMenu.getItemCount(); i++) {
+            if (arena.getName().equals(bookmarkMenu.getItem(i).getText())) {
                 bookmarkMenu.remove(i);
                 return;
             }
         }
     }
-    
+
     public void SetConnectedStatus() {
         jButtonConnectDisconnect.setIcon(DISCONNECT_ICON);
         jButtonConnectDisconnect.setToolTipText(resourceBundle.getString("LBL_DISCONNECT"));
     }
-    
+
     public void SetDisConnectedStatus() {
         jButtonConnectDisconnect.setIcon(CONNECT_ICON);
         jButtonConnectDisconnect.setToolTipText(resourceBundle.getString("LBL_CONNECT"));
     }
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
+            @Override
             public void run() {
                 new MainUI().setVisible(true);
             }
         });
     }
-    
-    public javax.swing.JPanel getJPanelMode(){
-        
+
+    public javax.swing.JPanel getJPanelMode() {
+
         return jPanelModes;
-        
+
     }
-    
-    public JEditorPane getLogEditorPane(){
-        
+
+    public JEditorPane getLogEditorPane() {
+
         return jLogPane;
-        
+
     }
-    
+
     public JPanel getToolbarPanel() {
         return footerToolbarContainer;
     }
-    
-    
+
     public InfoPanel getJPanelInfos() {
         return InfoPanel;
     }
-    
-    public static JPanel getSpecialCommandsPanel(){
-        
+
+    public static JPanel getSpecialCommandsPanel() {
+
         return specialCommandsPanel;
     }
-    
+
+    @Override
     public void windowClosing(WindowEvent e) {
-        
+
         System.out.println("Closing.... ");
-        
+
         if (JKaiUI.getConfig().getConfigBoolean(STOREWINDOWSIZEPOSITION)) {
-            Dimension windim = new Dimension();
-            Point winloc = new Point();
-            windim = this.getSize();
-            winloc = this.getLocation();
+            Dimension windim = this.getSize();
+            Point winloc = this.getLocation();
             JKaiUI.getConfig().storeWindowSizePosition(windim.height, windim.width, winloc.getX(), winloc.getY());
         }
 
         JKaiUI.disconnect();
-        
+
         System.exit(0);
-        
+
     }
-    
+
     // The other implementation of WindowListener... nothing! :)
-    
+    @Override
     public void windowClosed(WindowEvent e) {
     }
-    
+
+    @Override
     public void windowOpened(WindowEvent e) {
     }
-    
+
+    @Override
     public void windowIconified(WindowEvent e) {
     }
-    
+
+    @Override
     public void windowDeiconified(WindowEvent e) {
     }
-    
+
+    @Override
     public void windowActivated(WindowEvent e) {
     }
-    
+
+    @Override
     public void windowDeactivated(WindowEvent e) {
     }
-    
+
     /**
      * <p>This is an easier way to prompt the user with a question than writing
-     * horribly long JOptionPane calls every time a question needs to be asked.</p>
+     * horribly long JOptionPane calls every time a question needs to be
+     * asked.</p>
      *
      * <p>To use, simply provide the resource names from the ResourceBundle for
      * the question and title.</p>
      *
-     * @param questionResource A reference to the question asked from the ResourceBundle properties file.
-     * @param titleResource A reference to the title of the dialog from the ResourceBundle properties file.
+     * @param questionResource A reference to the question asked from the
+     * ResourceBundle properties file.
+     * @param titleResource A reference to the title of the dialog from the
+     * ResourceBundle properties file.
      * @return true if "Yes" was pressed or false if "No" was.
      */
     public boolean askYesNoDialog(String questionResource, String titleResource) {
-        Object[] opts = new Object[] { resourceBundle.getString("BTN_Yes"), resourceBundle.getString("BTN_No") };
+        Object[] opts = new Object[]{resourceBundle.getString("BTN_Yes"), resourceBundle.getString("BTN_No")};
         int result = JOptionPane.showOptionDialog(this,
                 resourceBundle.getString(questionResource),
                 resourceBundle.getString(titleResource),
@@ -1155,21 +1162,18 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 opts,
-                opts[0]
-                );
+                opts[0]);
         return (result == 0);
     }
-    
-    
+
     public void okDialog(String messageResource) {
         JOptionPane.showConfirmDialog(this, resourceBundle.getString(messageResource));
     }
-    
-    
+
     public boolean askRetry(String messageResource, String titleResource) {
-        String[] options = new String[] {
+        String[] options = new String[]{
             resourceBundle.getString("BTN_Retry"), // Index 0
-                    resourceBundle.getString("BTN_Cancel") // Index 1
+            resourceBundle.getString("BTN_Cancel") // Index 1
         };
         int result = JOptionPane.showOptionDialog(
                 this,
@@ -1179,62 +1183,60 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 options,
-                options[0]
-                );
+                options[0]);
         return (result == 0);
     }
-    
-    
+
     public String openEnginePrompt(String[] engines) {
-        if(engines.length == 0) throw new IllegalArgumentException("MainUI.openEnginePrompt() should only be given an array with more than one engine!");
-        
-        Object result = JOptionPane.showInputDialog(this, resourceBundle.getString("MSG_ChooseEngine"), resourceBundle.getString("MSG_ChooseEngineDialogTitle"),JOptionPane.QUESTION_MESSAGE, null, engines, engines[0]);
-        
+        if (engines.length == 0) {
+            throw new IllegalArgumentException("MainUI.openEnginePrompt() should only be given an array with more than one engine!");
+        }
+
+        Object result = JOptionPane.showInputDialog(this, resourceBundle.getString("MSG_ChooseEngine"), resourceBundle.getString("MSG_ChooseEngineDialogTitle"), JOptionPane.QUESTION_MESSAGE, null, engines, engines[0]);
+
         // This may be null if Cancel was pressed! Beware!
-        return (result == null)?null:(String) result;
+        return (result == null) ? null : (String) result;
     }
-    
-    
-    protected void resetPreview(){
-        
+
+    protected void resetPreview() {
+
         showCurrentMode();
         JKaiUI.resetModeName();
-        
+
     }
-    
-    
-    protected  void showCurrentMode(){
-        
-        if (JKaiUI.CURRENT_MODE == JKaiUI.MESSENGER_MODE)
+
+    protected void showCurrentMode() {
+
+        if (JKaiUI.CURRENT_MODE == JKaiUI.MESSENGER_MODE) {
             previewMessengerMode();
-        
-        else if (JKaiUI.CURRENT_MODE == JKaiUI.ARENA_MODE)
+        } else if (JKaiUI.CURRENT_MODE == JKaiUI.ARENA_MODE) {
             previewArenaMode();
-        
-        else if (JKaiUI.CURRENT_MODE == JKaiUI.DIAG_MODE)
+        } else if (JKaiUI.CURRENT_MODE == JKaiUI.DIAG_MODE) {
             previewDiagMode();
+        }
     }
-    
-    
-    protected void selectMessengerMode(){
-        
-        if(InfoPanel != null) InfoPanel.hidePanel();
-        
+
+    protected void selectMessengerMode() {
+
+        if (InfoPanel != null) {
+            InfoPanel.hidePanel();
+        }
+
         Vector modesVector = JKaiUI.getModesVector();
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements() ; ){
+        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
             MainMode m = (MainMode) e.nextElement();
-            if ( m instanceof MessengerMode ) {
+            if (m instanceof MessengerMode) {
                 m.selectMode();
                 ListModelChatUsers.clear();
                 eastPanel.setPreferredSize(new Dimension(130, 0));
                 eastPanel.setVisible(true);
-                CardLayout cards = (CardLayout)eastPanel.getLayout();
+                CardLayout cards = (CardLayout) eastPanel.getLayout();
                 cards.show(eastPanel, "card1");
             }
         }
         buttonCopyInfo.setVisible(false);
     }
-    
+
     protected void selectArenaMode() {
 
         if (InfoPanel != null) {
@@ -1242,10 +1244,10 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         }
 
         Vector modesVector = JKaiUI.getModesVector();
-       
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements() ; ){
+
+        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
             MainMode m = (MainMode) e.nextElement();
-            if ( m instanceof ArenaMode) {
+            if (m instanceof ArenaMode) {
                 m.selectMode();
                 eastPanel.setVisible(false);
 //                ListModelArenaUsers.clear();
@@ -1255,7 +1257,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
 //                cards.show(eastPanel, "card2");
             }
         }
-        
+
         buttonCopyInfo.setVisible(false);
     }
 
@@ -1266,218 +1268,218 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         }
 
         Vector modesVector = JKaiUI.getModesVector();
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements() ; ){
+        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
             MainMode m = (MainMode) e.nextElement();
-            if ( m instanceof DiagMode ) {
+            if (m instanceof DiagMode) {
                 m.selectMode();
                 eastPanel.setVisible(false);
             }
         }
         buttonCopyInfo.setVisible(true);
     }
-    
-    protected void previewMessengerMode(){
-        
+
+    protected void previewMessengerMode() {
+
         Vector modesVector = JKaiUI.getModesVector();
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements() ; ){
+        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
             MainMode m = (MainMode) e.nextElement();
-            if ( m instanceof MessengerMode )
+            if (m instanceof MessengerMode) {
                 m.previewMode();
+            }
         }
     }
-    
-    
-    protected void previewArenaMode(){
-        
+
+    protected void previewArenaMode() {
+
         Vector modesVector = JKaiUI.getModesVector();
-        
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements() ; ){
+
+        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
             MainMode m = (MainMode) e.nextElement();
-            if ( m instanceof ArenaMode)
+            if (m instanceof ArenaMode) {
                 m.previewMode();
+            }
         }
-        
+
 
     }
-    
-    protected void previewDiagMode(){
-        
+
+    protected void previewDiagMode() {
+
         Vector modesVector = JKaiUI.getModesVector();
-        
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements() ; ){
+
+        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
             MainMode m = (MainMode) e.nextElement();
-            if ( m instanceof DiagMode)
+            if (m instanceof DiagMode) {
                 m.previewMode();
+            }
         }
     }
-    
-    public void previewMode(int mode){
-        
+
+    public void previewMode(int mode) {
+
         // first of all, this is only relevant if we are connected
-        
-        if (JKaiUI.status == JKaiUI.DISCONNECTED )
+
+        if (JKaiUI.status == JKaiUI.DISCONNECTED) {
             return;
-        
+        }
+
         // lets se if its running
-        if (previewMode.isRunning()){
-            
+        if (previewMode.isRunning()) {
+
             // if it is not this mode, cancel and switch
-            if ( previewMode.getMode() != mode){
-                
+            if (previewMode.getMode() != mode) {
+
                 previewMode.stop();
-                
+
                 // Only start new preview if that mode is different than the current
-                
-                if (mode != JKaiUI.CURRENT_MODE){
+
+                if (mode != JKaiUI.CURRENT_MODE) {
                     previewMode.setMode(mode);
                     previewMode.start();
                 }
             }
-            
-        } else{
-            
+
+        } else {
+
             // Only start new preview if that mode is different than the current
-            
-            if (mode != JKaiUI.CURRENT_MODE){
+
+            if (mode != JKaiUI.CURRENT_MODE) {
                 previewMode.setMode(mode);
                 previewMode.start();
             }
-            
+
         }
-        
+
     }
-    
     private DefaultSortableListModel ListModelChatUsers = new DefaultSortableListModel();
     private DefaultSortableListModel ListModelArenaUsers = new DefaultSortableListModel();
-    
+
     public DefaultSortableListModel getListModelChatUsers() {
         return ListModelChatUsers;
     }
-    
+
     public DefaultSortableListModel getListModelArenaUsers() {
         return ListModelArenaUsers;
     }
-    
+
     public void UpdateChatUsersQuantity() {
-        TitledBorder brd = (TitledBorder)eastPanel.getBorder();
+        TitledBorder brd = (TitledBorder) eastPanel.getBorder();
         brd.setTitle(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_ChatUsers") + " (" + ListModelChatUsers.size() + ")");
-        eastPanel.repaint(0,0, eastPanel.WIDTH, 15);
+        eastPanel.repaint(0, 0, eastPanel.WIDTH, 15);
     }
-    
+
     public void SetModeTitle(String title) {
-        TitledBorder brd = (TitledBorder)westPanel.getBorder();
+        TitledBorder brd = (TitledBorder) westPanel.getBorder();
         brd.setTitle(title);
-        westPanel.repaint(0,0, westPanel.WIDTH, 15);
+        westPanel.repaint(0, 0, westPanel.WIDTH, 15);
     }
-    
-    private class PreviewMode implements Runnable{
-        
-        private static final int SHOW_AND_KEEP  = 1;
+
+    private class PreviewMode implements Runnable {
+
+        private static final int SHOW_AND_KEEP = 1;
         private static final int SHOW_AND_CLOSE = 2;
         private int status;
-        
         private boolean isRunning = false;
         private volatile Thread blinker;
         private Logger _logger;
-        
         /**
          * Holds value of property mode.
          */
         private int mode;
-        
+
         public void start() {
-            
+
             isRunning = true;
             status = SHOW_AND_KEEP;
-            
-            if(getMode() == JKaiUI.MESSENGER_MODE)
+
+            if (getMode() == JKaiUI.MESSENGER_MODE) {
                 previewMessengerMode();
-            
-            else if(getMode() == JKaiUI.ARENA_MODE)
+            } else if (getMode() == JKaiUI.ARENA_MODE) {
                 previewArenaMode();
-            
-            else if(getMode() == JKaiUI.DIAG_MODE)
+            } else if (getMode() == JKaiUI.DIAG_MODE) {
                 previewDiagMode();
-            
-            
+            }
+
+
             blinker = new Thread(this);
             blinker.start();
         }
-        
-        public void startTimer(){
-            
-            
-            if (JKaiUI.status == JKaiUI.DISCONNECTED || blinker == null)
-                return ;
-            
+
+        public void startTimer() {
+
+
+            if (JKaiUI.status == JKaiUI.DISCONNECTED || blinker == null) {
+                return;
+            }
+
             status = SHOW_AND_CLOSE;
             blinker.interrupt();
-            
+
         }
-        
+
         public void stop() {
             Thread moribund = blinker;
             blinker = null;
             moribund.interrupt();
         }
-        
-        
+
+        @Override
         public void run() {
             Thread thisThread = Thread.currentThread();
             while (blinker == thisThread) {
                 try {
-                    if (status == SHOW_AND_KEEP){
-                        
-                        thisThread.sleep(100000000); // wait() thows exception...
-                    } else if (status == SHOW_AND_CLOSE){
-                        
-                        thisThread.sleep(500);
-                        
+                    if (status == SHOW_AND_KEEP) {
+
+                        Thread.sleep(100000000); // wait() thows exception...
+                    } else if (status == SHOW_AND_CLOSE) {
+
+                        Thread.sleep(500);
+
                         blinker = null;
                     }
-                } catch (InterruptedException e){
-                    System.out.println("MainUI run:"+e);
+                } catch (InterruptedException e) {
+                    System.out.println("MainUI run:" + e);
                 }
                 repaint();
-                
+
             }
-            
+
             isRunning = false;
             resetPreview();
-            
+
         }
-        
-        public boolean isRunning(){
-            
+
+        public boolean isRunning() {
+
             return isRunning;
-            
+
         }
-        
+
         /**
          * Getter for property mode.
+         *
          * @return Value of property mode.
          */
         public int getMode() {
-            
+
             return this.mode;
         }
-        
+
         /**
          * Setter for property mode.
+         *
          * @param mode New value of property mode.
          */
         public void setMode(int mode) {
-            
+
             this.mode = mode;
         }
-        
     }
-    
+
     private class UniversalTimeSetter extends Thread {
-        
+
         private static final int RETRY_ATTEMPTS = 4;
         private static final int SLEEPTIME = 10000;
-        
         private String pre;
         private JLabel victim;
         private java.text.SimpleDateFormat formatter;
@@ -1485,7 +1487,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         private Thread runner;
         private boolean isActive;
         private boolean isOSX;
-        
+
         protected UniversalTimeSetter(JLabel label) {
             super("MainUI Toolbar Universal Time Setter Thread");
             isActive = true;
@@ -1493,44 +1495,46 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
             pre = resourceBundle.getString("LBL_UniversalTime") + ": ";
             formatter = new java.text.SimpleDateFormat("H:mm");
             formatter.setTimeZone(TimeZone.getTimeZone("GMT:00"));
-            
+
             isOSX = System.getProperty("mrj.version") != null;
         }
-        
+
+        @Override
         public void run() {
-            
-            if(JKaiUI.getConfig().getConfigString(NTPSERVER).equals("")) {
+
+            if (JKaiUI.getConfig().getConfigString(NTPSERVER).equals("")) {
                 offset = 0;
             } else {
                 long ntptime = 0;
-                for(int i = 0; i < RETRY_ATTEMPTS; i++) {
+                for (int i = 0; i < RETRY_ATTEMPTS; i++) {
                     ntptime = pt.jkaiui.ui.tools.NTPClient.getNTPTime();
-                    if(ntptime != 0) break;
+                    if (ntptime != 0) {
+                        break;
+                    }
                 }
                 offset = (ntptime != 0) ? ntptime - System.currentTimeMillis() : 0;
             }
-            
-            while(isActive) {
-                victim.setText(pre +  formatter.format(new java.util.Date(System.currentTimeMillis() + offset)) + (isOSX ? "     ":""));
+
+            while (isActive) {
+                victim.setText(pre + formatter.format(new java.util.Date(System.currentTimeMillis() + offset)) + (isOSX ? "     " : ""));
                 try {
                     Thread.sleep(SLEEPTIME);
-                } catch(InterruptedException ie) {
-                    System.out.println("MainUI run:"+ie);
+                } catch (InterruptedException ie) {
+                    System.out.println("MainUI run:" + ie);
                 }
             }
         }
-        
+
         public void convinceToStop() {
             isActive = false;
         }
     }
-    
+
     private class RawStatsSetter extends Thread {
-        
+
         //private static final int SLEEPTIME = 600000;
         private static final int SLEEPTIME = 5000;
         private static final int RETRY_ATTEMPTS = 2;
-        
         private String stats;
         private JLabel victim;
         private java.text.SimpleDateFormat formatter;
@@ -1538,7 +1542,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         private int cycle1;
         private int cycle2;
         private boolean isActive;
-        
+
         protected RawStatsSetter(JLabel label) {
             super("MainUI Toolbar Raw Network Statistics Setter Thread");
             isActive = true;
@@ -1547,94 +1551,99 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
             cycle1 = 9;
             cycle2 = 5;
         }
-        
+
+        @Override
         public void run() {
-            while(isActive) {
-                if(cycle1 == 9) {
-                    if(++cycle2 == 6) {
+            while (isActive) {
+                if (cycle1 == 9) {
+                    if (++cycle2 == 6) {
                         cycle2 = 1;
-                        for(int i = 0; i < RETRY_ATTEMPTS; i++) {
+                        for (int i = 0; i < RETRY_ATTEMPTS; i++) {
                             statsHashMap = XLinkNetworkRawStatsParser.getRawStatsInfo();
-                            if(statsHashMap == null) {
+                            if (statsHashMap == null) {
                                 convinceToStop();
                                 return;
                             }
-                            if(!statsHashMap.isEmpty()) break;
+                            if (!statsHashMap.isEmpty()) {
+                                break;
+                            }
                         }
                     }
                 }
-                
+
                 setNextString(false);
-                
+
                 try {
-                    if(isActive) Thread.sleep(SLEEPTIME);
+                    if (isActive) {
+                        Thread.sleep(SLEEPTIME);
+                    }
                 } catch (InterruptedException ie) {
-                    System.out.println("MinUI run:"+ie);
+                    System.out.println("MinUI run:" + ie);
                 }
             }
         }
-        
+
         public synchronized void setNextString(boolean quick) {
             cycle1 = (cycle1 >= 9) ? 1 : cycle1 + 1;
-            
+
             String nextKey = XLinkNetworkRawStatsParser.sequenceToName(cycle1);
-            
-            if(!quick) {
-                for(int i = 0; i <= 225; i += 25) {
-                    victim.setForeground(new Color(i,i,i));
+
+            if (!quick) {
+                for (int i = 0; i <= 225; i += 25) {
+                    victim.setForeground(new Color(i, i, i));
                     try {
                         Thread.sleep(30);
-                    } catch(InterruptedException ie) {
-                        System.out.println("MainUI setNextString:"+ie);
+                    } catch (InterruptedException ie) {
+                        System.out.println("MainUI setNextString:" + ie);
                     }
                 }
             }
             victim.setText("<html><body><b>" + nextKey + ":</b> " + statsHashMap.get(nextKey) + "</body></html>");
-            
-            if(quick) victim.setForeground(Color.BLACK);
-            else {
-                for(int i = 250; i >= 0; i -= 25) {
-                    victim.setForeground(new Color(i,i,i));
+
+            if (quick) {
+                victim.setForeground(Color.BLACK);
+            } else {
+                for (int i = 250; i >= 0; i -= 25) {
+                    victim.setForeground(new Color(i, i, i));
                     try {
                         Thread.sleep(20);
                     } catch (InterruptedException ie) {
-                        System.out.println("MainUI setNextString:"+ie);
+                        System.out.println("MainUI setNextString:" + ie);
                     }
                 }
             }
-            
+
         }
-        
+
         public void convinceToStop() {
             isActive = false;
         }
     }
-    
-    public void clickConnectDisconnectButton(){
+
+    public void clickConnectDisconnectButton() {
         jButtonConnectDisconnect.doClick();
     }
-    
     public Vector bookmarkVector = new Vector();
-    
-        private void fixedphraseinit(){
+
+    private void fixedphraseinit() {
         File PhraseFile = new File(fixedphrasefile);
         File PhraseHolder = new File(PhraseFile.getParent());
 
         Vector phrase = new Vector();
         PhraseEditorPane.setText("");
-        
+
         if (!PhraseHolder.exists()) {
             return;
         }
         if (!PhraseFile.exists()) {
             return;
         }
-        
+
         try {
             if (PhraseFile.isFile() && PhraseFile.canRead()) {
 
                 BufferedReader logfilebr = new BufferedReader(new FileReader(PhraseFile));
-                
+
                 String line;
                 while ((line = logfilebr.readLine()) != null) {
                     phrase.add(line);
@@ -1646,10 +1655,10 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         } catch (Exception e) {
             System.out.println("fixedphraseinit:" + e);
         }
-        
+
         PhraseList.setListData(phrase);
     }
-    
+
     private void fixedphrasesave() {
         File PhraseFile = new File(fixedphrasefile);
         File PhraseHolder = new File(PhraseFile.getParent());
@@ -1666,50 +1675,50 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
             if (PhraseFile.isFile() && PhraseFile.canWrite()) {
                 //バッファを自動でフラッシュ
                 phrasefilepw = new PrintWriter(new BufferedWriter(new FileWriter(PhraseFile)), true);
-                
+
                 phrasefilepw.print(PhraseEditorPane.getText());
-                
+
                 phrasefilepw.close();
-                
+
                 fixedphraseinit();
             }
         } catch (Exception e) {
             System.out.println("fileopen err:" + e);
-        }    
+        }
     }
-    
-    public void initEmotIconPane(){
-        
+
+    public void initEmotIconPane() {
+
         StringBuffer s = new StringBuffer("");
-            
+
         //JKaiUI
 //        String out = "<table style=\"padding:2px;width:100%;font-family:Dialog;"+ wordbreak +"font-size:"+JKaiUI.getConfig().getChatFontSize()+"px\"><tr style=\"background-color:" + color + "\"><td>" + user + "</td><td align=\"right\">";
 //        out += "</td></tr><tr><td colspan=2>" + msgtmp + "</td></tr></table>";
 
         String size = " width=\"30\" height=\"30\"";
-        
+
         ArrayList emoticons = JKaiUI.getChatManager().getEmotIconList();
         for (int i = 0; i < emoticons.size(); i++) {
-    
+
             String[] tmp = ((String) emoticons.get(i)).split(",");
             s = s.append(createlink(tmp[0], encodeImgTag(tmp[1], size)));
 
         }
-    
+
         EmotIconPane.setText(s.toString());
     }
-    
-    public void resetEmotIconPane(){
+
+    public void resetEmotIconPane() {
         EmotIconPane.setText("");
     }
-    
+
     //dummyアドレスを持ったリンクを作成
     private String createlink(String address, String v) {
         //userにリンクを追加　リンクをクリックするとチャット入力画面に出せる
         //https://sites.google.com/site/yuuakron/dummy/はダミーアドレス
         return "<a href=\"https://sites.google.com/site/yuuakron/dummy/" + address + "\">" + v + "</a>";
     }
-    
+
     private String encodeImgTag(String s, String size) {
 
         s = "<img src=\"" + s + "\"" + size + ">";

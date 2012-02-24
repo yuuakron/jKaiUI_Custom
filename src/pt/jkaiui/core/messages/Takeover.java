@@ -6,7 +6,6 @@
 
 package pt.jkaiui.core.messages;
 
-import pt.jkaiui.manager.I_InMessage;
 import pt.jkaiui.manager.I_OutMessage;
 
 /**
@@ -20,6 +19,7 @@ public class Takeover extends Message implements I_OutMessage{
     }
     
     
+    @Override
     public String send() {
         
         return "KAI_CLIENT_TAKEOVER";

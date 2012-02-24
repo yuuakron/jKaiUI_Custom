@@ -6,16 +6,12 @@
 
 package pt.jkaiui.ui.modes;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+import java.awt.*;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JPanel;
 import pt.jkaiui.JKaiUI;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.RoomFontSize;
 
 /**
  *
@@ -25,8 +21,8 @@ public class KaiListPanel extends JPanel{
     
     
     
-    Color	_theColor;
-    Color	_theBack;
+    private Color _theColor;
+    private Color _theBack;
     
     private javax.swing.JLabel jLabelIcon;
     private javax.swing.JLabel jLabelName;
@@ -106,6 +102,7 @@ public class KaiListPanel extends JPanel{
         //centerPanel.add(rightPanel,BorderLayout.EAST);
         
     }
+    @Override
     public Insets getInsets(){
         
         return new Insets(0,3,0,3);

@@ -4,14 +4,14 @@
  */
 package pt.jkaiui.filelog;
 
-import pt.jkaiui.JKaiUI;
-import pt.jkaiui.core.messages.*;
-
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.BufferedReader;
-import java.util.*;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import java.util.HashSet;
+import pt.jkaiui.JKaiUI;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.UserLogFile;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.UserLogPattern;
+import pt.jkaiui.core.messages.JoinsVector;
 /**
  *
  * @author yuu@akron
@@ -24,6 +24,7 @@ public class UserLog  extends Log{
         this.init();
     }
     
+    @Override
     protected void init() {
 //        System.out.println("userlog");
         logfile = new File(format(JKaiUI.getConfig().getConfigFile(UserLogFile)));
@@ -32,6 +33,7 @@ public class UserLog  extends Log{
         readlog();
     }
     
+    @Override
     public void println(Object user){
         if(user instanceof JoinsVector){
             println((JoinsVector)user);

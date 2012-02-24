@@ -6,11 +6,7 @@
  */
 package pt.jkaiui.ui.tools;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import javax.swing.JLabel;
 
 /**
@@ -56,6 +52,7 @@ public class ScrollGames extends JLabel implements Runnable {
         }
     }
 
+    @Override
     public void run() {
         PosX = 0;
         repaint();
@@ -77,7 +74,7 @@ public class ScrollGames extends JLabel implements Runnable {
                     PosX = LabWidth;
                 }
                 repaint();
-                Task.sleep(Speed);
+                Thread.sleep(Speed);
             }
         } catch (Exception e) {
             System.out.println("ScrollGames:" + e);
@@ -85,6 +82,7 @@ public class ScrollGames extends JLabel implements Runnable {
 
     }
 
+    @Override
     public void paint(Graphics g) {
 
         if (Gfx == null) {

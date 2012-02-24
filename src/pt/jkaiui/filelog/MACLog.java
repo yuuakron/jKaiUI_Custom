@@ -1,15 +1,16 @@
 package pt.jkaiui.filelog;
 
-import pt.jkaiui.JKaiUI;
-import pt.jkaiui.core.messages.*;
-
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.BufferedReader;
-import java.util.*;
+import java.util.HashSet;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.JKaiUI;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.MACLogFile;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.MACLogPattern;
+import pt.jkaiui.core.messages.RemoteArenaDevice;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -26,6 +27,7 @@ public class MACLog extends Log {
         this.init();
     }
 
+    @Override
     protected void init() {
         logfile = new File(format(JKaiUI.getConfig().getConfigFile(MACLogFile)));
         macset = new HashSet();
@@ -33,6 +35,7 @@ public class MACLog extends Log {
         readlog();
     }
 
+    @Override
     public void println(Object mac) {
         if (mac instanceof RemoteArenaDevice) {
             println((RemoteArenaDevice) mac);

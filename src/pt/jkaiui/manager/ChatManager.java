@@ -5,44 +5,29 @@
  */
 package pt.jkaiui.manager;
 
+import java.awt.Component;
+import java.io.File;
+import java.net.URL;
 import java.text.DateFormat;
-import java.util.logging.Logger;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.swing.ImageIcon;
-import javax.swing.JTabbedPane;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.net.URL;
-import java.io.File;
+import javax.sound.sampled.*;
 import javax.swing.AbstractListModel;
-
+import javax.swing.ImageIcon;
+import javax.swing.JTabbedPane;
 import pt.jkaiui.JKaiUI;
-import pt.jkaiui.core.ChatMessage;
-import pt.jkaiui.core.InMessage;
-import pt.jkaiui.core.KaiString;
-import pt.jkaiui.core.OutMessage;
-import pt.jkaiui.core.User;
-import pt.jkaiui.core.Arena;
-import pt.jkaiui.core.messages.ArenaPMOut;
-import pt.jkaiui.core.messages.ChatOut;
-import pt.jkaiui.core.messages.PMOut;
-import pt.jkaiui.core.messages.ContactOnline;
-import pt.jkaiui.core.messages.ContactOffline;
+import pt.jkaiui.core.KaiConfig.ConfigTag;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.core.*;
+import pt.jkaiui.core.messages.*;
 import pt.jkaiui.tools.log.ConfigLog;
 import pt.jkaiui.ui.ChatPanel;
-import pt.jkaiui.ui.modes.MessengerModeListModel;
-import pt.jkaiui.core.Diags;
-import pt.jkaiui.core.messages.KaiVectorOut;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
-import pt.jkaiui.core.KaiConfig.ConfigTag;
-import pt.jkaiui.core.messages.CreateVectorOut;
 import pt.jkaiui.ui.KaiSettingsPanel;
-import java.awt.Component;
+import pt.jkaiui.ui.modes.MessengerModeListModel;
+import pt.jkaiui.ui.tools.Say;
 
 /**
  *
@@ -209,18 +194,18 @@ public class ChatManager {
             // get general arena
             panel = (ChatPanel) chatsTable.get(GENERAL_CHAT);
 
-            //ƒ`ƒƒƒbƒg‚Å‰¹‚ğ–Â‚ç‚·
+            //ãƒãƒ£ãƒƒãƒˆã§éŸ³ã‚’é³´ã‚‰ã™
             if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND) && !msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh")
                     && (JKaiUI.getConfig().getConfigBoolean(ChatSound))) {
                 playMessageSound(SoundKinds.Chat);
             }
-            //ƒtƒŒƒ“ƒh‚Ì”­Œ¾‚É‰¹‚ğ‚È‚ç‚·‚æ‚¤‚É•ÏX
+            //ãƒ•ãƒ¬ãƒ³ãƒ‰ã®ç™ºè¨€æ™‚ã«éŸ³ã‚’ãªã‚‰ã™ã‚ˆã†ã«å¤‰æ›´
             if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
                     && (JKaiUI.getConfig().getConfigBoolean(FriendChatSound))
                     && (userIsFriend(msg.getUser()))) {
                 playMessageSound(SoundKinds.FriendChat);
             }
-            //ƒ‚ƒf‚Ì”­Œ¾‚É‰¹‚ğ‚È‚ç‚·‚æ‚¤‚É•ÏX
+            //ãƒ¢ãƒ‡ã®ç™ºè¨€æ™‚ã«éŸ³ã‚’ãªã‚‰ã™ã‚ˆã†ã«å¤‰æ›´
             if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
                     && (JKaiUI.getConfig().getConfigBoolean(ModeratorChatSound))
                     && (msg.getUser().isModerator())) {
@@ -231,21 +216,21 @@ public class ChatManager {
 
             panel = getOrCreatePanel(msg.getUser().getUser());
 
-            //PM‚ª‚«‚½‚Æ‚«‰¹‚ğ‚È‚ç‚·‚æ‚¤‚É•ÏX
+            //PMãŒããŸã¨ãéŸ³ã‚’ãªã‚‰ã™ã‚ˆã†ã«å¤‰æ›´
             if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
                     && (JKaiUI.getConfig().getConfigBoolean(FriendPMSound))
                     && (userIsFriend(msg.getUser()))) {
                 playMessageSound(SoundKinds.FriendPM);
             }
-            //ArenaPM‚ª‚«‚½‚Æ‚«‰¹‚ğ‚È‚ç‚·‚æ‚¤‚É•ÏX
+            //ArenaPMãŒããŸã¨ãéŸ³ã‚’ãªã‚‰ã™ã‚ˆã†ã«å¤‰æ›´
             if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
                     && (JKaiUI.getConfig().getConfigBoolean(ArenaPMSound))
                     && (!userIsFriend(msg.getUser()))) {
                 playMessageSound(SoundKinds.ArenaPM);
             }
             /*            
-            //óM‚Ìê‡‚Í‚¢‚Â‚Å‚à‹@”\on
-            //PMóM‚Ìê‡
+            //å—ä¿¡ã®å ´åˆã¯ã„ã¤ã§ã‚‚æ©Ÿèƒ½on
+            //PMå—ä¿¡ã®å ´åˆ
             try {
             msg.setMessage(HtmlUnicodedecode(msg.getMessage(), 10));
             } catch (Exception e) {
@@ -262,6 +247,7 @@ public class ChatManager {
 
         panel.write(formatInMessage(msg));
 //        panel.write(msg.getMessage());
+        Say.speakString(msg.getMessage());
 
         // Notify if not selected
         enableIconIfSelected(panel);
@@ -286,7 +272,7 @@ public class ChatManager {
             msg.setMessage(texttmp);
         }
 
-        //ƒ`ƒƒƒbƒg‘—M‚É‰¹‚ğ–Â‚ç‚·
+        //ãƒãƒ£ãƒƒãƒˆé€ä¿¡æ™‚ã«éŸ³ã‚’é³´ã‚‰ã™
         if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
                 && (JKaiUI.getConfig().getConfigBoolean(SendSound))) {
             playMessageSound(SoundKinds.Send);
@@ -302,7 +288,7 @@ public class ChatManager {
             ChatOut chat = new ChatOut();
             chat.setMessage(new KaiString(msg.getMessage()));
 
-            JKaiUI.getManager().getExecuter().execute(chat);
+            ActionExecuter.execute(chat);
 
         } else if (msg.getType() == ChatMessage.PRIVATE_MESSAGE) {
 
@@ -313,7 +299,7 @@ public class ChatManager {
             /*
             if (JKaiUI.getConfig().isHtmlUnicode()) {
             try {
-            //PM‚Ìê‡AHTMLƒGƒ“ƒR[ƒh‚ğ‚·‚é
+            //PMã®å ´åˆã€HTMLã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã‚’ã™ã‚‹
             msg.setMessage(HtmlUnicodeencode(msg.getMessage(), 10));
             } catch (Exception e) {
             System.out.println("processOutMessage:"+e);
@@ -327,19 +313,19 @@ public class ChatManager {
                 arenaPmOut.setUser(new KaiString(msg.getUser().getUser()));
                 arenaPmOut.setMessage(new KaiString(msg.getMessage()));
 
-                JKaiUI.getManager().getExecuter().execute(arenaPmOut);
+                ActionExecuter.execute(arenaPmOut);
 
             } else {
                 // PM
                 pmOut.setUser(new KaiString(msg.getUser().getUser()));
                 pmOut.setMessage(new KaiString(msg.getMessage()));
 
-                JKaiUI.getManager().getExecuter().execute(pmOut);
+                ActionExecuter.execute(pmOut);
             }
             /*
             if (JKaiUI.getConfig().isHtmlUnicode()) {
             try {
-            //PM‚Ìê‡AHTMLƒfƒR[ƒh‚ğ‚·‚é
+            //PMã®å ´åˆã€HTMLãƒ‡ã‚³ãƒ¼ãƒ‰ã‚’ã™ã‚‹
             msg.setMessage(HtmlUnicodedecode(msg.getMessage(), 10));
             } catch (Exception e) {
             System.out.println("processOutMessage:" + e);
@@ -355,6 +341,7 @@ public class ChatManager {
         }
 
         panel.write(formatOutMessage(msg));
+        Say.speakString(msg.getMessage());
     }
 
     private String formatOutMessage(OutMessage msg) {
@@ -378,7 +365,7 @@ public class ChatManager {
         msgtmp = matcher.replaceAll("<a href=\"$0\">$0</a>");
       
         /*
-        //html‰ğÍ –â‘è‚ ‚è    
+        //htmlè§£æ å•é¡Œã‚ã‚Š    
         Pattern p = Pattern.compile("(http|https):([^\\x00-\\x20()\"<>\\x7F-\\xFF])*", Pattern.CASE_INSENSITIVE);
 
         Matcher m = p.matcher(msgtmp);
@@ -387,21 +374,21 @@ public class ChatManager {
 //            System.out.println(m.group());
             String tmp = m.group();
             String tmp2 = m.group().replaceAll("\\?", "\\\\?");
-            msgtmp = msgtmp.replaceFirst(tmp2, "<a href=\"" + tmp + "\">" + tmp + "</a>");//‚ ‚Æ‚©‚ç“¯‚¶ƒhƒƒCƒ“‚ÌƒAƒhƒŒƒX‚ªo‚Ä‚«‚½ê‡‚É‚¤‚Ü‚­‚¢‚©‚È‚¢
+            msgtmp = msgtmp.replaceFirst(tmp2, "<a href=\"" + tmp + "\">" + tmp + "</a>");//ã‚ã¨ã‹ã‚‰åŒã˜ãƒ‰ãƒ¡ã‚¤ãƒ³ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒå‡ºã¦ããŸå ´åˆã«ã†ã¾ãã„ã‹ãªã„
         }
 //      System.out.println(msgtmp);
          * 
          */
 
-        //user‚ÉƒŠƒ“ƒN‚ğ’Ç‰Á@ƒŠƒ“ƒN‚ğƒNƒŠƒbƒN‚·‚é‚Æƒ`ƒƒƒbƒg“ü—Í‰æ–Ê‚Éo‚¹‚é
-        //https://sites.google.com/site/yuuakron/dummy/‚Íƒ_ƒ~[ƒAƒhƒŒƒX
-        user = "<a href=\"https://sites.google.com/site/yuuakron/dummy/" + user + "\">" + user + "</a>";
+        //userã«ãƒªãƒ³ã‚¯ã‚’è¿½åŠ ã€€ãƒªãƒ³ã‚¯ã‚’ã‚¯ãƒªãƒƒã‚¯ã™ã‚‹ã¨ãƒãƒ£ãƒƒãƒˆå…¥åŠ›ç”»é¢ã«å‡ºã›ã‚‹
+        //https://sites.google.com/site/yuuakron/dummy/ã¯ãƒ€ãƒŸãƒ¼ã‚¢ãƒ‰ãƒ¬ã‚¹
+        String userstr = "<a href=\"https://sites.google.com/site/yuuakron/dummy/" + user + "\">" + user + "</a>";
 
         String out = "";
         switch (JKaiUI.getConfig().getConfigInt(ChatDisplayStyle)) {
             case 0:
                 //JKaiUI
-                out = "<table style=\"padding:2px;width:100%;font-family:Dialog;" + wordbreak + "font-size:" + JKaiUI.getConfig().getConfigInt(ChatFontSize) + "px\"><tr style=\"background-color:" + color + "\"><td>" + user + "</td><td align=\"right\">";
+                out = "<table style=\"padding:2px;width:100%;font-family:Dialog;" + wordbreak + "font-size:" + JKaiUI.getConfig().getConfigInt(ChatFontSize) + "px\"><tr style=\"background-color:" + color + "\"><td>" + userstr + "</td><td align=\"right\">";
                 if (JKaiUI.getConfig().getConfigBoolean(SHOWTIMESTAMPS)) {
                     Date dat = new Date();
                     String stime = DateFormat.getTimeInstance().format(dat);
@@ -410,25 +397,25 @@ public class ChatManager {
                 out += "</td></tr><tr><td colspan=2>" + msgtmp + "</td></tr></table>";
                 break;
             case 2:
-                //WebUI•—
+                //WebUIé¢¨
                 out = "<table style=\"width:100%;font-family:Dialog;" + wordbreak + "font-size:" + JKaiUI.getConfig().getConfigInt(ChatFontSize) + "px\"><tr>";
                 if (JKaiUI.getConfig().getConfigBoolean(SHOWTIMESTAMPS)) {
                     Date dat = new Date();
                     String stime = DateFormat.getTimeInstance().format(dat);
                     out += "<td style=\"background-color:" + color + ";width:" + (JKaiUI.getConfig().getConfigInt(ChatFontSize) * 7) + "\">" + stime + " </td>";
                 }
-                out += "<td style=\"background-color:" + color + ";width:" + (JKaiUI.getConfig().getConfigInt(ChatFontSize) * 14) + "\">" + user + "</td>";
+                out += "<td style=\"background-color:" + color + ";width:" + (JKaiUI.getConfig().getConfigInt(ChatFontSize) * 14) + "\">" + userstr + "</td>";
                 out += "<td>" + msgtmp + "</td></tr></table>";
                 break;
             case 1:
-                //GUI•—
+                //GUIé¢¨
                 out = "<span style=\"font-family:Dialog;background-color:" + color + ";font-size:" + JKaiUI.getConfig().getConfigInt(ChatFontSize) + "px\">";
                 if (JKaiUI.getConfig().getConfigBoolean(SHOWTIMESTAMPS)) {
                     Date dat = new Date();
                     String stime = DateFormat.getTimeInstance().format(dat);
                     out += stime + " ";
                 }
-                out += user + "</span>";
+                out += userstr + "</span>";
                 out += "<span style=\"font-family:Dialog;" + wordbreak + "font-size:" + JKaiUI.getConfig().getConfigInt(ChatFontSize) + "px\"> : " + msgtmp + "</span>";
                 break;
             default:
@@ -444,12 +431,12 @@ public class ChatManager {
         EmotIcons = new ArrayList();
         ArrayList tmp = new ArrayList(70);
         
-        _logger.severe("url icon:"+url);
+        _logger.log(Level.SEVERE, "url icon:{0}", url);
         
         String settingfolder = JKaiUI.getConfig().getConfigSettingFolder() +"/";
         
         
-        //WebUI‚©‚ç’Šo        
+        //WebUIã‹ã‚‰æŠ½å‡º        
         tmp.add(":arrr:,file:"+settingfolder+"emoticons/arrr.gif");
         tmp.add(":awe:,file:"+settingfolder+"emoticons/awe.gif");
         tmp.add(":blink:,file:"+settingfolder+"emoticons/blink.gif");
@@ -503,7 +490,7 @@ public class ChatManager {
             }
         }
         
-        //JKaiUI original ƒIƒŠƒWƒiƒ‹‚ÍÅŒã‚Éˆ—‚·‚é•K—v‚ ‚è
+        //JKaiUI original ã‚ªãƒªã‚¸ãƒŠãƒ«ã¯æœ€å¾Œã«å‡¦ç†ã™ã‚‹å¿…è¦ã‚ã‚Š
         EmotIcons.add(":)," + url + "/pt/jkaiui/ui/resources/emoticons/smile.png");
         EmotIcons.add(":(," + url + "/pt/jkaiui/ui/resources/emoticons/sad.png");
         EmotIcons.add(":*," + url + "/pt/jkaiui/ui/resources/emoticons/kiss.png");
@@ -551,37 +538,41 @@ public class ChatManager {
 
     private String encodeMessage(String s) {
 
-        s = s.replace("&", "&amp;");
-        s = s.replace(">", "&gt;");
-        s = s.replace("<", "&lt;");
+        String str=s;
+        
+        str = str.replace("&", "&amp;");
+        str = str.replace(">", "&gt;");
+        str = str.replace("<", "&lt;");
 
         //s = s.replace(":)","<img src=\"jar:file:/home/pedro/tex/kai/jkaiui/dist/jKaiUI.jar!/pt/jkaiui/ui/resources/emoticons/smile.png\">");
 
-        s = encodeEmotIcon(s);
+        str = encodeEmotIcon(str);
 
 //        System.out.println(s);
 
-        return s;
+        return str;
 
     }
 
     private String encodeEmotIcon(String s) {
+        String str = s;
+        
         for (int i = 0; i < EmotIcons.size(); i++) {
 
             String[] tmp = ((String) EmotIcons.get(i)).split(",");
 //            System.out.println(tmp[0] + ":" + tmp[1]);
-            s = s.replace(tmp[0], encodeImgTag(tmp[1]));
+            str = str.replace(tmp[0], encodeImgTag(tmp[1]));
 
         }
 
-        return s;
+        return str;
     }
 
     private String encodeImgTag(String s) {
 
-        s = "<img src=\"" + s + "\">";
+        String tmp = "<img src=\"" + s + "\">";
 
-        return s;
+        return tmp;
     }
 
     private String getColor(String s) {
@@ -609,11 +600,11 @@ public class ChatManager {
     private ChatPanel getOrCreatePanel(String name) {
 
 
-        ChatPanel panel = null;
+        ChatPanel panel;
 
         if (chatsTable.get(name) == null) {
 
-            //PMƒpƒlƒ‹‚ğŠJ‚¢‚½ê‡‚É‰¹‚ğ–Â‚ç‚·‚æ‚¤‚É•ÏX
+            //PMãƒ‘ãƒãƒ«ã‚’é–‹ã„ãŸå ´åˆã«éŸ³ã‚’é³´ã‚‰ã™ã‚ˆã†ã«å¤‰æ›´
             if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
                     && (JKaiUI.getConfig().getConfigBoolean(PMOpenSound))) {
                 playMessageSound(SoundKinds.PMOpen);
@@ -629,7 +620,7 @@ public class ChatManager {
         } else if (((ChatPanel)chatsTable.get(name)).containMainUI()) {
             panel = (ChatPanel) chatsTable.get(name);
         } else {
-            //PMƒpƒlƒ‹‚ğŠJ‚¢‚½ê‡‚É‰¹‚ğ–Â‚ç‚·‚æ‚¤‚É•ÏX
+            //PMãƒ‘ãƒãƒ«ã‚’é–‹ã„ãŸå ´åˆã«éŸ³ã‚’é³´ã‚‰ã™ã‚ˆã†ã«å¤‰æ›´
             if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
                     && (JKaiUI.getConfig().getConfigBoolean(PMOpenSound))) {
                 playMessageSound(SoundKinds.PMOpen);
@@ -736,25 +727,6 @@ public class ChatManager {
     }
 
     public void loginFriend(ContactOnline friend) {
-/*
-        MessengerModeListModel listmodel = (MessengerModeListModel) JKaiUI.getMessengerMode().getListModel();
-
-        //Å‰‚Í•\¦A‚Q‰ñ–ÚˆÈ~‚ÍƒGƒXƒ^ó‘Ô‚È‚ç•\¦‚µ‚È‚¢
-        for (int i = 0; i < listmodel.size(); i++) {
-            Object obj = listmodel.getElementAt(i);
-            if (obj instanceof User) {
-                User user = (User) obj;
-                if (user.getName().equals(friend.getUser().decode())) {
-                    System.out.println(user.getPing());
-                    if (user.getPing() == 0) {
-                        user.setPing(-1);
-                    }else if(user.getPing() < 0){
-                        return;
-                    }
-                }
-            }
-        }
-*/
         // Notify that user has entered the arena
         Object[] panels = chatsTable.values().toArray();
 //        ChatPanel panel = (ChatPanel) chatsTable.get(GENERAL_CHAT);
@@ -763,7 +735,7 @@ public class ChatManager {
 
             panel.write("<div style=\"color:black; font-size:" + JKaiUI.getConfig().getConfigInt(SystemFontSize) + "px;\"> -- " + friend.getUser().decode() + " is logged in" + "</div>");
         }
-        //ƒtƒŒƒ“ƒh‚ÌƒƒOƒCƒ“‚É‰¹‚ğ–Â‚ç‚·
+        //ãƒ•ãƒ¬ãƒ³ãƒ‰ã®ãƒ­ã‚°ã‚¤ãƒ³æ™‚ã«éŸ³ã‚’é³´ã‚‰ã™
         if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
                 && (JKaiUI.getConfig().getConfigBoolean(FriendOnlineSound))) {
             playMessageSound(ChatManager.SoundKinds.FriendOnline);
@@ -776,26 +748,7 @@ public class ChatManager {
 //        ChatPanel panel = (ChatPanel) chatsTable.get(GENERAL_CHAT);
 
 //        panel.write("<div style=\"color:black; font-size:" + JKaiUI.getConfig().getConfigInt(SystemFontSize) + "px;\"> -- " + friend.getUser().decode() + " is logged out" + "</div>");
-
-/*        
-        MessengerModeListModel listmodel = (MessengerModeListModel) JKaiUI.getMessengerMode().getListModel();
-
-        //Å‰‚Í•\¦A‚Q‰ñ–ÚˆÈ~‚ÍƒGƒXƒ^ó‘Ô‚È‚ç•\¦‚µ‚È‚¢
-        for (int i = 0; i < listmodel.size(); i++) {
-            Object obj = listmodel.getElementAt(i);
-            if (obj instanceof User) {
-                User user = (User) obj;
-                if(user.getName().equals(friend.getUser().decode())){
-                    System.out.println(user.getPing());
-                    if (user.getPing() == 0) {
-                        user.setPing(-1);
-                    }else if(user.getPing() < 0){
-                        return;
-                    }
-                }
-            }
-        }
-*/        
+        
         Object[] panels = chatsTable.values().toArray();
 //        ChatPanel panel = (ChatPanel) chatsTable.get(GENERAL_CHAT);
         for(int i=0;i < panels.length;i++){
@@ -849,7 +802,7 @@ public class ChatManager {
         if (chathistory.size() > 0) {
             if (0 <= chathistoryindex && chathistory.size() > chathistoryindex) {
                 chathistoryindex--;
-                return (String) chathistory.get(chathistoryindex + 1);//Œ»İ’l‚ğ‘—M
+                return (String) chathistory.get(chathistoryindex + 1);//ç¾åœ¨å€¤ã‚’é€ä¿¡
             }else if(chathistory.size() == chathistoryindex){ 
                 chathistoryindex--;
             }else {
@@ -868,12 +821,12 @@ public class ChatManager {
         if (tmp[0].matches("^%(.*)")) {
             //System.out.println(m.group(1));
             if (tmp[0].equalsIgnoreCase("%send")) {
-                //ƒRƒ}ƒ“ƒh‚Ì‘—M
+                //ã‚³ãƒãƒ³ãƒ‰ã®é€ä¿¡
                 return JKaiUICommands(text.replaceFirst("%send\\s+", ""));
             }else if(tmp[0].equalsIgnoreCase("%ask")){
                 return text;
             }else {
-                //ƒRƒ}ƒ“ƒh‚ğ•\¦
+                //ã‚³ãƒãƒ³ãƒ‰ã‚’è¡¨ç¤º
 //                ChatPanel panel = (ChatPanel) chatsTable.get(GENERAL_CHAT);
                 ChatPanel panel = (ChatPanel)JKaiUI.getMainUI().jTabbedPane.getSelectedComponent();
 
@@ -885,7 +838,7 @@ public class ChatManager {
                 return null;
             }
         }
-        //’Êí‚ÌƒeƒLƒXƒg
+        //é€šå¸¸ã®ãƒ†ã‚­ã‚¹ãƒˆ
         return text;
     }
 
@@ -898,7 +851,7 @@ public class ChatManager {
                 ChatPanel panel = (ChatPanel)JKaiUI.getMainUI().jTabbedPane.getSelectedComponent();
                 panel.write("<div style=\"color:black; font-size:" + JKaiUI.getConfig().getConfigInt(SystemFontSize) + "px;\"> -- " + " Received an ask comamnd from "+ msg.getUser() +"  Command:" + msg.getMessage() + "</div>");
                 
-                //ƒRƒ}ƒ“ƒh‚Ì‘—M
+                //ã‚³ãƒãƒ³ãƒ‰ã®é€ä¿¡
                 String sendtext = JKaiUIAskCommands(msg.getMessage().replaceFirst("%ask\\s+", ""));
                 
                 if (sendtext != null) {
@@ -922,7 +875,7 @@ public class ChatManager {
                 return null;
             }
         }
-        //’Êí‚ÌƒeƒLƒXƒg
+        //é€šå¸¸ã®ãƒ†ã‚­ã‚¹ãƒˆ
         return msg.getMessage();
     }
     
@@ -952,27 +905,27 @@ public class ChatManager {
         
         //create private arena
         //create
-        //create description@maxplayernum password
-        //create description@maxplayernum@(no pass)
-        //create description@(maxplayernum=4)@ino passj
+        //create descriptionã€€maxplayernum password
+        //create descriptionã€€maxplayernumã€€(no pass)
+        //create descriptionã€€(maxplayernum=4)ã€€ï¼ˆno passï¼‰
         if (tmp[0].equalsIgnoreCase("create")) {
             String description = "";
             String password = "";
-            int maxPlayers = 4;
+            int maxPlayers;
             String maxPlayersString = "";
 
             if (tmp.length == 1) {
                 //create
                 JKaiUI.getArenaMode().clickcreateArenaButton();
             } else if (tmp.length == 2) {
-                //create description@(maxplayernum=4)@ino passj
+                //create descriptionã€€(maxplayernum=4)ã€€ï¼ˆno passï¼‰
                 description = tmp[1];
             } else if (tmp.length == 3) {
-                //create description@maxplayernum@(no pass)
+                //create descriptionã€€maxplayernumã€€(no pass)
                 description = tmp[1];
                 maxPlayersString = tmp[2];
             } else if (tmp.length == 4) {
-                //create description@maxplayernum password
+                //create descriptionã€€maxplayernum password
                 description = tmp[1];
                 maxPlayersString = tmp[2];
                 password = tmp[3];
@@ -984,7 +937,7 @@ public class ChatManager {
 
                 error = java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("MSG_InvalidMaxPlayers");
             }
-            maxPlayers = Integer.parseInt(maxPlayersString.length() > 0 ? maxPlayersString : "0");
+            maxPlayers = Integer.parseInt(maxPlayersString.length() > 0 ? maxPlayersString : "4");
 
             if (!description.matches("^.{0,20}$")) {
 
@@ -1005,7 +958,7 @@ public class ChatManager {
             out.setPassword(new KaiString(password));
             out.setMaxPlayers(maxPlayers);
 
-            JKaiUI.getManager().getExecuter().execute(out);
+            ActionExecuter.execute(out);
 
             return "create arena";
         }
@@ -1083,7 +1036,7 @@ public class ChatManager {
             Pattern p2 = Pattern.compile("^#([0-9]+)");
             Matcher m2 = p2.matcher(tmp[1]);
 
-            Arena arena = new Arena();
+            Arena arena;
             if (m2.matches()) {
                 if (Integer.parseInt(m2.group(1)) > 0) {
                     Vector BookmarkVector = JKaiUI.getMainUI().bookmarkVector;
@@ -1092,13 +1045,13 @@ public class ChatManager {
                     if (JKaiUI.CURRENT_MODE != JKaiUI.ARENA_MODE) {
                         JKaiUI.getMainUI().jButtonArenaMode.doClick();
                     }
-                    JKaiUI.getManager().enterArena(arena);
+                    Manager.enterArena(arena);
                 }
             }
             return null;
         }
 
-        //pm ƒtƒŒ#1
+        //pm ãƒ•ãƒ¬#1
         if (tmp[0].equalsIgnoreCase("pm")) {
 
             Pattern p2 = Pattern.compile("^#([0-9]+)");
@@ -1167,7 +1120,7 @@ public class ChatManager {
             return null;
         }
         
-        //help ƒRƒ}ƒ“ƒhˆê——@ƒRƒ}ƒ“ƒhà–¾
+        //help ã‚³ãƒãƒ³ãƒ‰ä¸€è¦§ã€€ã‚³ãƒãƒ³ãƒ‰èª¬æ˜
         if (tmp[0].equalsIgnoreCase("help")) {
             String commands = "send ver help show phrase emoti setconfig config diag go gofull arenapm follow pm bookmark "
                     + "chatreset chatlock cahtunlock logwindow exit connect disconnect messengermode arenamode diagmode "
@@ -1188,7 +1141,8 @@ public class ChatManager {
                         Object obj = listmodel.getElementAt(i);
                         if (obj instanceof User) {
                             User user = (User) obj;
-                            str.append(user.getUser() + " ");
+                            str.append(user.getUser());
+                            str.append(" ");
                         }
                     }
 
@@ -1202,7 +1156,8 @@ public class ChatManager {
                         Object obj = listmodel.getElementAt(i);
                         if (obj instanceof User) {
                             User user = (User) obj;
-                            str.append(user.getUser()+" ");
+                            str.append(user.getUser());
+                            str.append(" ");
                         }
                     }
                     
@@ -1216,7 +1171,10 @@ public class ChatManager {
                         Object obj = listmodel.getElementAt(i);
                         if (obj instanceof Arena) {
                             Arena arena = (Arena) obj;
-                            str.append(arena.getVector() + ":" + arena.getDescription() + " ");
+                            str.append(arena.getVector());
+                            str.append(":");
+                            str.append(arena.getDescription());
+                            str.append(" ");
                         }
                     }
 
@@ -1256,7 +1214,7 @@ public class ChatManager {
             Pattern p2 = Pattern.compile("^#([0-9]+)");
             Matcher m2 = p2.matcher(tmp[1]);
 
-            String emot = "";
+            String emot;
             
             if (m2.matches()) {
                 if (Integer.parseInt(m2.group(1)) > 0) {
@@ -1273,7 +1231,7 @@ public class ChatManager {
             return null;
         }
 
-        //setconfig ƒRƒ}ƒ“ƒh–¼@İ’è’l
+        //setconfig ã‚³ãƒãƒ³ãƒ‰åã€€è¨­å®šå€¤
         if (tmp[0].equalsIgnoreCase("setconfig")) {
             if (tmp.length > 2) {
                 try {
@@ -1282,7 +1240,7 @@ public class ChatManager {
                     System.out.println("error nothing config:" + e);
                 }
                 try {
-                    String str = text.replaceFirst(tmp[0]+"\\s+", "").replaceFirst(tmp[1]+"\\s+", "");//3”Ô–ÚˆÈ~‚Ì’l‚ğæ‚èo‚·
+                    String str = text.replaceFirst(tmp[0]+"\\s+", "").replaceFirst(tmp[1]+"\\s+", "");//3ç•ªç›®ä»¥é™ã®å€¤ã‚’å–ã‚Šå‡ºã™
                     JKaiUI.getConfig().loadtoFileConfig(tmp[1] + ":" + str);
                     JKaiUI.getConfig().saveConfig();
 
@@ -1310,7 +1268,7 @@ public class ChatManager {
             Pattern p2 = Pattern.compile("^#([0-9]+)");
             Matcher m2 = p2.matcher(tmp[1]);
 
-            String texttmp = text.replaceFirst(tmp[0]+"\\s+", "");//2”Ô–ÚˆÈ~‚Ì’l‚ğæ‚èo‚·
+            String texttmp = text.replaceFirst(tmp[0]+"\\s+", "");//2ç•ªç›®ä»¥é™ã®å€¤ã‚’å–ã‚Šå‡ºã™
             
             if (tmp[1].equalsIgnoreCase("parent")) {
                 JKaiUI.getArenaMode().clickgoBackButton();
@@ -1362,7 +1320,7 @@ private String copydiaginfo(String kinds){
             String textbuf = "";
 
             if (kinds.equalsIgnoreCase("all")) {
-                StringBuffer strbuf = new StringBuffer("Diags infomation \n\n");//•Û‘¶‚·‚éİ’èî•ñ
+                StringBuilder strbuf = new StringBuilder("Diags infomation \n\n");//ä¿å­˜ã™ã‚‹è¨­å®šæƒ…å ±
 
                 strbuf.append(copydiaginfo("server"));
                 strbuf.append(copydiaginfo("network"));
@@ -1373,12 +1331,12 @@ private String copydiaginfo(String kinds){
             }
             if (kinds.equalsIgnoreCase("server")) {
                 Diags diags = (Diags) model.get(0);
-                textbuf = new String("OrbServer: " + diags.getValue1());
+                textbuf = "OrbServer: " + diags.getValue1();
             }
             if (kinds.equalsIgnoreCase("network")) {
                 Diags diags = (Diags) model.get(1);
 //                    textbuf = new String("Network: " + diags.getValue1() +" "+ diags.getValue2());
-                textbuf = new String("Network: " + diags.getValue2());
+                textbuf = "Network: " + diags.getValue2();
 
             }
 //                if (m.group(2).equalsIgnoreCase("ipport")) {
@@ -1387,31 +1345,31 @@ private String copydiaginfo(String kinds){
 //                }
             if (kinds.equalsIgnoreCase("reachable")) {
                 Diags diags = (Diags) model.get(1);
-                textbuf = new String("Network: " + diags.getValue2());
+                textbuf = "Network: " + diags.getValue2();
             }
             if (kinds.equalsIgnoreCase("hardware")) {
                 Diags diags = (Diags) model.get(2);
-                textbuf = new String("Hardware: " + diags.getValue1() + " " + diags.getValue2());
+                textbuf = "Hardware: " + diags.getValue1() + " " + diags.getValue2();
             }
             if (kinds.equalsIgnoreCase("nic")) {
                 Diags diags = (Diags) model.get(2);
-                textbuf = new String("Hardware: " + diags.getValue1());
+                textbuf = "Hardware: " + diags.getValue1();
             }
             if (kinds.equalsIgnoreCase("lib")) {
                 Diags diags = (Diags) model.get(2);
-                textbuf = new String("Hardware: " + diags.getValue2());
+                textbuf = "Hardware: " + diags.getValue2();
             }
             if (kinds.equalsIgnoreCase("engine")) {
                 Diags diags = (Diags) model.get(3);
-                textbuf = new String("Engine: " + diags.getValue1() + " " + diags.getValue2());
+                textbuf = "Engine: " + diags.getValue1() + " " + diags.getValue2();
             }
             if (kinds.equalsIgnoreCase("ver")) {
                 Diags diags = (Diags) model.get(3);
-                textbuf = new String("Engine: " + diags.getValue1());
+                textbuf = "Engine: " + diags.getValue1();
             }
             if (kinds.equalsIgnoreCase("platform")) {
                 Diags diags = (Diags) model.get(3);
-                textbuf = new String("Engine: " + diags.getValue2());
+                textbuf = "Engine: " + diags.getValue2();
             }
             return textbuf; 
     }

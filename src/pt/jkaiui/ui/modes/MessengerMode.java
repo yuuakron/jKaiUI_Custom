@@ -162,10 +162,10 @@ public class MessengerMode extends MainMode implements ActionListener {
                 
                 ActionListener[] als = JKaiUI.getMainUI().jButtonArenaMode.getActionListeners();
                 
-                JKaiUI.ARENA = vectorLocation;//フレンドのいる場所
+                JKaiUI.ARENA = vectorLocation;
                 if(als.length == 1) {
                     als[0].actionPerformed(new ActionEvent(new Object(), 0, ""));
-                }//アリーナモードへの移行とフレのいる場所へ移動
+                }
 //                JKaiUI.getManager().enterArena(arena);
             }
         }

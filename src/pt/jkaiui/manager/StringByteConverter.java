@@ -13,7 +13,7 @@ import sun.misc.HexDumpEncoder;
  */
 public class StringByteConverter {
 
-    //htmlencodeä÷êîÅ@Ç©Ç»ÇËÇƒÇ´Ç∆Ç§
+    //htmlencode
     private static String HtmlUnicodeencode(String s, int radix) {
         StringBuilder sb = new StringBuilder("");
         char ch[] = s.toCharArray();
@@ -34,7 +34,7 @@ public class StringByteConverter {
         return sb.toString();
     }
 
-    //htmldecodeä÷êî
+    //htmldecode
     public static String HtmlUnicodedecode(String encoded_str, int radix) {
         String retStr = "";
 //        char[] chararray;
@@ -71,7 +71,7 @@ public class StringByteConverter {
         return retStr;
     }
     
-            //htmlencodeä÷êîÅ@Ç©Ç»ÇËÇƒÇ´Ç∆Ç§
+            //htmlencode
     private static String HtmlUnicodeencode(byte[] s, int radix) {
         StringBuilder sb = new StringBuilder("");
 //        char ch[] = s.toCharArray();
@@ -195,7 +195,7 @@ public class StringByteConverter {
         HexDumpEncoder enc = new HexDumpEncoder();
         
         try {
-            String tmp = "Ç†";
+            String tmp = "„ÅÇ";
             System.out.println("utf-16:" + enc.encode(tmp.getBytes("utf-16")));
             System.out.println("windows-31j:" + enc.encode(tmp.getBytes("Windows-31j")));
             System.out.println("utf-8:" + enc.encode(tmp.getBytes("utf-8")));

@@ -79,7 +79,7 @@ public class MACLog extends Log {
          */
 
         try {
-            //ファイル書き込みパターンの解析
+
             Pattern[] p = {Pattern.compile("%N"), Pattern.compile("%A")};
             Matcher m;
 
@@ -92,7 +92,7 @@ public class MACLog extends Log {
                 }
             }
 
-            //ユーザー名とアドレスが何番目か計算
+
             int usernum = -1, macnum = -1;
             Integer keytmp = new Integer(-1);
             for (int i = 0; i < tm.size(); i++) {

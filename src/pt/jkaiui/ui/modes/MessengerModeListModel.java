@@ -493,9 +493,8 @@ public class MessengerModeListModel extends AbstractListModel {
             fireIntervalRemoved(this, 0, index1);
         }
         
-        //ÅŒã‚Ì—v‘f‚ğ‘I‘ğ‚Å‚«‚È‚¢–â‘è‚Ì‘Îô‚Ì‚½‚ßƒ_ƒ~[‚ğ’Ç‰Á
         User user = new User();
-        user.setUser("@");
+        user.setUser("ã€€");
         user.setOnline(false);
         addElement(user);
     }

@@ -33,8 +33,8 @@ public class ActionExecuter {
     private static Manager manager;
     
     private static String CurrentArena;
-    private static boolean KaiVectorOutFlag;//©•ª‚ÅˆÚ“®‚µ‚½‚©‚Ç‚¤‚©‚Ì”»’èƒtƒ‰ƒO
-//    private static Chat2 chatbuf;//ˆê•ÛŠÇ
+    private static boolean KaiVectorOutFlag;
+//    private static Chat2 chatbuf;
     
     /** Creates a new instance of ActionExecuter */
     public ActionExecuter( Manager manager ) {
@@ -314,7 +314,7 @@ public class ActionExecuter {
             
             try{
                 if(JKaiUI.getConfig().getConfigBoolean(URLDecode)){
-                //URLƒfƒR[ƒh
+                //URLï¿½fï¿½Rï¿½[ï¿½h
                     arena.setDescription(URLDecoder.decode(contact.getDescription().decode(),"utf-8"));
                 }else{
                     arena.setDescription(contact.getDescription().decode());
@@ -531,7 +531,7 @@ public class ActionExecuter {
                 } else {
                     JKaiUI.getChatManager().processMessage(_msg);
                 }
-                //kai orbital mesh‚ÍœŠO
+                //kai orbital meshï¿½Íï¿½ï¿½O
                 if(!_msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh")){
                     JKaiUI.getLogFileManager().println(m, CurrentArena);
                 }
@@ -570,7 +570,7 @@ public class ActionExecuter {
                     } else {
                         JKaiUI.getChatManager().processMessage(_msg);
                     }
-                    //kai orbital mesh‚ÍœŠO
+                    //kai orbital meshï¿½Íï¿½ï¿½O
                     if (!_msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh")) {
                         JKaiUI.getLogFileManager().println(m, CurrentArena);
                     }
@@ -656,7 +656,7 @@ public class ActionExecuter {
         
         else if (msg instanceof ChatModeOut){
             
-            //•”‰®‚ÌˆÚ“®‚ğÀ¿“I‚É¦‚·
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½Éï¿½ï¿½ï¿½
             
             ChatModeOut vec = (ChatModeOut) msg;
             

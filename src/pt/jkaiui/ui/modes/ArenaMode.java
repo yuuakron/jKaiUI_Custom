@@ -203,7 +203,7 @@ public class ArenaMode extends MainMode {
             jmiEnterArena.addActionListener(this);
         } else if( obj instanceof User){
             
-            if (((User)obj).getUser().equals("Å@")) {
+            if (((User)obj).getUser().equals("„ÄÄ")) {
                 return popup;
             }
             

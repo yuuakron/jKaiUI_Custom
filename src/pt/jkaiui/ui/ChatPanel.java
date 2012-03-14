@@ -521,22 +521,22 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
 
     String tooltipbuf = "";
 
-    if (evt.getEventType() == EventType.ACTIVATED) {	//ƒNƒŠƒbƒN‚³‚ê‚½
+    if (evt.getEventType() == EventType.ACTIVATED) {	//ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½ï¿½ê‚½ï¿½ï¿½
         URL url = evt.getURL();
 
 //        System.err.println(url.toString());
 
-        //ƒ_ƒ~[ƒAƒhƒŒƒX‚È‚ç
+        //ï¿½_ï¿½~ï¿½[ï¿½Aï¿½hï¿½ï¿½ï¿½Xï¿½È‚ï¿½
         if (url.toString().matches("^(https://sites.google.com/site/yuuakron/dummy/)(.*)")) {
-            //ƒ†[ƒU[–¼‚ğƒ`ƒƒƒbƒg“ü—Í—“‚ÉƒRƒs[
+            //ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½bï¿½gï¿½ï¿½Í—ï¿½ï¿½ÉƒRï¿½sï¿½[
 //            System.out.print("user");
             try {
                 jTextFieldInput.getDocument().insertString(jTextFieldInput.getCaretPosition(), url.toString().replace("https://sites.google.com/site/yuuakron/dummy/", ""), null);
             } catch (Exception e) {
                 System.out.println("hyperlink user:" + e);
             }
-        } else {//’Êí‚ÌƒAƒhƒŒƒX‚È‚ç
-            //ƒfƒtƒHƒ‹ƒg‚Ìƒuƒ‰ƒEƒU[‚ğg‚Á‚ÄƒŠƒ“ƒNæ‚ğ•\¦
+        } else {//ï¿½Êï¿½ÌƒAï¿½hï¿½ï¿½ï¿½Xï¿½È‚ï¿½
+            //ï¿½fï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½Ìƒuï¿½ï¿½ï¿½Eï¿½Uï¿½[ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Äƒï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½\ï¿½ï¿½
             Desktop dp = Desktop.getDesktop();
             try {
                 dp.browse(url.toURI());
@@ -544,22 +544,22 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
                 System.out.println("hyperlink:" + ex);
             }
         }
-    } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {//ƒŠƒ“ƒNã‚É‚«‚½‚Æ‚«
+    } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {//ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½
         tooltipbuf = jEditorPane.getToolTipText();
         jEditorPane.setToolTipText(null);
         URL url = evt.getURL();
 
-        //ƒAƒhƒŒƒX‚ª‰æ‘œ‚È‚ç
+        //ï¿½Aï¿½hï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½æ‘œï¿½È‚ï¿½
         if (url.toString().matches("(.*)\\.(jpg|jpeg|gif|png|bmp)$") && JKaiUI.getConfig().getConfigBoolean(ShowImageMouseoverLink)) {
             jEditorPane.setToolTipText("<html><img src=\"" + url.toExternalForm() + "\"></html>");
-        } else if (url.toString().matches("^(https://sites.google.com/site/yuuakron/dummy/)(.*)")) {//ƒ_ƒ~[ƒAƒhƒŒƒX‚È‚ç
+        } else if (url.toString().matches("^(https://sites.google.com/site/yuuakron/dummy/)(.*)")) {//ï¿½_ï¿½~ï¿½[ï¿½Aï¿½hï¿½ï¿½ï¿½Xï¿½È‚ï¿½
             try {
                 hyperlinkbuf = url.toString().replace("https://sites.google.com/site/yuuakron/dummy/", "");
             } catch (Exception e) {
                 System.out.println("hyperlink user entered:" + e);
             }
             jEditorPane.setToolTipText(hyperlinkbuf);
-        } else {//•’Ê‚ÌƒAƒhƒŒƒX‚È‚ç
+        } else {//ï¿½ï¿½ï¿½Ê‚ÌƒAï¿½hï¿½ï¿½ï¿½Xï¿½È‚ï¿½
             hyperlinkbuf = url.toString();
             /*
              * try { JEditorPane urlopen = new JEditorPane();
@@ -571,7 +571,7 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
             jEditorPane.setToolTipText(url.toString());
         }
 
-        //ƒŠƒ“ƒNã‚Å‚Ìƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[‚ğİ’è
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½Å‚Ìƒ|ï¿½bï¿½vï¿½Aï¿½bï¿½vï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½ï¿½İ’ï¿½
         CopytoClipboard.removeActionListener(CopytoClipboard.getActionListeners()[0]);
         CopytoClipboard.addActionListener(new java.awt.event.ActionListener() {
 
@@ -618,10 +618,9 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
                 }
             }
         });
-    } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {//ƒŠƒ“ƒNã‚©‚ç—£‚ê‚½‚Æ‚«
+    } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {
         jEditorPane.setToolTipText(tooltipbuf);
 
-        //ƒfƒtƒHƒ‹ƒgƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[‚Ì“®ì‚É‚É–ß‚·
         CopytoClipboard.removeActionListener(CopytoClipboard.getActionListeners()[0]);
         CopytoClipboard.addActionListener(new java.awt.event.ActionListener() {
 
@@ -738,7 +737,7 @@ private void CreatePrivateArenaActionPerformed(java.awt.event.ActionEvent evt) {
 
 private void jToggleButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MousePressed
     if (JKaiUI.getMainUI().jPanel2.isVisible()) {
-        JKaiUI.getMainUI().resetEmotIconPane();//•\¦‚É‚b‚o‚tƒŠƒ\[ƒX‚ğH‚¤‚½‚ßƒpƒlƒ‹”ñ•\¦‚Íƒpƒlƒ‹‚ÌƒeƒLƒXƒg‚ÍƒŠƒZƒbƒg‚µ‚Ä‚¨‚­
+        JKaiUI.getMainUI().resetEmotIconPane();//ï¿½\ï¿½ï¿½ï¿½É‚bï¿½oï¿½tï¿½ï¿½ï¿½\ï¿½[ï¿½Xï¿½ï¿½Hï¿½ï¿½ï¿½ï¿½ï¿½ßƒpï¿½lï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½Íƒpï¿½lï¿½ï¿½ï¿½Ìƒeï¿½Lï¿½Xï¿½gï¿½Íƒï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
     } else if (!JKaiUI.getMainUI().jPanel2.isVisible()) {
         JKaiUI.getMainUI().initEmotIconPane();
     }

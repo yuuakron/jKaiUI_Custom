@@ -16,7 +16,7 @@ import java.util.Date;
  *
  * @author yuu@akron
  */
-//継承必須
+
 public class Log {
     protected File logfile;
     protected PrintWriter logfilepw;
@@ -40,7 +40,7 @@ public class Log {
             }
 
             if (logfile.isFile() && logfile.canWrite()) {
-                //バッファを自動でフラッシュ　追記
+
                 logfilepw = new PrintWriter(new BufferedWriter(new FileWriter(logfile, true)), true);
             }
         } catch (Exception e) {

@@ -80,7 +80,7 @@ public class KaiListCellRenderer extends KaiListPanel implements ListCellRendere
 
             User user = (User) kaiObject;
 
-            if (user.getUser().equals("Å@")) {
+            if (user.getUser().equals("„ÄÄ")) {
                 setText("");
                 setIcon(null);
                 setDescription("");

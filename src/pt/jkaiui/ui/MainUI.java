@@ -487,7 +487,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         jPanel4.setLayout(new java.awt.CardLayout());
 
         PhraseList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "定型文です", "editボタンで編集", "saveボタンで保存できます" };
+            String[] strings = { "This is a phrase panel." };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });

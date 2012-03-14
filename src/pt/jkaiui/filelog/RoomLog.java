@@ -43,7 +43,7 @@ public class RoomLog  extends Log{
             update();
         }
 
-        if (!this.contains(room)) {//エラーの場合とObjectが意図したものではない場合は処理しない
+        if (!this.contains(room)) {
             this.add(room);
 
             String pattern = JKaiUI.getConfig().getConfigString(RoomLogPattern);
@@ -60,7 +60,7 @@ public class RoomLog  extends Log{
                 }
                 pattern = pattern.replace("%M", Integer.toString(roomtmp.getMaxPlayers()));
                 try {
-                    //defaultの文字セットＳｈｉｆｔ－ＪＩＳを用いて書き込み
+                    //default
                     pattern = pattern.replace("%D", new String(URLDecoder.decode(roomtmp.getDescription().decode(), "utf-8").getBytes("Shift-JIS"), "Shift-JIS"));
                 } catch (Exception e) {
                     System.out.println("RoomLog println error:"+e);
@@ -84,7 +84,6 @@ public class RoomLog  extends Log{
         }
     }
     
-    //エラーの場合とObjectが意図したものではない場合はtrueをかえす。これにより意図しない表示を防ぐ
     private boolean contains(Object room) {
 
         if (room instanceof UserSubVector) {
@@ -124,7 +123,6 @@ public class RoomLog  extends Log{
  
     private void readlog() {
         try {            
-            //ファイル書き込みパターンの解析
             Pattern[] p = {Pattern.compile("%V"), Pattern.compile("%C"), Pattern.compile("%S"), Pattern.compile("%P"), Pattern.compile("%M"), Pattern.compile("%D")};
             Matcher m;
             
@@ -137,7 +135,6 @@ public class RoomLog  extends Log{
                 }
             }
             
-            //場所と記述が何番目か計算
             int vectnum=-1, descnum=-1;
             Integer keytmp = new Integer(-1);
             for (int i = 0; i < tm.size(); i++) {

@@ -141,7 +141,7 @@ make dmg file for Mac OS X
             <arg line=" ../resources/ReadMe.html ${application.title}"/>
         </exec>
         <exec dir="${dist.dir}" executable="hdiutil">
-            <arg line="create -srcfolder ${application.title} -fs HFS+ -volname ${application.title} ${application.title}.dmg"/>
+            <arg line="create -srcfolder ${application.title} -fs HFS+ -volname ${application.title} ${application.title}.dmg -imagekey zlib-level=9"/>
         </exec>
         <exec dir="${dist.dir}" executable="rm">
             <arg line="-r ${application.title}/${application.title}.app"/>

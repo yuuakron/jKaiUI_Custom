@@ -54,7 +54,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
 
         resetValues();
         
-        //”z•zƒo[ƒWƒ‡ƒ“—p
+        //ï¿½zï¿½zï¿½oï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½p
         if (!(JKaiUI.develflag)) {
             radioAllLogger.setVisible(false);
             radioUserLogger.setVisible(false);
@@ -1299,7 +1299,7 @@ private void buttonSaveSettingFileActionPerformed(java.awt.event.ActionEvent evt
             }
 
             if (conffile.isFile() && conffile.canWrite()) {
-                //ƒoƒbƒtƒ@‚ğ©“®‚Åƒtƒ‰ƒbƒVƒ…
+                //ï¿½oï¿½bï¿½tï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åƒtï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½
                 conffilepw = new PrintWriter(new BufferedWriter(new FileWriter(conffile)), true);
 
                 conffilepw.print(JKaiUI.getConfig().savetoFileConfig());
@@ -1737,7 +1737,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
         // Ensure everything's saved
         kaiConfig.saveConfig();
         JKaiUI.getLogFileManager().updateAll();
-        JKaiUI.getChatManager().initSoundFile();
+        JKaiUI.getSoundManager().init();
         JKaiUI.getArenaMode().setRoomFontSize(((Integer) spinnerRoomFontSize.getValue()).intValue());
         JKaiUI.getDiagMode().setRoomFontSize(((Integer) spinnerRoomFontSize.getValue()).intValue());
         JKaiUI.getMessengerMode().setRoomFontSize(((Integer) spinnerRoomFontSize.getValue()).intValue());

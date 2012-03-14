@@ -19,6 +19,7 @@ public class ChatLog extends Log {
         this.init();
     }
 
+    @Override
     protected void init() {
 //        System.out.println("chatlog");
         logfile = new File(format(JKaiUI.getConfig().getConfigFile(ChatLogFile)));

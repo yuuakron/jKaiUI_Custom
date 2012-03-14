@@ -18,6 +18,7 @@ public class AllLog extends Log{
         this.init();
     }
     
+    @Override
     protected void init(){  
         
 //        System.out.println("alllog");

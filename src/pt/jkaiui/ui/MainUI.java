@@ -487,7 +487,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         jPanel4.setLayout(new java.awt.CardLayout());
 
         PhraseList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "’èŒ^•¶‚Å‚·", "editƒ{ƒ^ƒ“‚Å•ÒW", "saveƒ{ƒ^ƒ“‚Å•Û‘¶‚Å‚«‚Ü‚·" };
+            String[] strings = { "å®šå‹æ–‡ã§ã™", "editãƒœã‚¿ãƒ³ã§ç·¨é›†", "saveãƒœã‚¿ãƒ³ã§ä¿å­˜ã§ãã¾ã™" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
@@ -555,9 +555,6 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         jMenuItemExit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 JMenuItemExitPressed(evt);
-            }
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenuItemExitMouseClicked(evt);
             }
         });
         jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
@@ -661,9 +658,6 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
     private void toolbarRawStatsLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_toolbarRawStatsLabelMouseClicked
         statsSetter.setNextString(true);
     }//GEN-LAST:event_toolbarRawStatsLabelMouseClicked
-
-    private void jMenuItemExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItemExitMouseClicked
-    }//GEN-LAST:event_jMenuItemExitMouseClicked
 
     private void jMenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExitActionPerformed
         this.windowClosing(null);
@@ -798,7 +792,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
     }//GEN-LAST:event_jMenuItemLogActionPerformed
 
     private void JMenuItemExitPressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JMenuItemExitPressed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_JMenuItemExitPressed
 
 private void menuitemVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuitemVersionActionPerformed
@@ -824,7 +818,7 @@ private void menuitemVersionActionPerformed(java.awt.event.ActionEvent evt) {//G
 private void buttonCopyInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCopyInfoActionPerformed
 
     MessengerModeListModel model = (MessengerModeListModel) JKaiUI.getDiagMode().getListModel();
-    StringBuilder strbuf = new StringBuilder("Diags infomation \n\n");//•Û‘¶‚·‚éİ’èî•ñ
+    StringBuilder strbuf = new StringBuilder("Diags infomation \n\n");//ï¿½Û‘ï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½ï¿½ï¿½
 
 
     Diags diags = (Diags) model.get(0);
@@ -919,13 +913,13 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
 
     String tooltipbuf = "";
 
-    if (evt.getEventType() == EventType.ACTIVATED) {	//ƒNƒŠƒbƒN‚³‚ê‚½
+    if (evt.getEventType() == EventType.ACTIVATED) {	//ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½ï¿½ê‚½ï¿½ï¿½
         URL url = evt.getURL();
 
 //        System.err.println(url.toString());
 
         if (url.toString().matches("^(https://sites.google.com/site/yuuakron/dummy/)(.*)")) {
-            //ŠG•¶š‚ğƒ`ƒƒƒbƒg“ü—Í—“‚ÉƒRƒs[
+            //ï¿½Gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½bï¿½gï¿½ï¿½Í—ï¿½ï¿½ÉƒRï¿½sï¿½[
 //            System.out.print("user");
 
             if (!(jTabbedPane.getSelectedComponent() instanceof ChatPanel)) {
@@ -939,12 +933,12 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 System.out.println("hyperlink emoticon:" + e);
             }
         }
-    } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {//ƒŠƒ“ƒNã‚É‚«‚½‚Æ‚«
+    } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {//ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½
         tooltipbuf = EmotIconPane.getToolTipText();
         EmotIconPane.setToolTipText(null);
         URL url = evt.getURL();
         EmotIconPane.setToolTipText(url.toExternalForm().replace("https://sites.google.com/site/yuuakron/dummy/", ""));
-    } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {//ƒŠƒ“ƒNã‚©‚ç—£‚ê‚½‚Æ‚«
+    } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {//ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ã‚©ï¿½ç—£ï¿½ê‚½ï¿½Æ‚ï¿½
         EmotIconPane.setToolTipText(tooltipbuf);
     }
 }//GEN-LAST:event_EmotIconPaneHyperlinkUpdate
@@ -1673,7 +1667,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
             }
 
             if (PhraseFile.isFile() && PhraseFile.canWrite()) {
-                //ƒoƒbƒtƒ@‚ğ©“®‚Åƒtƒ‰ƒbƒVƒ…
+                //ï¿½oï¿½bï¿½tï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åƒtï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½
                 phrasefilepw = new PrintWriter(new BufferedWriter(new FileWriter(PhraseFile)), true);
 
                 phrasefilepw.print(PhraseEditorPane.getText());
@@ -1712,10 +1706,10 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         EmotIconPane.setText("");
     }
 
-    //dummyƒAƒhƒŒƒX‚ğ‚Á‚½ƒŠƒ“ƒN‚ğì¬
+    //dummyï¿½Aï¿½hï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½ì¬
     private String createlink(String address, String v) {
-        //user‚ÉƒŠƒ“ƒN‚ğ’Ç‰Á@ƒŠƒ“ƒN‚ğƒNƒŠƒbƒN‚·‚é‚Æƒ`ƒƒƒbƒg“ü—Í‰æ–Ê‚Éo‚¹‚é
-        //https://sites.google.com/site/yuuakron/dummy/‚Íƒ_ƒ~[ƒAƒhƒŒƒX
+        //userï¿½Éƒï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½Ç‰ï¿½ï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½Æƒ`ï¿½ï¿½ï¿½bï¿½gï¿½ï¿½Í‰ï¿½Ê‚Éoï¿½ï¿½ï¿½ï¿½
+        //https://sites.google.com/site/yuuakron/dummy/ï¿½Íƒ_ï¿½~ï¿½[ï¿½Aï¿½hï¿½ï¿½ï¿½X
         return "<a href=\"https://sites.google.com/site/yuuakron/dummy/" + address + "\">" + v + "</a>";
     }
 

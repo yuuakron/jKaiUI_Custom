@@ -6,10 +6,7 @@
 
 package pt.jkaiui;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.Vector;
 import java.util.Enumeration;
@@ -30,6 +27,7 @@ import pt.jkaiui.ui.modes.MessengerMode;
 import pt.jkaiui.ui.modes.MessengerModeListModel;
 import pt.jkaiui.filelog.*;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.manager.SoundManager;
 
 /**
  *
@@ -62,6 +60,7 @@ public class JKaiUI {
      */
     private static ChatManager chatManager;    
     private static LogFileManager logFileManager;
+    private static SoundManager soundManager;
     
     private static final String uiname = "JKaiUI Custom";
     private static final String version = " ver.0.5.1(2012/1/15)";
@@ -81,11 +80,11 @@ public class JKaiUI {
         }
         
         if (isMac()) {
-            // JFrame‚Éƒƒjƒ…[‚ğ‚Â‚¯‚é‚Ì‚Å‚Í‚È‚­Aˆê”Ê“I‚ÈOSXƒAƒvƒŠ“¯—l‚É‰æ–Êã’[‚ÌƒXƒNƒŠ[ƒ“ƒƒjƒ…[‚É‚·‚é.
+            // JFrameï¿½Éƒï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½Ì‚Å‚Í‚È‚ï¿½ï¿½Aï¿½ï¿½Ê“Iï¿½ï¿½OSXï¿½Aï¿½vï¿½ï¿½ï¿½ï¿½ï¿½lï¿½É‰ï¿½Êï¿½[ï¿½ÌƒXï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½É‚ï¿½ï¿½ï¿½.
            System.setProperty("apple.laf.useScreenMenuBar", "true");
 
-            // ƒXƒNƒŠ[ƒ“ƒƒjƒ…[¶’[‚É•\‹L‚³‚ê‚éƒAƒvƒŠƒP[ƒVƒ‡ƒ“–¼‚ğİ’è‚·‚é
-            // (‰½‚àİ’è‚µ‚È‚¢‚ÆƒNƒ‰ƒX–¼‚É‚È‚éB)
+            // ï¿½Xï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½[ï¿½É•\ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½vï¿½ï¿½ï¿½Pï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚·ï¿½ï¿½
+            // (ï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚µï¿½È‚ï¿½ï¿½ÆƒNï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½É‚È‚ï¿½B)
             System.setProperty("com.apple.mrj.application.apple.menu.about.name",JKaiUI.getUIName());
         }
         
@@ -123,6 +122,7 @@ public class JKaiUI {
         }
 
         chatManager = new ChatManager();
+        soundManager = new SoundManager();
         logFileManager = new LogFileManager();
 
         mainUI.repaint();
@@ -158,9 +158,7 @@ public class JKaiUI {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-        
+    public static void main(String[] args) {       
         //javax.swing.SwingUtilities.invokeLater(new Runnable() {
         //  public void run() {
         new JKaiUI(args);
@@ -169,7 +167,7 @@ public class JKaiUI {
     }
     
     private static boolean isMac() {
-        // MacOSX‚Å“®ì‚µ‚Ä‚¢‚é‚©?
+        // MacOSXï¿½Å“ï¿½ï¿½ì‚µï¿½Ä‚ï¿½ï¿½é‚©?
         return System.getProperty("os.name").toLowerCase().startsWith("mac os x");
     }
     
@@ -359,13 +357,16 @@ public class JKaiUI {
      * Getter for property chatManager.
      * @return Value of property chatManager.
      */
-    public static ChatManager getChatManager() {
-        
+    public static ChatManager getChatManager() { 
         return chatManager;
     }
     
     public static LogFileManager getLogFileManager() {
         return logFileManager;
+    }
+    
+    public static SoundManager getSoundManager(){
+        return soundManager;
     }
     
     public static String getVersion(){

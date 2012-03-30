@@ -27,6 +27,7 @@ import pt.jkaiui.core.messages.GetMetrics;
 import pt.jkaiui.core.messages.GetUserProfile;
 import pt.jkaiui.core.messages.KaiVectorOut;
 import pt.jkaiui.manager.ActionExecuter;
+import pt.jkaiui.manager.EmoticonManager;
 import pt.jkaiui.manager.Manager;
 import pt.jkaiui.ui.modes.*;
 import pt.jkaiui.ui.tools.XLinkNetworkRawStatsParser;
@@ -51,6 +52,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
     private static Hashtable avatars;
     private static Hashtable loading = new Hashtable();
     private String fixedphrasefile = JKaiUI.getConfig().getConfigSettingFolder() + "/setting/fixedphrese.txt";
+    public Vector bookmarkVector = new Vector();
 
     /**
      * Creates new form MainUI
@@ -792,7 +794,6 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
     }//GEN-LAST:event_jMenuItemLogActionPerformed
 
     private void JMenuItemExitPressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JMenuItemExitPressed
-
     }//GEN-LAST:event_JMenuItemExitPressed
 
 private void menuitemVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuitemVersionActionPerformed
@@ -919,7 +920,6 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
 //        System.err.println(url.toString());
 
         if (url.toString().matches("^(https://sites.google.com/site/yuuakron/dummy/)(.*)")) {
-            //�G�������`���b�g��͗��ɃR�s�[
 //            System.out.print("user");
 
             if (!(jTabbedPane.getSelectedComponent() instanceof ChatPanel)) {
@@ -933,12 +933,12 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 System.out.println("hyperlink emoticon:" + e);
             }
         }
-    } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {//�����N��ɂ����Ƃ�
+    } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
         tooltipbuf = EmotIconPane.getToolTipText();
         EmotIconPane.setToolTipText(null);
         URL url = evt.getURL();
         EmotIconPane.setToolTipText(url.toExternalForm().replace("https://sites.google.com/site/yuuakron/dummy/", ""));
-    } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {//�����N�ォ�痣�ꂽ�Ƃ�
+    } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {
         EmotIconPane.setToolTipText(tooltipbuf);
     }
 }//GEN-LAST:event_EmotIconPaneHyperlinkUpdate
@@ -1617,7 +1617,6 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
     public void clickConnectDisconnectButton() {
         jButtonConnectDisconnect.doClick();
     }
-    public Vector bookmarkVector = new Vector();
 
     private void fixedphraseinit() {
         File PhraseFile = new File(fixedphrasefile);
@@ -1667,7 +1666,6 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
             }
 
             if (PhraseFile.isFile() && PhraseFile.canWrite()) {
-                //�o�b�t�@�������Ńt���b�V��
                 phrasefilepw = new PrintWriter(new BufferedWriter(new FileWriter(PhraseFile)), true);
 
                 phrasefilepw.print(PhraseEditorPane.getText());
@@ -1691,10 +1689,10 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
 
         String size = " width=\"30\" height=\"30\"";
 
-        ArrayList emoticons = JKaiUI.getChatManager().getEmotIconList();
+        java.util.List<String> emoticons = EmoticonManager.getInstance().getEmotIconList();
         for (int i = 0; i < emoticons.size(); i++) {
 
-            String[] tmp = ((String) emoticons.get(i)).split(",");
+            String[] tmp = (emoticons.get(i)).split(",");
             s = s.append(createlink(tmp[0], encodeImgTag(tmp[1], size)));
 
         }
@@ -1706,10 +1704,9 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         EmotIconPane.setText("");
     }
 
-    //dummy�A�h���X�������������N���쐬
+    //dummy
     private String createlink(String address, String v) {
-        //user�Ƀ����N��ǉ��@�����N���N���b�N����ƃ`���b�g��͉�ʂɏo����
-        //https://sites.google.com/site/yuuakron/dummy/�̓_�~�[�A�h���X
+        //https://sites.google.com/site/yuuakron/dummy/
         return "<a href=\"https://sites.google.com/site/yuuakron/dummy/" + address + "\">" + v + "</a>";
     }
 

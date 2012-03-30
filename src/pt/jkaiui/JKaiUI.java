@@ -7,27 +7,24 @@
 package pt.jkaiui;
 
 import java.io.File;
-import java.util.Locale;
-import java.util.Vector;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Locale;
+import java.util.Vector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
-
-import pt.jkaiui.core.*;
+import pt.jkaiui.core.KaiConfig;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.HOST;
+import static pt.jkaiui.core.KaiConfig.ConfigTag.PASSWORD;
 import pt.jkaiui.core.messages.DetachEngineOut;
+import pt.jkaiui.filelog.LogFileManager;
 import pt.jkaiui.manager.ChatManager;
 import pt.jkaiui.manager.Manager;
-import pt.jkaiui.tools.log.*;
-import pt.jkaiui.ui.*;
-import pt.jkaiui.ui.modes.ArenaMode;
-import pt.jkaiui.ui.modes.DiagMode;
-import pt.jkaiui.ui.modes.MainMode;
-import pt.jkaiui.ui.modes.MessengerMode;
-import pt.jkaiui.ui.modes.MessengerModeListModel;
-import pt.jkaiui.filelog.*;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
 import pt.jkaiui.manager.SoundManager;
+import pt.jkaiui.tools.log.ConfigLog;
+import pt.jkaiui.ui.MainUI;
+import pt.jkaiui.ui.modes.*;
 
 /**
  *
@@ -63,8 +60,8 @@ public class JKaiUI {
     private static SoundManager soundManager;
     
     private static final String uiname = "JKaiUI Custom";
-    private static final String version = " ver.0.5.1(2012/1/15)";
-    private static final String version2 = "0.5.1";
+    private static final String version = " ver.0.6.0(2012/4/2)";
+    private static final String version2 = "0.6.0";
     private static String KaiEngineVersion;
     public static boolean develflag = false;//true: devel verion false:normal version
     
@@ -73,23 +70,20 @@ public class JKaiUI {
 //        init();
 //    }
     
-    public JKaiUI(String[] args){
-                //switch normal, devel mode depend on argments
-        if(args.length > 0 && args[0].equals("devel")){
+    public JKaiUI(String[] args) {
+        //switch normal, devel mode depend on argments
+        if (args.length > 0 && args[0].equals("devel")) {
             develflag = true;
         }
-        
-        if (isMac()) {
-            // JFrame�Ƀ��j���[������̂ł͂Ȃ��A��ʓI��OSX�A�v�����l�ɉ�ʏ�[�̃X�N���[�����j���[�ɂ���.
-           System.setProperty("apple.laf.useScreenMenuBar", "true");
 
-            // �X�N���[�����j���[���[�ɕ\�L�����A�v���P�[�V��������ݒ肷��
-            // (�����ݒ肵�Ȃ��ƃN���X���ɂȂ�B)
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name",JKaiUI.getUIName());
+        if (isMac()) {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", JKaiUI.getUIName());
         }
-        
-        System.out.println(Locale.getDefault().getDisplayCountry());
-        
+
+//        System.out.println(Locale.getDefault().getDisplayCountry());
+
         init();
     }
     
@@ -107,7 +101,7 @@ public class JKaiUI {
 
             ConfigLog.createDefaulLoggerHandlers(mainUI.getLogEditorPane());
             _logger = ConfigLog.getLogger(this.getClass().getName());
-            _logger.config("Log Started at " + new java.util.Date().toString());
+            _logger.log(Level.CONFIG, "Log Started at {0}", new java.util.Date().toString());
 
         } catch (Exception e) {
             System.out.println("Failed to init log: " + e.getMessage());
@@ -167,7 +161,6 @@ public class JKaiUI {
     }
     
     private static boolean isMac() {
-        // MacOSX�œ��삵�Ă��邩?
         return System.getProperty("os.name").toLowerCase().startsWith("mac os x");
     }
     

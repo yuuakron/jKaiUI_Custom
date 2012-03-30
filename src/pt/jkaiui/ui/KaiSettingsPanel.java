@@ -54,7 +54,6 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
 
         resetValues();
         
-        //�z�z�o�[�W�����p
         if (!(JKaiUI.develflag)) {
             radioAllLogger.setVisible(false);
             radioUserLogger.setVisible(false);
@@ -1299,7 +1298,6 @@ private void buttonSaveSettingFileActionPerformed(java.awt.event.ActionEvent evt
             }
 
             if (conffile.isFile() && conffile.canWrite()) {
-                //�o�b�t�@�������Ńt���b�V��
                 conffilepw = new PrintWriter(new BufferedWriter(new FileWriter(conffile)), true);
 
                 conffilepw.print(JKaiUI.getConfig().savetoFileConfig());

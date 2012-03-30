@@ -314,7 +314,7 @@ public class ActionExecuter {
             
             try{
                 if(JKaiUI.getConfig().getConfigBoolean(URLDecode)){
-                //URL�f�R�[�h
+
                     arena.setDescription(URLDecoder.decode(contact.getDescription().decode(),"utf-8"));
                 }else{
                     arena.setDescription(contact.getDescription().decode());
@@ -531,7 +531,7 @@ public class ActionExecuter {
                 } else {
                     JKaiUI.getChatManager().processMessage(_msg);
                 }
-                //kai orbital mesh�͏��O
+                //kai orbital mesh
                 if(!_msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh")){
                     JKaiUI.getLogFileManager().println(m, CurrentArena);
                 }
@@ -570,7 +570,7 @@ public class ActionExecuter {
                     } else {
                         JKaiUI.getChatManager().processMessage(_msg);
                     }
-                    //kai orbital mesh�͏��O
+                    //kai orbital mesh
                     if (!_msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh")) {
                         JKaiUI.getLogFileManager().println(m, CurrentArena);
                     }
@@ -655,8 +655,6 @@ public class ActionExecuter {
         // UI -> Engine -- Enter chatroom
         
         else if (msg instanceof ChatModeOut){
-            
-            //�����̈ړ��������I�Ɏ���
             
             ChatModeOut vec = (ChatModeOut) msg;
             

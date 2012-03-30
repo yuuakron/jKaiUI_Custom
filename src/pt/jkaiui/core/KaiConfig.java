@@ -360,7 +360,7 @@ public class KaiConfig {
 
     public String copyconfig(String kinds) {
 
-        StringBuilder strbuf = new StringBuilder("");//�ۑ�����ݒ���
+        StringBuilder strbuf = new StringBuilder("");
         if (kinds.equalsIgnoreCase("all")) {
 
             strbuf.append("Setting information \n\n");
@@ -422,10 +422,10 @@ public class KaiConfig {
         return strbuf.toString();
     }
     
-    //save file config�p 
+    //save file config
     public String savetoFileConfig() {
 
-        StringBuilder strbuf = new StringBuilder("");//�ۑ�����ݒ���
+        StringBuilder strbuf = new StringBuilder("");
 
 
         ConfigTag[] keys = ConfigTag.values();
@@ -459,7 +459,7 @@ public class KaiConfig {
         return strbuf.toString();
     }
     
-    //load file config�p 
+    //load file config
     public void loadtoFileConfig(String data) {
 
         String[] config = data.split(":");

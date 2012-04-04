@@ -21,6 +21,7 @@ import pt.jkaiui.JKaiUI;
 import pt.jkaiui.core.Arena;
 import pt.jkaiui.core.KaiObject;
 import pt.jkaiui.core.User;
+import pt.jkaiui.manager.ChatManager;
 import pt.jkaiui.manager.Manager;
 import pt.jkaiui.ui.ChatPanel;
 import pt.jkaiui.ui.MainUI;
@@ -86,7 +87,7 @@ public abstract class MainMode extends javax.swing.JPanel implements I_MainMode,
                         User user = (User) obj;
                         if(user.isOnline()){
                             
-                            JKaiUI.getChatManager().openChat(user);
+                            ChatManager.getInstance().openChat(user);
                         }
                     }
                     if( obj instanceof Arena){
@@ -98,7 +99,7 @@ public abstract class MainMode extends javax.swing.JPanel implements I_MainMode,
                     }
                 }
                 
-                Object selected = JKaiUI.getMainUI().jTabbedPane.getSelectedComponent();
+                Object selected = MainUI.getInstance().jTabbedPane.getSelectedComponent();
                 if(selected instanceof ChatPanel) {
                     ((ChatPanel)selected).getInputField().requestFocus();
                 }
@@ -125,7 +126,7 @@ public abstract class MainMode extends javax.swing.JPanel implements I_MainMode,
      * @param modeName New value of property modeName.
      */
     public void setModeName(String modeName) {
-        JKaiUI.getMainUI().SetModeTitle(modeName);
+        MainUI.getInstance().SetModeTitle(modeName);
     }
     
     @Override
@@ -139,11 +140,11 @@ public abstract class MainMode extends javax.swing.JPanel implements I_MainMode,
         
         setModeName(getName() + " - " + java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_Preview"));
         
-        JKaiUI.getMainUI().getJPanelMode().removeAll();
-        JKaiUI.getMainUI().getJPanelMode().add(this,BorderLayout.CENTER);
+        MainUI.getInstance().getJPanelMode().removeAll();
+        MainUI.getInstance().getJPanelMode().add(this,BorderLayout.CENTER);
         setVisible(true);
         
-        JKaiUI.getMainUI().getJPanelMode().repaint();
+        MainUI.getInstance().getJPanelMode().repaint();
         
         
     }
@@ -153,13 +154,13 @@ public abstract class MainMode extends javax.swing.JPanel implements I_MainMode,
         _logger.log(Level.FINE, "Selecting {0}", getName());
         
         
-        JKaiUI.getMainUI().getJPanelMode().removeAll();
-        setSize(250, JKaiUI.getMainUI().jTabbedPane.getHeight());
-        JKaiUI.getMainUI().getJPanelMode().add(this,BorderLayout.CENTER);
+        MainUI.getInstance().getJPanelMode().removeAll();
+        setSize(250, MainUI.getInstance().jTabbedPane.getHeight());
+        MainUI.getInstance().getJPanelMode().add(this,BorderLayout.CENTER);
         
         setModeName(getName());
         setVisible(true);
-        JKaiUI.getMainUI().getJPanelMode().repaint();
+        MainUI.getInstance().getJPanelMode().repaint();
         
         // Setting special commands
         

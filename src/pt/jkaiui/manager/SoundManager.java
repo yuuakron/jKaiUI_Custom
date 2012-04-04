@@ -7,7 +7,7 @@ package pt.jkaiui.manager;
 import java.io.File;
 import java.net.URL;
 import javax.sound.sampled.*;
-import pt.jkaiui.JKaiUI;
+import pt.jkaiui.core.KaiConfig;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
 
 /**
@@ -16,6 +16,12 @@ import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
  */
 public class SoundManager {
 
+    private static final SoundManager INSTANCE = new SoundManager();
+    
+    public static SoundManager getInstance(){
+        return INSTANCE;
+    }
+    
     public enum SoundKinds {
         Chat,
         PMOpen,
@@ -29,13 +35,13 @@ public class SoundManager {
     
     private URL[] MessageSoundUrl;
 
-    public SoundManager() {
+    private SoundManager() {
         init();
     }
     
-    public void init(){
+    private void init(){
         MessageSoundUrl = new URL[10];
-        File soundfileholder = new File(JKaiUI.getConfig().getConfigSettingFolder() + "/sound");
+        File soundfileholder = new File(KaiConfig.getInstance().getConfigSettingFolder() + "/sound");
 //        System.out.println("sf:" + soundfileholder.getPath());
         try {
             if (!soundfileholder.exists()) {
@@ -48,57 +54,61 @@ public class SoundManager {
                 MessageSoundUrl[SoundKinds.ModeratorChat.ordinal()] = getClass().getResource("/pt/jkaiui/ui/resources/sound/message.wav");
                 MessageSoundUrl[SoundKinds.Send.ordinal()] = getClass().getResource("/pt/jkaiui/ui/resources/sound/message.wav");
             } else {
-                if (JKaiUI.getConfig().getConfigString(ChatSoundFile).equals("default")) {
+                if (KaiConfig.getInstance().getConfigString(ChatSoundFile).equals("default")) {
                     MessageSoundUrl[SoundKinds.Chat.ordinal()] = getClass().getResource("/pt/jkaiui/ui/resources/sound/message.wav");
                 } else {
-                    MessageSoundUrl[SoundKinds.Chat.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + JKaiUI.getConfig().getConfigString(ChatSoundFile));
+                    MessageSoundUrl[SoundKinds.Chat.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + KaiConfig.getInstance().getConfigString(ChatSoundFile));
                 }
 
-                if (JKaiUI.getConfig().getConfigString(PMOpenSoundFile).equals("default")) {
+                if (KaiConfig.getInstance().getConfigString(PMOpenSoundFile).equals("default")) {
                     MessageSoundUrl[SoundKinds.PMOpen.ordinal()] = getClass().getResource("/pt/jkaiui/ui/resources/sound/message.wav");
                 } else {
-                    MessageSoundUrl[SoundKinds.PMOpen.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + JKaiUI.getConfig().getConfigString(PMOpenSoundFile));
+                    MessageSoundUrl[SoundKinds.PMOpen.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + KaiConfig.getInstance().getConfigString(PMOpenSoundFile));
                 }
 
-                if (JKaiUI.getConfig().getConfigString(FriendPMSoundFile).equals("default")) {
+                if (KaiConfig.getInstance().getConfigString(FriendPMSoundFile).equals("default")) {
                     MessageSoundUrl[SoundKinds.FriendPM.ordinal()] = getClass().getResource("/pt/jkaiui/ui/resources/sound/message.wav");
                 } else {
-                    MessageSoundUrl[SoundKinds.FriendPM.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + JKaiUI.getConfig().getConfigString(FriendPMSoundFile));
+                    MessageSoundUrl[SoundKinds.FriendPM.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + KaiConfig.getInstance().getConfigString(FriendPMSoundFile));
                 }
 
-                if (JKaiUI.getConfig().getConfigString(FriendChatSoundFile).equals("default")) {
+                if (KaiConfig.getInstance().getConfigString(FriendChatSoundFile).equals("default")) {
                     MessageSoundUrl[SoundKinds.FriendChat.ordinal()] = getClass().getResource("/pt/jkaiui/ui/resources/sound/message.wav");
                 } else {
-                    MessageSoundUrl[SoundKinds.FriendChat.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + JKaiUI.getConfig().getConfigString(FriendChatSoundFile));
+                    MessageSoundUrl[SoundKinds.FriendChat.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + KaiConfig.getInstance().getConfigString(FriendChatSoundFile));
                 }
 
-                if (JKaiUI.getConfig().getConfigString(FriendOnlineSoundFile).equals("default")) {
+                if (KaiConfig.getInstance().getConfigString(FriendOnlineSoundFile).equals("default")) {
                     MessageSoundUrl[SoundKinds.FriendOnline.ordinal()] = getClass().getResource("/pt/jkaiui/ui/resources/sound/message.wav");
                 } else {
-                    MessageSoundUrl[SoundKinds.FriendOnline.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + JKaiUI.getConfig().getConfigString(FriendOnlineSoundFile));
+                    MessageSoundUrl[SoundKinds.FriendOnline.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + KaiConfig.getInstance().getConfigString(FriendOnlineSoundFile));
                 }
-                if (JKaiUI.getConfig().getConfigString(ArenaPMSoundFile).equals("default")) {
+                if (KaiConfig.getInstance().getConfigString(ArenaPMSoundFile).equals("default")) {
                     MessageSoundUrl[SoundKinds.ArenaPM.ordinal()] = getClass().getResource("/pt/jkaiui/ui/resources/sound/message.wav");
                 } else {
-                    MessageSoundUrl[SoundKinds.ArenaPM.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + JKaiUI.getConfig().getConfigString(ArenaPMSoundFile));
+                    MessageSoundUrl[SoundKinds.ArenaPM.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + KaiConfig.getInstance().getConfigString(ArenaPMSoundFile));
                 }
 
-                if (JKaiUI.getConfig().getConfigString(ModeratorChatSoundFile).equals("default")) {
+                if (KaiConfig.getInstance().getConfigString(ModeratorChatSoundFile).equals("default")) {
                     MessageSoundUrl[SoundKinds.ModeratorChat.ordinal()] = getClass().getResource("/pt/jkaiui/ui/resources/sound/message.wav");
                 } else {
-                    MessageSoundUrl[SoundKinds.ModeratorChat.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + JKaiUI.getConfig().getConfigString(ModeratorChatSoundFile));
+                    MessageSoundUrl[SoundKinds.ModeratorChat.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + KaiConfig.getInstance().getConfigString(ModeratorChatSoundFile));
                 }
 
-                if (JKaiUI.getConfig().getConfigString(SendSoundFile).equals("default")) {
+                if (KaiConfig.getInstance().getConfigString(SendSoundFile).equals("default")) {
                     MessageSoundUrl[SoundKinds.Send.ordinal()] = getClass().getResource("/pt/jkaiui/ui/resources/sound/message.wav");
                 } else {
-                    MessageSoundUrl[SoundKinds.Send.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + JKaiUI.getConfig().getConfigString(SendSoundFile));
+                    MessageSoundUrl[SoundKinds.Send.ordinal()] = new URL("file:" + soundfileholder.getPath() + "/" + KaiConfig.getInstance().getConfigString(SendSoundFile));
                 }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    public void reset(){
+        init();
     }
 
     public void playMessageSound(SoundKinds sound) {

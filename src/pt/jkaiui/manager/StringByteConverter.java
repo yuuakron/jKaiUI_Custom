@@ -128,29 +128,30 @@ public class StringByteConverter {
     }
     
     public static String BytetoStringforPM(byte[] str, String user) {
+        
         try {
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("JKaiUI(7.4.18)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("JKaiUI(7.4.18)")) {
                 return new String(str, "Windows-31j");
             }
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("JKaiUI(7.4.22)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("JKaiUI(7.4.22)")) {
                 return new String(str, "utf-8");
             }
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("WebUI(7.4.18)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("WebUI(7.4.18)")) {
                 String tmp = new String(str, "Windows-31j");
                 String[] tmpstr = tmp.split(";");
                 String returnstr = tmpstr[0] + ";" + tmpstr[1] + ";" + HtmlUnicodedecode(tmpstr[2].replaceAll("\2", ";"), 10) + ";";
                 return returnstr;
             }
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("WebUI(7.4.22)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("WebUI(7.4.22)")) {
                 String tmp = new String(str, "utf-8");
                 String[] tmpstr = tmp.split(";");
                 String returnstr = tmpstr[0] + ";" + tmpstr[1] + ";" + HtmlUnicodedecode(tmpstr[2].replaceAll("\2", ";"), 10) + ";";
                 return returnstr;
             }
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("GUI(7.4.18)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("GUI(7.4.18)")) {
                 return new String(str, "Windows-31j");
             }
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("GUI(7.4.22)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("GUI(7.4.22)")) {
                 return new String(str, "utf-8");
             }
         } catch (Exception e) {
@@ -162,26 +163,26 @@ public class StringByteConverter {
     public static byte[] StringtoByteforPM(String str, String user) {
 
         try {
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("JKaiUI(7.4.18)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("JKaiUI(7.4.18)")) {
                 return str.getBytes("Windows-31j");
             }
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("JKaiUI(7.4.22)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("JKaiUI(7.4.22)")) {
                 return str.getBytes("utf-8");
             }
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("WebUI(7.4.18)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("WebUI(7.4.18)")) {
                 String[] tmp = str.split(";");
                 String sendstr = tmp[0] + ";" + tmp[1] + ";" + new KaiString(HtmlUnicodeencode(tmp[2], 10)).toString() + ";";
                 return sendstr.getBytes("Windows-31j");
             }
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("WebUI(7.4.22)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("WebUI(7.4.22)")) {
                 String[] tmp = str.split(";");
                 String returnstr = tmp[0] + ";" + tmp[1] + ";" + new KaiString(HtmlUnicodeencode(tmp[2], 10)).toString() + ";";
                 return returnstr.getBytes("utf-8");
             }
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("GUI(7.4.18)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("GUI(7.4.18)")) {
                 return str.getBytes("Windows-31j");
             }
-            if (JKaiUI.getChatManager().getSelectedEncoding(user).equals("GUI(7.4.22)")) {
+            if (ChatManager.getInstance().getSelectedEncoding(user).equals("GUI(7.4.22)")) {
                 return str.getBytes("utf-8");
             }
         } catch (Exception e) {

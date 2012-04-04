@@ -10,11 +10,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.AbstractListModel;
 import pt.jkaiui.JKaiUI;
+import static pt.jkaiui.JKaiUI.Status.CONNECTED;
+import static pt.jkaiui.JKaiUI.Status.DISCONNECTED;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.SystemFontSize;
 import pt.jkaiui.core.*;
 import pt.jkaiui.core.messages.*;
 import pt.jkaiui.ui.ChatPanel;
 import pt.jkaiui.ui.KaiSettingsPanel;
+import pt.jkaiui.ui.MainUI;
 import pt.jkaiui.ui.modes.MessengerModeListModel;
 
 /**
@@ -42,12 +45,12 @@ public class CommandManager {
             } else {
                 //コマンドを表示
 //                ChatPanel panel = (ChatPanel) chatsTable.get(GENERAL_CHAT);
-                ChatPanel panel = (ChatPanel) JKaiUI.getMainUI().jTabbedPane.getSelectedComponent();
+                ChatPanel panel = (ChatPanel) MainUI.getInstance().jTabbedPane.getSelectedComponent();
 
                 String tmpstr = JKaiUICommands(text.replaceFirst("%", ""));
 
                 if (tmpstr != null) {
-                    panel.write("<div style=\"color:black; font-size:" + JKaiUI.getConfig().getConfigInt(SystemFontSize) + "px;\"> -- " + tmpstr + "</div>");
+                    panel.write("<div style=\"color:black; font-size:" + KaiConfig.getInstance().getConfigInt(SystemFontSize) + "px;\"> -- " + tmpstr + "</div>");
                 }
                 return null;
             }
@@ -62,8 +65,8 @@ public class CommandManager {
         if (tmp[0].matches("^%(.*)")) {
             if (tmp[0].equalsIgnoreCase("%ask")) {
                 //display ask command receive info
-                ChatPanel panel = (ChatPanel) JKaiUI.getMainUI().jTabbedPane.getSelectedComponent();
-                panel.write("<div style=\"color:black; font-size:" + JKaiUI.getConfig().getConfigInt(SystemFontSize) + "px;\"> -- " + " Received an ask comamnd from " + msg.getUser() + "  Command:" + msg.getMessage() + "</div>");
+                ChatPanel panel = (ChatPanel) MainUI.getInstance().jTabbedPane.getSelectedComponent();
+                panel.write("<div style=\"color:black; font-size:" + KaiConfig.getInstance().getConfigInt(SystemFontSize) + "px;\"> -- " + " Received an ask comamnd from " + msg.getUser() + "  Command:" + msg.getMessage() + "</div>");
 
                 //コマンドの送信
                 String sendtext = JKaiUIAskCommands(msg.getMessage().replaceFirst("%ask\\s+", ""));
@@ -111,7 +114,7 @@ public class CommandManager {
                         }
                     }
 
-                    panel.write("<div style=\"color:black; font-size:" + JKaiUI.getConfig().getConfigInt(SystemFontSize) + "px;\"> -- " + "Replied to the " + msg.getUser() + "'s ask command   Command:" + msg.getMessage() + "</div>");
+                    panel.write("<div style=\"color:black; font-size:" + KaiConfig.getInstance().getConfigInt(SystemFontSize) + "px;\"> -- " + "Replied to the " + msg.getUser() + "'s ask command   Command:" + msg.getMessage() + "</div>");
 
                 }
                 return null;
@@ -143,12 +146,12 @@ public class CommandManager {
 
         //show jkaiui version
         if (tmp[0].equalsIgnoreCase("ver")) {
-            return JKaiUI.getVersion();
+            return JKaiUI.Info.getLongVersion();
         }
 
         //open setting
         if (tmp[0].equalsIgnoreCase("openconfig")) {
-            JKaiUI.getMainUI().jMenuItemSettings.doClick();
+            MainUI.getInstance().jMenuItemSettings.doClick();
             return "open config";
         }
 
@@ -214,68 +217,68 @@ public class CommandManager {
 
         //change messangermode
         if (tmp[0].equalsIgnoreCase("messengermode")) {
-            JKaiUI.getMainUI().jButtonMessengerMode.doClick();
+            MainUI.getInstance().jButtonMessengerMode.doClick();
             return "change messengermode";
         }
 
         //change arenamode
         if (tmp[0].equalsIgnoreCase("arenamode")) {
-            JKaiUI.getMainUI().jButtonArenaMode.doClick();
+            MainUI.getInstance().jButtonArenaMode.doClick();
             return "change arenamode";
         }
 
         //change diagmode
         if (tmp[0].equalsIgnoreCase("diagmode")) {
-            JKaiUI.getMainUI().jButtonDiagMode.doClick();
+            MainUI.getInstance().jButtonDiagMode.doClick();
             return "change diagmode";
         }
 
         //connect to kaiengine
         if (tmp[0].equalsIgnoreCase("connect")) {
-            if (JKaiUI.status == JKaiUI.DISCONNECTED) {
-                JKaiUI.getMainUI().clickConnectDisconnectButton();
+            if (JKaiUI.getStatus() == DISCONNECTED) {
+                MainUI.getInstance().clickConnectDisconnectButton();
             }
             return "connect to kaiengine";
         }
 
         //disconnect to kaiengine
         if (tmp[0].equalsIgnoreCase("disconnect")) {
-            if (JKaiUI.status == JKaiUI.CONNECTED) {
-                JKaiUI.getMainUI().clickConnectDisconnectButton();
+            if (JKaiUI.getStatus() == CONNECTED) {
+                MainUI.getInstance().clickConnectDisconnectButton();
             }
             return "disconnect from kaiengine";
         }
 
         //exit jkaiui
         if (tmp[0].equalsIgnoreCase("exit")) {
-            JKaiUI.getMainUI().windowClosing(null);
+            MainUI.getInstance().windowClosing(null);
             return "exit jKaiUI";
         }
 
         //lock chat window
         if (tmp[0].equalsIgnoreCase("chatlock")) {
-            ChatPanel tmppanel = (ChatPanel) JKaiUI.getMainUI().jTabbedPane.getSelectedComponent();
+            ChatPanel tmppanel = (ChatPanel) MainUI.getInstance().jTabbedPane.getSelectedComponent();
             tmppanel.checklockchat.setSelected(true);
             return "lock chat window";
         }
 
         //unlock chat window
         if (tmp[0].equalsIgnoreCase("chatunlock")) {
-            ChatPanel tmppanel = (ChatPanel) JKaiUI.getMainUI().jTabbedPane.getSelectedComponent();
+            ChatPanel tmppanel = (ChatPanel) MainUI.getInstance().jTabbedPane.getSelectedComponent();
             tmppanel.checklockchat.setSelected(false);
             return "unlock chat window";
         }
 
         //reset chat window
         if (tmp[0].equalsIgnoreCase("chatreset")) {
-            ChatPanel tmppanel = (ChatPanel) JKaiUI.getMainUI().jTabbedPane.getSelectedComponent();
+            ChatPanel tmppanel = (ChatPanel) MainUI.getInstance().jTabbedPane.getSelectedComponent();
             tmppanel.buttonReset.doClick();
             return "reset chat window";
         }
 
         //open logwindow
         if (tmp[0].equalsIgnoreCase("logwindow")) {
-            JKaiUI.getMainUI().jMenuItemLog.doClick();
+            MainUI.getInstance().jMenuItemLog.doClick();
             return "show/hide logwindow";
         }
 
@@ -288,11 +291,11 @@ public class CommandManager {
             Arena arena;
             if (m2.matches()) {
                 if (Integer.parseInt(m2.group(1)) > 0) {
-                    Vector BookmarkVector = JKaiUI.getMainUI().bookmarkVector;
+                    Vector BookmarkVector = MainUI.getInstance().bookmarkVector;
                     arena = (Arena) BookmarkVector.elementAt(Integer.parseInt(m2.group(1)) - 1);
 
-                    if (JKaiUI.CURRENT_MODE != JKaiUI.ARENA_MODE) {
-                        JKaiUI.getMainUI().jButtonArenaMode.doClick();
+                    if (JKaiUI.getCURRENT_MODE() != JKaiUI.Mode.ARENA_MODE) {
+                        MainUI.getInstance().jButtonArenaMode.doClick();
                     }
                     Manager.enterArena(arena);
                 }
@@ -312,7 +315,7 @@ public class CommandManager {
                 if (Integer.parseInt(m2.group(1)) > 0) {
                     User user = (User) listmodel.getElementAt(Integer.parseInt(m2.group(1)) - 1);
                     if (user.isOnline()) {
-                        JKaiUI.getChatManager().openChat(user);
+                        ChatManager.getInstance().openChat(user);
                     }
                 }
             }
@@ -359,7 +362,7 @@ public class CommandManager {
                             if (count == Integer.parseInt(m2.group(1))) {
                                 User user = (User) obj;
                                 if (user.isOnline()) {
-                                    JKaiUI.getChatManager().openChat(user);
+                                    ChatManager.getInstance().openChat(user);
                                 }
                             }
                         }
@@ -432,7 +435,7 @@ public class CommandManager {
 
                 if (tmp[1].equalsIgnoreCase("bookmarks")) {
 
-                    Vector BookmarkVector = JKaiUI.getMainUI().bookmarkVector;
+                    Vector BookmarkVector = MainUI.getInstance().bookmarkVector;
                     return BookmarkVector.toString();
                 }
             }
@@ -447,7 +450,7 @@ public class CommandManager {
 
             if (m2.matches()) {
                 if (Integer.parseInt(m2.group(1)) > 0) {
-                    AbstractListModel model = (AbstractListModel) JKaiUI.getMainUI().PhraseList.getModel();
+                    AbstractListModel model = (AbstractListModel) MainUI.getInstance().PhraseList.getModel();
 
                     if (model.getSize() > Integer.parseInt(m2.group(1)) - 1) {
                         return (String) model.getElementAt(Integer.parseInt(m2.group(1)) - 1);
@@ -469,7 +472,7 @@ public class CommandManager {
                 if (Integer.parseInt(m2.group(1)) > 0) {
 
                     emot = (EmoticonManager.getInstance().getEmotIconList().get(Integer.parseInt(m2.group(1)) - 1)).split(",")[0];
-                    ChatPanel tmppane = (ChatPanel) JKaiUI.getMainUI().jTabbedPane.getSelectedComponent();
+                    ChatPanel tmppane = (ChatPanel) MainUI.getInstance().jTabbedPane.getSelectedComponent();
                     try {
                         tmppane.jTextFieldInput.getDocument().insertString(tmppane.jTextFieldInput.getCaretPosition(), emot, null);
                     } catch (Exception e) {
@@ -490,10 +493,10 @@ public class CommandManager {
                 }
                 try {
                     String str = text.replaceFirst(tmp[0] + "\\s+", "").replaceFirst(tmp[1] + "\\s+", "");//3番目以降の値を取り出す
-                    JKaiUI.getConfig().loadtoFileConfig(tmp[1] + ":" + str);
-                    JKaiUI.getConfig().saveConfig();
+                    KaiConfig.getInstance().loadtoFileConfig(tmp[1] + ":" + str);
+                    KaiConfig.getInstance().saveConfig();
 
-                    Component[] children = JKaiUI.getMainUI().jTabbedPane.getComponents();
+                    Component[] children = MainUI.getInstance().jTabbedPane.getComponents();
                     for (int i = 0; i < children.length; i++) {
                         if (children[i] instanceof KaiSettingsPanel) {
                             KaiSettingsPanel pane = (KaiSettingsPanel) children[i];
@@ -537,7 +540,7 @@ public class CommandManager {
             }
 
             KaiVectorOut vecOut = new KaiVectorOut();
-            vecOut.setVector(new KaiString(JKaiUI.ARENA + "/" + texttmp));
+            vecOut.setVector(new KaiString(JKaiUI.getARENA() + "/" + texttmp));
             ActionExecuter.execute(vecOut);
             return null;
         }
@@ -558,7 +561,7 @@ public class CommandManager {
 
         //show config info
         if (tmp[0].equalsIgnoreCase("config")) {
-            return JKaiUI.getConfig().copyconfig(tmp[1]);
+            return KaiConfig.getInstance().copyconfig(tmp[1]);
         }
 
         return text;

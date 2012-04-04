@@ -205,7 +205,7 @@ public class InfoPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 	
 	public void setUser(String s) {
-                if(JKaiUI.MODERATORS.contains(s)) {
+                if(JKaiUI.getMODERATORS().contains(s)) {
             s = "<html><body>" + s + " - <font color=\"red\">"
             + ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_Moderator") + "</font></body></html>";
         }

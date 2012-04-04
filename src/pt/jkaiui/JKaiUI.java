@@ -3,103 +3,159 @@
  *
  * Created on November 16, 2004, 3:46 PM
  */
-
 package pt.jkaiui;
 
 import java.io.File;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Vector;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JPanel;
+import static pt.jkaiui.JKaiUI.Mode.*;
+import static pt.jkaiui.JKaiUI.Status.CONNECTED;
+import static pt.jkaiui.JKaiUI.Status.DISCONNECTED;
 import pt.jkaiui.core.KaiConfig;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.HOST;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.PASSWORD;
 import pt.jkaiui.core.messages.DetachEngineOut;
-import pt.jkaiui.filelog.LogFileManager;
-import pt.jkaiui.manager.ChatManager;
+import pt.jkaiui.manager.ActionExecuter;
 import pt.jkaiui.manager.Manager;
-import pt.jkaiui.manager.SoundManager;
 import pt.jkaiui.tools.log.ConfigLog;
 import pt.jkaiui.ui.MainUI;
 import pt.jkaiui.ui.modes.*;
 
 /**
  *
- * @author  pedro
+ * @author pedro
  */
 public class JKaiUI {
+
+    //internal enum/class
+    public enum Status {
+
+        DISCONNECTED,
+        CONNECTED
+    }
+
+    public enum Mode {
+
+        MESSENGER_MODE,
+        ARENA_MODE,
+        DIAG_MODE;
+    }
+
+    public static class Info {
+
+        private static final String UIName = "JKaiUI Custom";
+        private static final String LongVersion = " ver.0.6.0(2012/4/2)";
+        private static final String ShortVersion = "0.6.0";
+
+        public static String getLongVersion() {
+            return LongVersion;
+        }
+
+        public static String getShortVersion() {
+            return ShortVersion;
+        }
+
+        public static String getUIName() {
+            return UIName;
+        }
+    }
     
-    public static final int DISCONNECTED = 10;
-    public static final int CONNECTED = 11;
-    public static int status = DISCONNECTED;
-    
-    public static final int MESSENGER_MODE = 0;
-    public static final int ARENA_MODE = 1;
-    public static final int DIAG_MODE = 2;
-    public static int CURRENT_MODE = MESSENGER_MODE;
-    
-    private static MainUI mainUI;
-    private static KaiConfig kaiConfig;
+    //variable
+    private static Status status = DISCONNECTED;
+    private static Mode CURRENT_MODE = MESSENGER_MODE;
+    private static Map<Mode, MainMode> modesMap;
+    private static Set<String> ADMINISTRATORS = new HashSet<String>();
+    private static Set<String> MODERATORS = new HashSet<String>();
     private static Logger _logger;
-    private static Vector modesVector;
-    private static Manager manager;
     
-    public static String ARENA;
-    
-    public static HashSet ADMINISTRATORS = new HashSet();
-    public static HashSet MODERATORS = new HashSet();
-    
-    /**
-     * Holds value of property chatManager.
-     */
-    private static ChatManager chatManager;    
-    private static LogFileManager logFileManager;
-    private static SoundManager soundManager;
-    
-    private static final String uiname = "JKaiUI Custom";
-    private static final String version = " ver.0.6.0(2012/4/2)";
-    private static final String version2 = "0.6.0";
+    private static String ARENA;
     private static String KaiEngineVersion;
-    public static boolean develflag = false;//true: devel verion false:normal version
-    
-    /** Creates a new instance of JKaiUI */
-//    public JKaiUI(){
-//        init();
-//    }
-    
+    private static boolean devel = false;//true: devel verion false:normal version
+
+    //setter and getter
+    public static boolean isDevel() {
+        return devel;
+    }
+
+    public static Status getStatus() {
+        return status;
+    }
+
+    public static void setCURRENT_MODE(Mode CURRENT_MODE) {
+        JKaiUI.CURRENT_MODE = CURRENT_MODE;
+    }
+
+    public static Mode getCURRENT_MODE() {
+        return CURRENT_MODE;
+    }
+
+    public static Set<String> getADMINISTRATORS() {
+        return ADMINISTRATORS;
+    }
+
+    public static Set<String> getMODERATORS() {
+        return MODERATORS;
+    }
+
+    public static void setKaiEngineVersion(String version) {
+        KaiEngineVersion = version;
+    }
+
+    public static String getKaiEngineVersion() {
+        return KaiEngineVersion;
+    }
+
+    public static String getARENA() {
+        return ARENA;
+    }
+
+    public static void setARENA(String ARENA) {
+        JKaiUI.ARENA = ARENA;
+    }
+
+    public static MessengerMode getMessengerMode() {
+        return (MessengerMode) modesMap.get(MESSENGER_MODE);
+    }
+
+    public static ArenaMode getArenaMode() {
+        return (ArenaMode) modesMap.get(ARENA_MODE);
+    }
+
+    public static DiagMode getDiagMode() {
+        return (DiagMode) modesMap.get(DIAG_MODE);
+    }
+
+    public static Map<Mode, MainMode> getModesMap() {
+        return Collections.unmodifiableMap(modesMap);
+    }
+
+    //
     public JKaiUI(String[] args) {
         //switch normal, devel mode depend on argments
         if (args.length > 0 && args[0].equals("devel")) {
-            develflag = true;
-        }
-
-        if (isMac()) {
-            System.setProperty("apple.laf.useScreenMenuBar", "true");
-
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", JKaiUI.getUIName());
+            devel = true;
         }
 
 //        System.out.println(Locale.getDefault().getDisplayCountry());
 
         init();
     }
-    
+
     private void init() {
 
+        if (isMac()) {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", Info.getUIName());
+        }
 
-        mainUI = new MainUI();
+        MainUI mainUI = MainUI.getInstance();
 
         updateStatus();
 
-        // Moved the setVisible call until after everything is loaded in MainUI's constructor.
-        //mainUI.setVisible(true);
-
         try {
 
-            ConfigLog.createDefaulLoggerHandlers(mainUI.getLogEditorPane());
+            ConfigLog.createDefaulLoggerHandlers(MainUI.getInstance().getLogEditorPane());
             _logger = ConfigLog.getLogger(this.getClass().getName());
             _logger.log(Level.CONFIG, "Log Started at {0}", new java.util.Date().toString());
 
@@ -110,24 +166,20 @@ public class JKaiUI {
 
         // Add Modes
         try {
-            addModes(mainUI.getJPanelMode());
+            addModes();
         } catch (Exception e) {
             System.out.println("JKaiUI init:" + e.getMessage());
         }
 
-        chatManager = new ChatManager();
-        soundManager = new SoundManager();
-        logFileManager = new LogFileManager();
-
         mainUI.repaint();
         mainUI.setVisible(true);
-      
+
         //setting folder
-        File settingFolder = new File(JKaiUI.getConfig().getConfigSettingFolder());
-        File settingSaveFolder = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/setting");
-        File soundFolder = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/sound");
-        File emoticonsFolder = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/emoticons");
-        
+        File settingFolder = new File(KaiConfig.getInstance().getConfigSettingFolder());
+        File settingSaveFolder = new File(KaiConfig.getInstance().getConfigSettingFolder() + "/setting");
+        File soundFolder = new File(KaiConfig.getInstance().getConfigSettingFolder() + "/sound");
+        File emoticonsFolder = new File(KaiConfig.getInstance().getConfigSettingFolder() + "/emoticons");
+
         try {
             if (!settingFolder.exists()) {
                 settingFolder.mkdir();
@@ -142,243 +194,127 @@ public class JKaiUI {
                 emoticonsFolder.mkdir();
             }
         } catch (Exception e) {
-            System.out.println("setting folder open err:"+e);
+            System.out.println("setting folder open err:" + e);
         }
-        
+
         connect();
     }
-    
-    
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {       
-        //javax.swing.SwingUtilities.invokeLater(new Runnable() {
-        //  public void run() {
+    public static void main(String[] args) {
         new JKaiUI(args);
-        //  }
-        //});
     }
-    
+
     private static boolean isMac() {
         return System.getProperty("os.name").toLowerCase().startsWith("mac os x");
     }
-    
-    /**
-     * Getter for property mainUI.
-     * @return Value of property mainUI.
-     */
-    public static MainUI getMainUI() {
-        
-        return mainUI;
-    }
-    
-    /**
-     * Setter for property mainUI.
-     * @param mainUI New value of property mainUI.
-     */
-    public void setMainUI(MainUI mainUI) {
-        
-        this.mainUI = mainUI;
-    }
-    
-    
-    public static KaiConfig getConfig(){
-        
-        if( kaiConfig == null ){
-            
-            kaiConfig = new KaiConfig();
-            kaiConfig.readConfig();
-        }
-        
-        return kaiConfig;
-        
-    }
-    
-    
-    public void addModes(JPanel panel){
-        
-        
-        _logger.config("Creating modes");
-        
-        modesVector = new Vector();
-        
-        // Init Modesx
-        MessengerMode messengerMode = new MessengerMode();
-        ArenaMode arenaMode = new ArenaMode();
-        DiagMode diagMode = new DiagMode();
-        
-        // Add to vector
-        modesVector.add(messengerMode); // 0
-        modesVector.add(arenaMode); // 1
-        modesVector.add(diagMode); // 2
-        
+
+    public void addModes() {
+
+//        _logger.config("Creating modes");
+
+        modesMap = new EnumMap<Mode, MainMode>(Mode.class);
+
+        // Init ModesMap
+        modesMap.put(MESSENGER_MODE, new MessengerMode());
+        modesMap.put(ARENA_MODE, new ArenaMode());
+        modesMap.put(DIAG_MODE, new DiagMode());
+
         // Show one
-        _logger.info("Selecting Messenger Mode");
-        
-        ((MainMode)modesVector.get(MESSENGER_MODE)).selectMode();
-        
+//        _logger.info("Selecting Messenger Mode");
+
+        modesMap.get(MESSENGER_MODE).selectMode();
     }
-    
-    
-    public static void resetModeName(){
-        
-        MainMode m = (MainMode) modesVector.get(CURRENT_MODE);
-        
+
+    public static void resetModeName() {
+
+        MainMode m = modesMap.get(CURRENT_MODE);
+
         m.setModeName(m.getName());
     }
-    
-    public static void selectMode(Object cl){
-        
+
+    public static void selectMode(Object cl) {
+
         // Add all to UI
-        
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements() ; ){
-            
-            MainMode m = (MainMode) e.nextElement();
-            
-            if ( m.getClass().getName().equals(cl.getClass().getName()) ){
-                
-                m.selectMode();
-                
+        for (Mode m : Mode.values()) {
+            MainMode mode = modesMap.get(m);
+            if (mode.getClass().getName().equals(cl.getClass().getName())) {
+
+                mode.selectMode();
+
                 return;
             }
         }
-        
     }
-    
-    public static MessengerMode getMessengerMode(){
-        return (MessengerMode) getModesVector().get(0);
-    }
-    
-    public static ArenaMode getArenaMode(){
-        return (ArenaMode) getModesVector().get(1);
-    }
-    
-    public static DiagMode getDiagMode(){
-        return (DiagMode) getModesVector().get(2);
-    }
-    
-    public static Vector getModesVector(){
-        
-        return modesVector;
-    }
-    
-    
-    public static void connect(){
-        if(kaiConfig != null && mainUI != null) {
-            if(kaiConfig.getConfig(HOST).equals("") || kaiConfig.getConfig(PASSWORD).equals("")) {
-                boolean shouldOpenSettingsDialog;
-                // Should check if the program is being ran for the first time?
-                if(mainUI.askYesNoDialog("MSG_SettingsNotConfiguredQuestion", "MSG_Error")) {
-                    mainUI.openSettings();
-                }
-            } else {
-                getManager().connect();
+
+    public static void connect() {
+        if (KaiConfig.getInstance().getConfig(HOST).equals("") || KaiConfig.getInstance().getConfig(PASSWORD).equals("")) {
+            boolean shouldOpenSettingsDialog;
+            // Should check if the program is being ran for the first time?
+            if (MainUI.getInstance().askYesNoDialog("MSG_SettingsNotConfiguredQuestion", "MSG_Error")) {
+                MainUI.getInstance().openSettings();
             }
+        } else {
+            Manager.getInstance().connect();
         }
     }
-    
-    
-    public static void connected(){
+
+    public static void connected() {
         status = CONNECTED;
         updateStatus();
     }
-    
-    public static Manager getManager(){
-        
-        if(manager == null)
-            manager = new Manager();
-        
-        return manager;
-        
-    }
-    
-    public static void disconnect(){
-        
-        if(status != DISCONNECTED){
+
+    public static void disconnect() {
+
+        if (status != DISCONNECTED) {
             DetachEngineOut out = new DetachEngineOut();
-            JKaiUI.getManager().getExecuter().execute(out);
+            ActionExecuter.execute(out);
         }
-        
+
     }
-    
-    public static void disconnected(){
-        
+
+    public static void disconnected() {
+
         //Clean lists
         MessengerModeListModel model = (MessengerModeListModel) JKaiUI.getArenaMode().getListModel();
         model.clear();
-        
+
         model = (MessengerModeListModel) JKaiUI.getMessengerMode().getListModel();
         model.clear();
-        
+
         model = (MessengerModeListModel) JKaiUI.getDiagMode().getListModel();
         model.clear();
-        
-        mainUI.getListModelChatUsers().clear();
-        mainUI.UpdateChatUsersQuantity();
-        
+
+        MainUI.getInstance().getListModelChatUsers().clear();
+        MainUI.getInstance().UpdateChatUsersQuantity();
+
         status = DISCONNECTED;
         updateStatus();
-        
+
     }
-    
-    
-    public static void updateStatus(){
-        
-        if (status == DISCONNECTED){
-            mainUI.jButtonMessengerMode.setEnabled(false);
-            mainUI.jButtonArenaMode.setEnabled(false);
-            mainUI.jButtonDiagMode.setEnabled(false);
-            mainUI.SetDisConnectedStatus();
-            
-            try{
+
+    public static void updateStatus() {
+
+        if (status == DISCONNECTED) {
+            MainUI.getInstance().jButtonMessengerMode.setEnabled(false);
+            MainUI.getInstance().jButtonArenaMode.setEnabled(false);
+            MainUI.getInstance().jButtonDiagMode.setEnabled(false);
+            MainUI.getInstance().SetDisConnectedStatus();
+
+            try {
                 getArenaMode().enableGoParentArena(false);
-            } catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 // do nothing. must be first init
-                System.out.println("JKaiUI updateStatus:"+e);
+                System.out.println("JKaiUI updateStatus:" + e);
             }
-        } else if(status == CONNECTED){
-            mainUI.jButtonArenaMode.setEnabled(true);
-            mainUI.jButtonDiagMode.setEnabled(true);
-            mainUI.SetConnectedStatus();
+        } else if (status == CONNECTED) {
+            MainUI.getInstance().jButtonArenaMode.setEnabled(true);
+            MainUI.getInstance().jButtonDiagMode.setEnabled(true);
+            MainUI.getInstance().SetConnectedStatus();
             getArenaMode().enableGoParentArena(true);
         }
-        
-    }
-    
-    /**
-     * Getter for property chatManager.
-     * @return Value of property chatManager.
-     */
-    public static ChatManager getChatManager() { 
-        return chatManager;
-    }
-    
-    public static LogFileManager getLogFileManager() {
-        return logFileManager;
-    }
-    
-    public static SoundManager getSoundManager(){
-        return soundManager;
-    }
-    
-    public static String getVersion(){
-        return version;
-    }
-    
-    public static String getVersion2(){
-        return version2;
-    }
-    
-    public static void setKaiEngineVersion(String version){
-        KaiEngineVersion = version;
-    } 
-    
-    public static String getUIName(){
-        return uiname;
-    }
-    
-    public static String getKaiEngineVersion(){
-        return KaiEngineVersion;
+
     }
 }

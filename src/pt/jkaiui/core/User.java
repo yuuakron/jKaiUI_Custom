@@ -13,7 +13,7 @@ import pt.jkaiui.JKaiUI;
  *
  * @author  pedro
  */
-public class User extends KaiObject implements Comparable {
+public class User extends KaiObject implements Comparable{
     
     public static final int IDLE = 0;
     public static final int BUSY = 1;
@@ -210,14 +210,14 @@ public class User extends KaiObject implements Comparable {
     
     public boolean isAdmin(){
         
-        return JKaiUI.ADMINISTRATORS.contains(this.getUser());
+        return JKaiUI.getADMINISTRATORS().contains(this.getUser());
         
     }
     
     
     public boolean isModerator(){
         
-        return JKaiUI.MODERATORS.contains(this.getUser());
+        return JKaiUI.getMODERATORS().contains(this.getUser());
         
     }
 

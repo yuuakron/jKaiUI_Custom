@@ -166,11 +166,11 @@ public class KaiListCellRenderer extends KaiListPanel implements ListCellRendere
                 icon = overlapGraphics(icon, DEDICATED_HOSTING_OVERLAY);
             }
 
-            if (user.isAdmin() && JKaiUI.CURRENT_MODE == JKaiUI.ARENA_MODE) {
+            if (user.isAdmin() && JKaiUI.getCURRENT_MODE() == JKaiUI.Mode.ARENA_MODE) {
                 icon = overlapGraphics(icon, ADMIN_OVERLAY);
             }
 
-            if (user.isModerator() && JKaiUI.CURRENT_MODE == JKaiUI.ARENA_MODE) {
+            if (user.isModerator() && JKaiUI.getCURRENT_MODE() == JKaiUI.Mode.ARENA_MODE) {
                 icon = overlapGraphics(icon, MODERATOR_OVERLAY);
             }
 
@@ -243,7 +243,7 @@ public class KaiListCellRenderer extends KaiListPanel implements ListCellRendere
 
                             ImageIcon avatar = null;
 
-                            File iconLocation = new File(JKaiUI.getConfig().getConfigString(KaiConfig.ConfigTag.AVATARCACHE), arena.getVector().replace('/', File.separatorChar).toLowerCase() + ".ii");
+                            File iconLocation = new File(KaiConfig.getInstance().getConfigString(KaiConfig.ConfigTag.AVATARCACHE), arena.getVector().replace('/', File.separatorChar).toLowerCase() + ".ii");
 
                             File iconFolder = new File(iconLocation.getParent());
                             if (!iconFolder.exists()) {
@@ -251,7 +251,7 @@ public class KaiListCellRenderer extends KaiListPanel implements ListCellRendere
                             }
 
                             // 86400000 milliseconds in a day
-                            if (iconLocation.exists() && (iconLocation.lastModified() < System.currentTimeMillis() + (86400000 * JKaiUI.getConfig().getConfigInt(KaiConfig.ConfigTag.CACHEDAYS)))) {
+                            if (iconLocation.exists() && (iconLocation.lastModified() < System.currentTimeMillis() + (86400000 * KaiConfig.getInstance().getConfigInt(KaiConfig.ConfigTag.CACHEDAYS)))) {
                                 try {
                                     ObjectInputStream ois = new ObjectInputStream(new FileInputStream(iconLocation));
                                     avatar = (ImageIcon) ois.readObject();

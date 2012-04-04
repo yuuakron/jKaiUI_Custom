@@ -19,6 +19,7 @@ import pt.jkaiui.core.messages.*;
 import static pt.jkaiui.manager.SoundManager.SoundKinds.*;
 import pt.jkaiui.tools.log.ConfigLog;
 import pt.jkaiui.ui.ChatPanel;
+import pt.jkaiui.ui.MainUI;
 import pt.jkaiui.ui.modes.MessengerModeListModel;
 import pt.jkaiui.ui.tools.Say;
 
@@ -28,6 +29,12 @@ import pt.jkaiui.ui.tools.Say;
  */
 public class ChatManager {
 
+    private static final ChatManager INSTANCE = new ChatManager();
+
+    public static ChatManager getInstance() {
+        return INSTANCE;
+    }
+    
     public static final String GENERAL_CHAT = "\1";
     private static Logger _logger;
     private Hashtable chatsTable;
@@ -41,7 +48,7 @@ public class ChatManager {
     /**
      * Creates a new instance of ChatManager
      */
-    public ChatManager() {
+    private ChatManager() {
         init();
     }
 
@@ -83,7 +90,7 @@ public class ChatManager {
 
         ChatPanel panel = null;
 
-        if (JKaiUI.getConfig().getConfigBoolean(AskCommand)) {
+        if (KaiConfig.getInstance().getConfigBoolean(AskCommand)) {
             String texttmp = CommandManager.JKaiUIAskcommand(msg);
             if (texttmp == null) {
                 return;
@@ -97,21 +104,21 @@ public class ChatManager {
             panel = (ChatPanel) chatsTable.get(GENERAL_CHAT);
 
             //チャットで音を鳴らす
-            if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND) && !msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh")
-                    && (JKaiUI.getConfig().getConfigBoolean(ChatSound))) {
-                JKaiUI.getSoundManager().playMessageSound(Chat);
+            if (KaiConfig.getInstance().getConfigBoolean(PLAYMESSAGESOUND) && !msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh")
+                    && (KaiConfig.getInstance().getConfigBoolean(ChatSound))) {
+                SoundManager.getInstance().playMessageSound(Chat);
             }
             //フレンドの発言時に音をならすように変更
-            if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
-                    && (JKaiUI.getConfig().getConfigBoolean(FriendChatSound))
+            if (KaiConfig.getInstance().getConfigBoolean(PLAYMESSAGESOUND)
+                    && (KaiConfig.getInstance().getConfigBoolean(FriendChatSound))
                     && (userIsFriend(msg.getUser()))) {
-                JKaiUI.getSoundManager().playMessageSound(FriendChat);
+                SoundManager.getInstance().playMessageSound(FriendChat);
             }
             //モデの発言時に音をならすように変更
-            if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
-                    && (JKaiUI.getConfig().getConfigBoolean(ModeratorChatSound))
+            if (KaiConfig.getInstance().getConfigBoolean(PLAYMESSAGESOUND)
+                    && (KaiConfig.getInstance().getConfigBoolean(ModeratorChatSound))
                     && (msg.getUser().isModerator())) {
-                JKaiUI.getSoundManager().playMessageSound(ModeratorChat);
+                SoundManager.getInstance().playMessageSound(ModeratorChat);
             }
 
         } else if (msg.getType() == ChatMessage.PRIVATE_MESSAGE) {
@@ -119,16 +126,16 @@ public class ChatManager {
             panel = getOrCreatePanel(msg.getUser().getUser());
 
             //PMがきたとき音をならすように変更
-            if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
-                    && (JKaiUI.getConfig().getConfigBoolean(FriendPMSound))
+            if (KaiConfig.getInstance().getConfigBoolean(PLAYMESSAGESOUND)
+                    && (KaiConfig.getInstance().getConfigBoolean(FriendPMSound))
                     && (userIsFriend(msg.getUser()))) {
-                JKaiUI.getSoundManager().playMessageSound(FriendPM);
+                SoundManager.getInstance().playMessageSound(FriendPM);
             }
             //ArenaPMがきたとき音をならすように変更
-            if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
-                    && (JKaiUI.getConfig().getConfigBoolean(ArenaPMSound))
+            if (KaiConfig.getInstance().getConfigBoolean(PLAYMESSAGESOUND)
+                    && (KaiConfig.getInstance().getConfigBoolean(ArenaPMSound))
                     && (!userIsFriend(msg.getUser()))) {
-                JKaiUI.getSoundManager().playMessageSound(ArenaPM);
+                SoundManager.getInstance().playMessageSound(ArenaPM);
             }
         }
 
@@ -156,7 +163,7 @@ public class ChatManager {
 
         addchathistory(msg);
 
-        if (JKaiUI.getConfig().getConfigBoolean(CUICommand)) {
+        if (KaiConfig.getInstance().getConfigBoolean(CUICommand)) {
             String texttmp = CommandManager.JKaiUIcommand(msg.getMessage());
             if (texttmp == null) {
                 return;
@@ -165,9 +172,9 @@ public class ChatManager {
         }
 
         //チャット送信時に音を鳴らす
-        if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
-                && (JKaiUI.getConfig().getConfigBoolean(SendSound))) {
-            JKaiUI.getSoundManager().playMessageSound(Send);
+        if (KaiConfig.getInstance().getConfigBoolean(PLAYMESSAGESOUND)
+                && (KaiConfig.getInstance().getConfigBoolean(SendSound))) {
+            SoundManager.getInstance().playMessageSound(Send);
         }
 
         ChatPanel panel = null;
@@ -218,7 +225,7 @@ public class ChatManager {
 
     private String formatOutMessage(OutMessage msg) {
 
-        return formatMessage(JKaiUI.getConfig().getConfigString(TAG), "#ffaaaa", encodeMessage(msg.getMessage()));
+        return formatMessage(KaiConfig.getInstance().getConfigString(TAG), "#ffaaaa", encodeMessage(msg.getMessage()));
     }
 
     private String formatMessage(String user, String color, String msg) {
@@ -226,7 +233,7 @@ public class ChatManager {
         String msgtmp = msg.replaceAll("\n", "<br>");
 
         String wordbreak = "";
-        if (JKaiUI.getConfig().getConfigBoolean(ChatWrap)) {
+        if (KaiConfig.getInstance().getConfigBoolean(ChatWrap)) {
             wordbreak = "word-break:break-all;";
         }
 
@@ -241,11 +248,11 @@ public class ChatManager {
         String userstr = "<a href=\"https://sites.google.com/site/yuuakron/dummy/" + user + "\">" + user + "</a>";
 
         String out = "";
-        switch (JKaiUI.getConfig().getConfigInt(ChatDisplayStyle)) {
+        switch (KaiConfig.getInstance().getConfigInt(ChatDisplayStyle)) {
             case 0:
                 //JKaiUI
-                out = "<table style=\"padding:2px;width:100%;font-family:Dialog;" + wordbreak + "font-size:" + JKaiUI.getConfig().getConfigInt(ChatFontSize) + "px\"><tr style=\"background-color:" + color + "\"><td>" + userstr + "</td><td align=\"right\">";
-                if (JKaiUI.getConfig().getConfigBoolean(SHOWTIMESTAMPS)) {
+                out = "<table style=\"padding:2px;width:100%;font-family:Dialog;" + wordbreak + "font-size:" + KaiConfig.getInstance().getConfigInt(ChatFontSize) + "px\"><tr style=\"background-color:" + color + "\"><td>" + userstr + "</td><td align=\"right\">";
+                if (KaiConfig.getInstance().getConfigBoolean(SHOWTIMESTAMPS)) {
                     Date dat = new Date();
                     String stime = DateFormat.getTimeInstance().format(dat);
                     out += stime;
@@ -254,25 +261,25 @@ public class ChatManager {
                 break;
             case 2:
                 //WebUI風
-                out = "<table style=\"width:100%;font-family:Dialog;" + wordbreak + "font-size:" + JKaiUI.getConfig().getConfigInt(ChatFontSize) + "px\"><tr>";
-                if (JKaiUI.getConfig().getConfigBoolean(SHOWTIMESTAMPS)) {
+                out = "<table style=\"width:100%;font-family:Dialog;" + wordbreak + "font-size:" + KaiConfig.getInstance().getConfigInt(ChatFontSize) + "px\"><tr>";
+                if (KaiConfig.getInstance().getConfigBoolean(SHOWTIMESTAMPS)) {
                     Date dat = new Date();
                     String stime = DateFormat.getTimeInstance().format(dat);
-                    out += "<td style=\"background-color:" + color + ";width:" + (JKaiUI.getConfig().getConfigInt(ChatFontSize) * 7) + "\">" + stime + " </td>";
+                    out += "<td style=\"background-color:" + color + ";width:" + (KaiConfig.getInstance().getConfigInt(ChatFontSize) * 7) + "\">" + stime + " </td>";
                 }
-                out += "<td style=\"background-color:" + color + ";width:" + (JKaiUI.getConfig().getConfigInt(ChatFontSize) * 14) + "\">" + userstr + "</td>";
+                out += "<td style=\"background-color:" + color + ";width:" + (KaiConfig.getInstance().getConfigInt(ChatFontSize) * 14) + "\">" + userstr + "</td>";
                 out += "<td>" + msgtmp + "</td></tr></table>";
                 break;
             case 1:
                 //GUI風
-                out = "<span style=\"font-family:Dialog;background-color:" + color + ";font-size:" + JKaiUI.getConfig().getConfigInt(ChatFontSize) + "px\">";
-                if (JKaiUI.getConfig().getConfigBoolean(SHOWTIMESTAMPS)) {
+                out = "<span style=\"font-family:Dialog;background-color:" + color + ";font-size:" + KaiConfig.getInstance().getConfigInt(ChatFontSize) + "px\">";
+                if (KaiConfig.getInstance().getConfigBoolean(SHOWTIMESTAMPS)) {
                     Date dat = new Date();
                     String stime = DateFormat.getTimeInstance().format(dat);
                     out += stime + " ";
                 }
                 out += userstr + "</span>";
-                out += "<span style=\"font-family:Dialog;" + wordbreak + "font-size:" + JKaiUI.getConfig().getConfigInt(ChatFontSize) + "px\"> : " + msgtmp + "</span>";
+                out += "<span style=\"font-family:Dialog;" + wordbreak + "font-size:" + KaiConfig.getInstance().getConfigInt(ChatFontSize) + "px\"> : " + msgtmp + "</span>";
                 break;
             default:
                 break;
@@ -296,7 +303,7 @@ public class ChatManager {
     }
 
     private String getColor(String s) {
-        if (JKaiUI.getConfig().getConfigBoolean(ColorBackground)) {
+        if (KaiConfig.getInstance().getConfigBoolean(ColorBackground)) {
 
             char[] array = s.toCharArray();
 
@@ -324,9 +331,9 @@ public class ChatManager {
         if (chatsTable.get(name) == null) {
 
             //PMパネルを開いた場合に音を鳴らすように変更
-            if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
-                    && (JKaiUI.getConfig().getConfigBoolean(PMOpenSound))) {
-                JKaiUI.getSoundManager().playMessageSound(PMOpen);
+            if (KaiConfig.getInstance().getConfigBoolean(PLAYMESSAGESOUND)
+                    && (KaiConfig.getInstance().getConfigBoolean(PMOpenSound))) {
+                SoundManager.getInstance().playMessageSound(PMOpen);
             }
 
             panel = new ChatPanel();
@@ -340,9 +347,9 @@ public class ChatManager {
             panel = (ChatPanel) chatsTable.get(name);
         } else {
             //PMパネルを開いた場合に音を鳴らすように変更
-            if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
-                    && (JKaiUI.getConfig().getConfigBoolean(PMOpenSound))) {
-                JKaiUI.getSoundManager().playMessageSound(PMOpen);
+            if (KaiConfig.getInstance().getConfigBoolean(PLAYMESSAGESOUND)
+                    && (KaiConfig.getInstance().getConfigBoolean(PMOpenSound))) {
+                SoundManager.getInstance().playMessageSound(PMOpen);
             }
 
             panel = (ChatPanel) chatsTable.get(name);
@@ -374,8 +381,8 @@ public class ChatManager {
         // Notify that user has entered the arena
         ChatPanel panel = (ChatPanel) chatsTable.get(GENERAL_CHAT);
 
-        panel.write("<div style=\"color:black; font-size:" + JKaiUI.getConfig().getConfigInt(SystemFontSize) + "px;\"> -- " + java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("MSG_CurrentArena") + ": " + arena + "</div>");
-        JKaiUI.getMainUI().setTitle("JKaiUI: " + arena);
+        panel.write("<div style=\"color:black; font-size:" + KaiConfig.getInstance().getConfigInt(SystemFontSize) + "px;\"> -- " + java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("MSG_CurrentArena") + ": " + arena + "</div>");
+        MainUI.getInstance().setTitle("JKaiUI: " + arena);
 
     }
 
@@ -409,21 +416,21 @@ public class ChatManager {
 
     public void enableIcon(ChatPanel panel) {
 
-        JTabbedPane pane = JKaiUI.getMainUI().jTabbedPane;
+        JTabbedPane pane = MainUI.getInstance().jTabbedPane;
         pane.setIconAt(pane.indexOfComponent(panel), NOTIFY_ICON);
 
     }
 
     public void disableIcon(ChatPanel panel) {
 
-        JTabbedPane pane = JKaiUI.getMainUI().jTabbedPane;
+        JTabbedPane pane = MainUI.getInstance().jTabbedPane;
         pane.setIconAt(pane.indexOfComponent(panel), UNNOTIFY_ICON);
 
     }
 
     public void enableIconIfSelected(ChatPanel panel) {
 
-        JTabbedPane pane = JKaiUI.getMainUI().jTabbedPane;
+        JTabbedPane pane = MainUI.getInstance().jTabbedPane;
         if (!pane.getSelectedComponent().equals(panel)) {
             enableIcon(panel);
         }
@@ -437,12 +444,12 @@ public class ChatManager {
         for (int i = 0; i < panels.length; i++) {
             ChatPanel panel = (ChatPanel) panels[i];
 
-            panel.write("<div style=\"color:black; font-size:" + JKaiUI.getConfig().getConfigInt(SystemFontSize) + "px;\"> -- " + friend.getUser().decode() + " is logged in" + "</div>");
+            panel.write("<div style=\"color:black; font-size:" + KaiConfig.getInstance().getConfigInt(SystemFontSize) + "px;\"> -- " + friend.getUser().decode() + " is logged in" + "</div>");
         }
         //フレンドのログイン時に音を鳴らす
-        if (JKaiUI.getConfig().getConfigBoolean(PLAYMESSAGESOUND)
-                && (JKaiUI.getConfig().getConfigBoolean(FriendOnlineSound))) {
-            JKaiUI.getSoundManager().playMessageSound(FriendOnline);
+        if (KaiConfig.getInstance().getConfigBoolean(PLAYMESSAGESOUND)
+                && (KaiConfig.getInstance().getConfigBoolean(FriendOnlineSound))) {
+            SoundManager.getInstance().playMessageSound(FriendOnline);
         }
     }
 
@@ -451,14 +458,14 @@ public class ChatManager {
         // Notify that user has entered the arena
 //        ChatPanel panel = (ChatPanel) chatsTable.get(GENERAL_CHAT);
 
-//        panel.write("<div style=\"color:black; font-size:" + JKaiUI.getConfig().getConfigInt(SystemFontSize) + "px;\"> -- " + friend.getUser().decode() + " is logged out" + "</div>");
+//        panel.write("<div style=\"color:black; font-size:" + KaiConfig.getInstance().getConfigInt(SystemFontSize) + "px;\"> -- " + friend.getUser().decode() + " is logged out" + "</div>");
 
         Object[] panels = chatsTable.values().toArray();
 //        ChatPanel panel = (ChatPanel) chatsTable.get(GENERAL_CHAT);
         for (int i = 0; i < panels.length; i++) {
             ChatPanel panel = (ChatPanel) panels[i];
 
-            panel.write("<div style=\"color:black; font-size:" + JKaiUI.getConfig().getConfigInt(SystemFontSize) + "px;\"> -- " + friend.getUser().decode() + " is logged out" + "</div>");
+            panel.write("<div style=\"color:black; font-size:" + KaiConfig.getInstance().getConfigInt(SystemFontSize) + "px;\"> -- " + friend.getUser().decode() + " is logged out" + "</div>");
         }
     }
 
@@ -481,7 +488,7 @@ public class ChatManager {
 //        }
 
         chathistory.add(msg.getMessage());
-        if (chathistory.size() > JKaiUI.getConfig().getConfigInt(MaxChatHistory)) {
+        if (chathistory.size() > KaiConfig.getInstance().getConfigInt(MaxChatHistory)) {
             chathistory.remove(0);
         }
         chathistoryindex = chathistory.size() - 1;

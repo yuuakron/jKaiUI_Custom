@@ -10,7 +10,7 @@ import java.awt.*;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JPanel;
-import pt.jkaiui.JKaiUI;
+import pt.jkaiui.core.KaiConfig;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.RoomFontSize;
 
 /**
@@ -66,12 +66,12 @@ public class KaiListPanel extends JPanel{
         add(centerPanel, BorderLayout.CENTER);
 
         // Formatting:
-        jLabelName.setFont(new java.awt.Font("SansSerif", 0, JKaiUI.getConfig().getConfigInt(RoomFontSize)));
-        jLabelBase.setFont(new java.awt.Font("SansSerif", 0, JKaiUI.getConfig().getConfigInt(RoomFontSize)));
+        jLabelName.setFont(new java.awt.Font("SansSerif", 0, KaiConfig.getInstance().getConfigInt(RoomFontSize)));
+        jLabelBase.setFont(new java.awt.Font("SansSerif", 0, KaiConfig.getInstance().getConfigInt(RoomFontSize)));
         jLabelBase.setForeground(new Color(10, 10, 10));
-        jLabelC1.setFont(new java.awt.Font("SansSerif", 0, JKaiUI.getConfig().getConfigInt(RoomFontSize)));
+        jLabelC1.setFont(new java.awt.Font("SansSerif", 0, KaiConfig.getInstance().getConfigInt(RoomFontSize)));
         jLabelC1.setForeground(new Color(10, 10, 10));
-        jLabelC2.setFont(new java.awt.Font("SansSerif", 0, JKaiUI.getConfig().getConfigInt(RoomFontSize)));
+        jLabelC2.setFont(new java.awt.Font("SansSerif", 0, KaiConfig.getInstance().getConfigInt(RoomFontSize)));
         jLabelC2.setForeground(new Color(10, 10, 10));
 
         c.gridx = 0;
@@ -146,7 +146,7 @@ public class KaiListPanel extends JPanel{
         
         jLabelBase.setText(text);
         setToolTipText(text);
-        setToolTipText("<html><div style=\"font-size:"+JKaiUI.getConfig().getConfigInt(RoomFontSize)+"px\">" + text + "</div></html>");
+        setToolTipText("<html><div style=\"font-size:"+KaiConfig.getInstance().getConfigInt(RoomFontSize)+"px\">" + text + "</div></html>");
     }
     
     public void setC1(String text){
@@ -160,9 +160,9 @@ public class KaiListPanel extends JPanel{
     }
     
     public void setFontSize(int size) {
-        jLabelName.setFont(new java.awt.Font("SansSerif", 0, JKaiUI.getConfig().getConfigInt(RoomFontSize)));
-        jLabelBase.setFont(new java.awt.Font("SansSerif", 0, JKaiUI.getConfig().getConfigInt(RoomFontSize)));
-        jLabelC1.setFont(new java.awt.Font("SansSerif", 0, JKaiUI.getConfig().getConfigInt(RoomFontSize)));
-        jLabelC2.setFont(new java.awt.Font("SansSerif", 0, JKaiUI.getConfig().getConfigInt(RoomFontSize)));
+        jLabelName.setFont(new java.awt.Font("SansSerif", 0, KaiConfig.getInstance().getConfigInt(RoomFontSize)));
+        jLabelBase.setFont(new java.awt.Font("SansSerif", 0, KaiConfig.getInstance().getConfigInt(RoomFontSize)));
+        jLabelC1.setFont(new java.awt.Font("SansSerif", 0, KaiConfig.getInstance().getConfigInt(RoomFontSize)));
+        jLabelC2.setFont(new java.awt.Font("SansSerif", 0, KaiConfig.getInstance().getConfigInt(RoomFontSize)));
     }
 }

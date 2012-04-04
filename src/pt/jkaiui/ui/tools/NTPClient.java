@@ -29,7 +29,7 @@ public class NTPClient {
      * @return The current time based on a remote NTP server's time.
      */
     public static long getNTPTime() {
-        return getNTPTime(JKaiUI.getConfig().getConfigString(KaiConfig.ConfigTag.NTPSERVER));
+        return getNTPTime(KaiConfig.getInstance().getConfigString(KaiConfig.ConfigTag.NTPSERVER));
     }
     
     /**

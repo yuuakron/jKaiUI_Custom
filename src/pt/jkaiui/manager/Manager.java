@@ -15,7 +15,9 @@ import pt.jkaiui.core.KaiConfig;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
 import pt.jkaiui.core.KaiString;
 import pt.jkaiui.core.messages.*;
+import pt.jkaiui.filelog.LogFileManager;
 import pt.jkaiui.tools.log.ConfigLog;
+import pt.jkaiui.ui.MainUI;
 
 /**
  *
@@ -23,7 +25,12 @@ import pt.jkaiui.tools.log.ConfigLog;
  */
 public class Manager {
 
-    private static ActionExecuter executer;
+    private static final Manager INSTANCE = new Manager();
+    
+    public static Manager getInstance(){
+        return INSTANCE;
+    }
+    
     private Connection conn;
     private static Logger _logger;
     // String[] to find all I_InMessage interfaces.
@@ -78,18 +85,16 @@ public class Manager {
     /**
      * Creates a new instance of Manager
      */
-    public Manager() {
+    private Manager() {
 
         _logger = ConfigLog.getLogger(this.getClass().getName());
-
-        executer = new ActionExecuter(this);
 
 //        LogFileinit();        
     }
 
     public void connect() {
 
-        KaiConfig config = JKaiUI.getConfig();
+        KaiConfig config = KaiConfig.getInstance();
 
         _logger.fine("Discovering engine");
         if (config.getConfigBoolean(AUTOMATICALLYDETECTED)) {
@@ -102,7 +107,7 @@ public class Manager {
 
             Collection engines = finder.getEngines();
             if (engines.isEmpty()) {
-                boolean shouldRetry = JKaiUI.getMainUI().askRetry("MSG_NoEngineFound", "MSG_NoEngineFoundTitleMsg");
+                boolean shouldRetry = MainUI.getInstance().askRetry("MSG_NoEngineFound", "MSG_NoEngineFoundTitleMsg");
                 if (shouldRetry) {
                     JKaiUI.connect();
                 }
@@ -120,7 +125,7 @@ public class Manager {
                     engineArray[traverseIndex++] = (String) it.next();
                 }
 
-                String choice = JKaiUI.getMainUI().openEnginePrompt(engineArray);
+                String choice = MainUI.getInstance().openEnginePrompt(engineArray);
 
                 if (choice == null) {
                     return;
@@ -144,11 +149,11 @@ public class Manager {
         if (message instanceof PMOut || message instanceof ArenaPMOut) {
             try {
                 if (message instanceof PMOut) {
-//                    conn.send(message.send().getBytes(JKaiUI.getChatManager().getSelectedEncoding(((PMOut) message).getUser().decode())));
+//                    conn.send(message.send().getBytes(ChatManager.getInstance().getSelectedEncoding(((PMOut) message).getUser().decode())));
                     conn.send(StringByteConverter.StringtoByteforPM(message.send(), ((PMOut) message).getUser().decode()));
                 }
                 if (message instanceof ArenaPMOut) {
-//                    conn.send(message.send().getBytes(JKaiUI.getChatManager().getSelectedEncoding(((ArenaPMOut) message).getUser().decode())));
+//                    conn.send(message.send().getBytes(ChatManager.getInstance().getSelectedEncoding(((ArenaPMOut) message).getUser().decode())));
                     conn.send(StringByteConverter.StringtoByteforPM(message.send(), ((ArenaPMOut) message).getUser().decode()));
                 }
             } catch (Exception e) {
@@ -157,7 +162,7 @@ public class Manager {
         } else {
             conn.send(StringByteConverter.StringtoByte(message.send()));
         }
-        JKaiUI.getLogFileManager().println("All", "Send; " + message.send());
+        LogFileManager.getInstance().getLog(LogFileManager.LogKinds.All).println("Send; " + message.send());
     }
 
     private Message parse(String s) throws UnsupportedMessageException {
@@ -190,7 +195,7 @@ public class Manager {
         String s = StringByteConverter.BytetoString(b).trim();
 //        String s = StringValidator.CheckandReturnCorrectString(b).trim();
 
-        JKaiUI.getLogFileManager().println("All", "Receive; " + s);
+        LogFileManager.getInstance().getLog(LogFileManager.LogKinds.All).println("Receive; " + s);
         Message message;
 
         try {
@@ -217,14 +222,7 @@ public class Manager {
         }
     }
 
-    public static ActionExecuter getExecuter() {
-
-
-        return executer;
-    }
-
     public static void enterArena(Arena arena) {
-
         // Check for pass
 
         String pass = "";

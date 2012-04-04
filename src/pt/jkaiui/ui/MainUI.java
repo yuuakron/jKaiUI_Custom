@@ -20,6 +20,9 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import pt.jkaiui.JKaiUI;
+import static pt.jkaiui.JKaiUI.Mode.*;
+import static pt.jkaiui.JKaiUI.Status.CONNECTED;
+import static pt.jkaiui.JKaiUI.Status.DISCONNECTED;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
 import pt.jkaiui.core.*;
 import pt.jkaiui.core.messages.AddContactOut;
@@ -27,6 +30,7 @@ import pt.jkaiui.core.messages.GetMetrics;
 import pt.jkaiui.core.messages.GetUserProfile;
 import pt.jkaiui.core.messages.KaiVectorOut;
 import pt.jkaiui.manager.ActionExecuter;
+import pt.jkaiui.manager.ChatManager;
 import pt.jkaiui.manager.EmoticonManager;
 import pt.jkaiui.manager.Manager;
 import pt.jkaiui.ui.modes.*;
@@ -37,7 +41,7 @@ import pt.jkaiui.ui.tools.XLinkNetworkRawStatsParser;
  * @author pedro
  */
 public class MainUI extends javax.swing.JFrame implements WindowListener {
-
+    
     private static final long serialVersionUID = 123413;
     private final String ARENA_URL_PREFIX = "http://www.teamxlink.co.uk/media/avatars/";
     private final ImageIcon ARENA_IMAGE_ICON = new ImageIcon(getClass().getResource("/pt/jkaiui/ui/resources/agame.png"));
@@ -51,13 +55,18 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
     private static RawStatsSetter statsSetter;
     private static Hashtable avatars;
     private static Hashtable loading = new Hashtable();
-    private String fixedphrasefile = JKaiUI.getConfig().getConfigSettingFolder() + "/setting/fixedphrese.txt";
-    public Vector bookmarkVector = new Vector();
+    private static String fixedphrasefile = KaiConfig.getInstance().getConfigSettingFolder() + "/setting/fixedphrese.txt";
+    public static Vector bookmarkVector = new Vector();
+    
+    private static final MainUI INSTANCE = new MainUI();
+    public static MainUI getInstance() {
+        return INSTANCE;
+    }
 
     /**
      * Creates new form MainUI
      */
-    public MainUI() {
+    private MainUI() {
 
         // Check to see if JKaiUI is running on OSX or Windows. If so, use their
         // appropriate System Look&Feel. The default Look&Feel for Linux is the
@@ -97,7 +106,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         addWindowListener(this);
 
         // Get Bookmarks
-        String BookmarksAtStart = JKaiUI.getConfig().getConfigString(BOOKMARKS);
+        String BookmarksAtStart = KaiConfig.getInstance().getConfigString(BOOKMARKS);
         if (!BookmarksAtStart.equals("") && BookmarksAtStart != null) {
             String[] sTemp = BookmarksAtStart.substring(0, BookmarksAtStart.length()).split(";");
             for (int i = 0; i < sTemp.length; i++) {
@@ -109,18 +118,18 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         }
 
         // Start the timer to keep the UT in the toolbar. It refreshes every 10 seconds.
-        // Before start JKaiUI.getConfig() has to be called (is done at 'Get Bookmarks')
+        // Before start KaiConfig.getInstance() has to be called (is done at 'Get Bookmarks')
         new UniversalTimeSetter(toolbarTimeLabel).start();
 
         // Start the timer to scroll the stats at the bottom.
-        if (JKaiUI.getConfig().getConfigBoolean(SHOWSERVERSTATS)) {
+        if (KaiConfig.getInstance().getConfigBoolean(SHOWSERVERSTATS)) {
             statsSetter = new RawStatsSetter(toolbarRawStatsLabel);
             statsSetter.start();
         }
 
-        if (JKaiUI.getConfig().getConfigBoolean(STOREWINDOWSIZEPOSITION)) {
-            this.setSize(JKaiUI.getConfig().getConfigInt(WINDOWWIDTH), JKaiUI.getConfig().getConfigInt(WINDOWHEIGTH));
-            this.setLocation(JKaiUI.getConfig().getConfigInt(WINDOWX), JKaiUI.getConfig().getConfigInt(WINDOWY));
+        if (KaiConfig.getInstance().getConfigBoolean(STOREWINDOWSIZEPOSITION)) {
+            this.setSize(KaiConfig.getInstance().getConfigInt(WINDOWWIDTH), KaiConfig.getInstance().getConfigInt(WINDOWHEIGTH));
+            this.setLocation(KaiConfig.getInstance().getConfigInt(WINDOWX), KaiConfig.getInstance().getConfigInt(WINDOWY));
         }
 
         buttonCopyInfo.setVisible(false);
@@ -240,7 +249,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         jPopupMenuTabs.add(menuClosePM);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle(JKaiUI.getUIName());
+        setTitle(JKaiUI.Info.getUIName());
         setIconImage(this.getToolkit().createImage(getClass().getResource("/pt/jkaiui/ui/resources/mainui-icon.gif")));
         setName("mainFrame"); // NOI18N
 
@@ -607,7 +616,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
     }//GEN-LAST:event_jButtonConnectDisconnectMouseEntered
 
     private void jButtonConnectDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConnectDisconnectActionPerformed
-        if (JKaiUI.status == JKaiUI.CONNECTED) {
+        if (JKaiUI.getStatus() == CONNECTED) {
             JKaiUI.disconnect();
         } else {
             JKaiUI.connect();
@@ -640,9 +649,9 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
             User user = new User();
             user.setName(UserName);
             if (source == jMenuItemUserProfile) {
-                JKaiUI.getManager().send(new GetUserProfile(UserName));
+                Manager.getInstance().send(new GetUserProfile(UserName));
             } else if (source == jMenuItemChatUser) {
-                JKaiUI.getChatManager().openChat(user);
+                ChatManager.getInstance().openChat(user);
             } else if (source == jMenuItemAddBuddy) {
                 AddContactOut out = new AddContactOut();
                 out.setUser(new KaiString(user.getUser()));
@@ -682,17 +691,17 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
 	private void jButtonDiagModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDiagModeActionPerformed
             selectDiagMode();
 
-            JKaiUI.getManager().send(new GetMetrics());
+            Manager.getInstance().send(new GetMetrics());
             jButtonArenaMode.setEnabled(true);
             jButtonMessengerMode.setEnabled(true);
             jButtonDiagMode.setEnabled(false);
-            JKaiUI.CURRENT_MODE = JKaiUI.DIAG_MODE;
+            JKaiUI.setCURRENT_MODE(DIAG_MODE);
             // vector must be changed if switching from messenger to diag and back to messenger mode
 /*
              * KaiVectorOut vector = new KaiVectorOut(); if (JKaiUI.ARENA ==
              * null) vector.setVector(new KaiString("Arena")); else
              * vector.setVector(new KaiString(JKaiUI.ARENA));
-             * JKaiUI.getManager().getExecuter().execute(vector);
+             * Manager.getInstance().getExecuter().execute(vector);
              */
 	}//GEN-LAST:event_jButtonDiagModeActionPerformed
 
@@ -721,8 +730,8 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
             jButtonMessengerMode.setBorderPainted(true);
             jButtonMessengerMode.setContentAreaFilled(true);
         }
-        if (JKaiUI.CURRENT_MODE == JKaiUI.ARENA_MODE) {
-            previewMode(JKaiUI.MESSENGER_MODE);
+        if (JKaiUI.getCURRENT_MODE() == ARENA_MODE) {
+            previewMode(MESSENGER_MODE);
         }
 
     }//GEN-LAST:event_messengerModeMouseEntered
@@ -734,7 +743,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
             ChatPanel panel = (ChatPanel) pane.getSelectedComponent();
             panel.jTextFieldInput.requestFocus();
 
-            JKaiUI.getChatManager().disableIcon(panel);
+            ChatManager.getInstance().disableIcon(panel);
         }
     }//GEN-LAST:event_jTabbedPaneFocusGained
 
@@ -743,14 +752,14 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
 
         selectArenaMode();
 
-        if (JKaiUI.CURRENT_MODE == JKaiUI.MESSENGER_MODE) {
+        if (JKaiUI.getCURRENT_MODE() == MESSENGER_MODE) {
             KaiVectorOut vector = new KaiVectorOut();
 
-            if (JKaiUI.ARENA == null) {
+            if (JKaiUI.getARENA() == null) {
                 // Init arena mode
                 vector.setVector(new KaiString("Arena"));
             } else {
-                vector.setVector(new KaiString(JKaiUI.ARENA));
+                vector.setVector(new KaiString(JKaiUI.getARENA()));
             }
 
             ActionExecuter.execute(vector);
@@ -759,7 +768,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         jButtonMessengerMode.setEnabled(true);
         jButtonDiagMode.setEnabled(true);
 
-        JKaiUI.CURRENT_MODE = JKaiUI.ARENA_MODE;
+        JKaiUI.setCURRENT_MODE(ARENA_MODE);
 
     }//GEN-LAST:event_jButtonArenaModeActionPerformed
 
@@ -777,7 +786,7 @@ public class MainUI extends javax.swing.JFrame implements WindowListener {
         jButtonDiagMode.setEnabled(true);
 
 
-        JKaiUI.CURRENT_MODE = JKaiUI.MESSENGER_MODE;
+        JKaiUI.setCURRENT_MODE(MESSENGER_MODE);
 
     }//GEN-LAST:event_jButtonMessengerModeActionPerformed
 
@@ -802,7 +811,7 @@ private void menuitemVersionActionPerformed(java.awt.event.ActionEvent evt) {//G
 
     int result = JOptionPane.showOptionDialog(
             this,
-            JKaiUI.getUIName() + JKaiUI.getVersion() + "\nOriginal jKaiUI:http://jkaiui.sourceforge.net/downloads/\n" + JKaiUI.getUIName() + ":https://sites.google.com/site/yuuakron/",
+            JKaiUI.Info.getUIName() + JKaiUI.Info.getLongVersion() + "\nOriginal jKaiUI:http://jkaiui.sourceforge.net/downloads/\n" + JKaiUI.Info.getUIName() + ":https://sites.google.com/site/yuuakron/",
             "jKaiUI version",
             JOptionPane.CANCEL_OPTION,
             JOptionPane.INFORMATION_MESSAGE,
@@ -811,7 +820,7 @@ private void menuitemVersionActionPerformed(java.awt.event.ActionEvent evt) {//G
             objects[0]);
     if (result == 1) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        StringSelection selection = new StringSelection(JKaiUI.getVersion());
+        StringSelection selection = new StringSelection(JKaiUI.Info.getLongVersion());
         clipboard.setContents(selection, null);
     }
 }//GEN-LAST:event_menuitemVersionActionPerformed
@@ -819,7 +828,7 @@ private void menuitemVersionActionPerformed(java.awt.event.ActionEvent evt) {//G
 private void buttonCopyInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCopyInfoActionPerformed
 
     MessengerModeListModel model = (MessengerModeListModel) JKaiUI.getDiagMode().getListModel();
-    StringBuilder strbuf = new StringBuilder("Diags infomation \n\n");//�ۑ�����ݒ���
+    StringBuilder strbuf = new StringBuilder("Diags infomation \n\n");
 
 
     Diags diags = (Diags) model.get(0);
@@ -906,7 +915,7 @@ private void PhraseListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:
         }
 
         msg.setMessage(text);
-        JKaiUI.getChatManager().processMessage(msg);
+        ChatManager.getInstance().processMessage(msg);
     }
 }//GEN-LAST:event_PhraseListMouseClicked
 
@@ -914,7 +923,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
 
     String tooltipbuf = "";
 
-    if (evt.getEventType() == EventType.ACTIVATED) {	//�N���b�N���ꂽ��
+    if (evt.getEventType() == EventType.ACTIVATED) {
         URL url = evt.getURL();
 
 //        System.err.println(url.toString());
@@ -949,7 +958,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
 
     public ImageIcon getBookmarkIcon(Arena arena) {
 
-        File iconLocation = new File(JKaiUI.getConfig().getConfigString(AVATARCACHE), arena.getVector().replace('/', File.separatorChar).toLowerCase() + ".ii");
+        File iconLocation = new File(KaiConfig.getInstance().getConfigString(AVATARCACHE), arena.getVector().replace('/', File.separatorChar).toLowerCase() + ".ii");
         ImageIcon avatar = null;
 
         try {
@@ -995,7 +1004,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
             item.setFont(bookmarkMenu.getFont());
             bookmarkMenu.add(item);
             if (store) {
-                JKaiUI.getConfig().saveBookmarks(bookmarkVector);
+                KaiConfig.getInstance().saveBookmarks(bookmarkVector);
             }
             item.setIcon(this.getBookmarkIcon(arena));
             item.addActionListener(new java.awt.event.ActionListener() {
@@ -1006,7 +1015,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                     for (int i = 0; i < bookmarkVector.size(); i++) {
                         arena = (Arena) bookmarkVector.get(i);
                         if (arena.getName().equals(item.getText())) {
-                            if (JKaiUI.CURRENT_MODE != JKaiUI.ARENA_MODE) {
+                            if (JKaiUI.getCURRENT_MODE() != ARENA_MODE) {
                                 jButtonArenaModeActionPerformed(null);
                             }
                             Manager.enterArena(arena);
@@ -1033,7 +1042,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         }
 
         bookmarkVector.remove(index);
-        JKaiUI.getConfig().saveBookmarks(bookmarkVector);
+        KaiConfig.getInstance().saveBookmarks(bookmarkVector);
 
         for (int i = 0; i < bookmarkMenu.getItemCount(); i++) {
             if (arena.getName().equals(bookmarkMenu.getItem(i).getText())) {
@@ -1096,10 +1105,10 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
 
         System.out.println("Closing.... ");
 
-        if (JKaiUI.getConfig().getConfigBoolean(STOREWINDOWSIZEPOSITION)) {
+        if (KaiConfig.getInstance().getConfigBoolean(STOREWINDOWSIZEPOSITION)) {
             Dimension windim = this.getSize();
             Point winloc = this.getLocation();
-            JKaiUI.getConfig().storeWindowSizePosition(windim.height, windim.width, winloc.getX(), winloc.getY());
+            KaiConfig.getInstance().storeWindowSizePosition(windim.height, windim.width, winloc.getX(), winloc.getY());
         }
 
         JKaiUI.disconnect();
@@ -1201,11 +1210,11 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
 
     protected void showCurrentMode() {
 
-        if (JKaiUI.CURRENT_MODE == JKaiUI.MESSENGER_MODE) {
+        if (JKaiUI.getCURRENT_MODE() == MESSENGER_MODE) {
             previewMessengerMode();
-        } else if (JKaiUI.CURRENT_MODE == JKaiUI.ARENA_MODE) {
+        } else if (JKaiUI.getCURRENT_MODE() == ARENA_MODE) {
             previewArenaMode();
-        } else if (JKaiUI.CURRENT_MODE == JKaiUI.DIAG_MODE) {
+        } else if (JKaiUI.getCURRENT_MODE() == DIAG_MODE) {
             previewDiagMode();
         }
     }
@@ -1216,18 +1225,16 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
             InfoPanel.hidePanel();
         }
 
-        Vector modesVector = JKaiUI.getModesVector();
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
-            MainMode m = (MainMode) e.nextElement();
-            if (m instanceof MessengerMode) {
-                m.selectMode();
-                ListModelChatUsers.clear();
-                eastPanel.setPreferredSize(new Dimension(130, 0));
-                eastPanel.setVisible(true);
-                CardLayout cards = (CardLayout) eastPanel.getLayout();
-                cards.show(eastPanel, "card1");
-            }
-        }
+
+        MessengerMode m = JKaiUI.getMessengerMode();
+
+        m.selectMode();
+        ListModelChatUsers.clear();
+        eastPanel.setPreferredSize(new Dimension(130, 0));
+        eastPanel.setVisible(true);
+        CardLayout cards = (CardLayout) eastPanel.getLayout();
+        cards.show(eastPanel, "card1");
+
         buttonCopyInfo.setVisible(false);
     }
 
@@ -1237,20 +1244,17 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
             InfoPanel.hidePanel();
         }
 
-        Vector modesVector = JKaiUI.getModesVector();
 
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
-            MainMode m = (MainMode) e.nextElement();
-            if (m instanceof ArenaMode) {
-                m.selectMode();
-                eastPanel.setVisible(false);
+        ArenaMode m = JKaiUI.getArenaMode();
+
+        m.selectMode();
+        eastPanel.setVisible(false);
 //                ListModelArenaUsers.clear();
 //                eastPanel.setPreferredSize(new Dimension(210, 0));
 //                eastPanel.setVisible(true);
 //                CardLayout cards = (CardLayout)eastPanel.getLayout();
 //                cards.show(eastPanel, "card2");
-            }
-        }
+
 
         buttonCopyInfo.setVisible(false);
     }
@@ -1261,59 +1265,34 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
             InfoPanel.hidePanel();
         }
 
-        Vector modesVector = JKaiUI.getModesVector();
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
-            MainMode m = (MainMode) e.nextElement();
-            if (m instanceof DiagMode) {
-                m.selectMode();
-                eastPanel.setVisible(false);
-            }
-        }
+        MainMode m = JKaiUI.getDiagMode();
+        m.selectMode();
+        eastPanel.setVisible(false);
+        
         buttonCopyInfo.setVisible(true);
     }
 
     protected void previewMessengerMode() {
-
-        Vector modesVector = JKaiUI.getModesVector();
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
-            MainMode m = (MainMode) e.nextElement();
-            if (m instanceof MessengerMode) {
-                m.previewMode();
-            }
-        }
+        MessengerMode m = JKaiUI.getMessengerMode();
+        m.previewMode();
     }
 
     protected void previewArenaMode() {
-
-        Vector modesVector = JKaiUI.getModesVector();
-
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
-            MainMode m = (MainMode) e.nextElement();
-            if (m instanceof ArenaMode) {
-                m.previewMode();
-            }
-        }
-
-
+        ArenaMode m = JKaiUI.getArenaMode();
+        m.previewMode();
     }
 
     protected void previewDiagMode() {
 
-        Vector modesVector = JKaiUI.getModesVector();
-
-        for (Enumeration e = modesVector.elements(); e.hasMoreElements();) {
-            MainMode m = (MainMode) e.nextElement();
-            if (m instanceof DiagMode) {
-                m.previewMode();
-            }
-        }
+        DiagMode m = JKaiUI.getDiagMode();
+        m.previewMode();
     }
 
-    public void previewMode(int mode) {
+    public void previewMode(JKaiUI.Mode mode) {
 
         // first of all, this is only relevant if we are connected
 
-        if (JKaiUI.status == JKaiUI.DISCONNECTED) {
+        if (JKaiUI.getStatus() == DISCONNECTED) {
             return;
         }
 
@@ -1327,7 +1306,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
 
                 // Only start new preview if that mode is different than the current
 
-                if (mode != JKaiUI.CURRENT_MODE) {
+                if (mode != JKaiUI.getCURRENT_MODE()) {
                     previewMode.setMode(mode);
                     previewMode.start();
                 }
@@ -1337,7 +1316,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
 
             // Only start new preview if that mode is different than the current
 
-            if (mode != JKaiUI.CURRENT_MODE) {
+            if (mode != JKaiUI.getCURRENT_MODE()) {
                 previewMode.setMode(mode);
                 previewMode.start();
             }
@@ -1379,18 +1358,18 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         /**
          * Holds value of property mode.
          */
-        private int mode;
+        private JKaiUI.Mode mode;
 
         public void start() {
 
             isRunning = true;
             status = SHOW_AND_KEEP;
 
-            if (getMode() == JKaiUI.MESSENGER_MODE) {
+            if (getMode() == MESSENGER_MODE) {
                 previewMessengerMode();
-            } else if (getMode() == JKaiUI.ARENA_MODE) {
+            } else if (getMode() == ARENA_MODE) {
                 previewArenaMode();
-            } else if (getMode() == JKaiUI.DIAG_MODE) {
+            } else if (getMode() == DIAG_MODE) {
                 previewDiagMode();
             }
 
@@ -1402,7 +1381,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         public void startTimer() {
 
 
-            if (JKaiUI.status == JKaiUI.DISCONNECTED || blinker == null) {
+            if (JKaiUI.getStatus() == DISCONNECTED || blinker == null) {
                 return;
             }
 
@@ -1454,7 +1433,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
          *
          * @return Value of property mode.
          */
-        public int getMode() {
+        public JKaiUI.Mode getMode() {
 
             return this.mode;
         }
@@ -1464,7 +1443,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
          *
          * @param mode New value of property mode.
          */
-        public void setMode(int mode) {
+        public void setMode(JKaiUI.Mode mode) {
 
             this.mode = mode;
         }
@@ -1496,7 +1475,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         @Override
         public void run() {
 
-            if (JKaiUI.getConfig().getConfigString(NTPSERVER).equals("")) {
+            if (KaiConfig.getInstance().getConfigString(NTPSERVER).equals("")) {
                 offset = 0;
             } else {
                 long ntptime = 0;
@@ -1684,7 +1663,7 @@ private void EmotIconPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
         StringBuffer s = new StringBuffer("");
 
         //JKaiUI
-//        String out = "<table style=\"padding:2px;width:100%;font-family:Dialog;"+ wordbreak +"font-size:"+JKaiUI.getConfig().getChatFontSize()+"px\"><tr style=\"background-color:" + color + "\"><td>" + user + "</td><td align=\"right\">";
+//        String out = "<table style=\"padding:2px;width:100%;font-family:Dialog;"+ wordbreak +"font-size:"+KaiConfig.getInstance().getChatFontSize()+"px\"><tr style=\"background-color:" + color + "\"><td>" + user + "</td><td align=\"right\">";
 //        out += "</td></tr><tr><td colspan=2>" + msgtmp + "</td></tr></table>";
 
         String size = " width=\"30\" height=\"30\"";

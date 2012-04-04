@@ -19,27 +19,28 @@ import pt.jkaiui.JKaiUI;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
 import pt.jkaiui.core.*;
 import pt.jkaiui.core.messages.*;
+import pt.jkaiui.filelog.LogFileManager;
 import pt.jkaiui.tools.log.ConfigLog;
 import pt.jkaiui.ui.InfoPanel;
+import pt.jkaiui.ui.MainUI;
 import pt.jkaiui.ui.modes.MessengerMode;
 import pt.jkaiui.ui.modes.MessengerModeListModel;
 
 /**
  * @author  pedro
  */
+//ユーティリティクラス
 public class ActionExecuter {
     
-    private static Logger _logger;
-    private static Manager manager;
+    private static Logger _logger = ConfigLog.getLogger(ActionExecuter.class.getName());
+    private static Manager manager = Manager.getInstance();
     
     private static String CurrentArena;
     private static boolean KaiVectorOutFlag;
 //    private static Chat2 chatbuf;
     
     /** Creates a new instance of ActionExecuter */
-    public ActionExecuter( Manager manager ) {
-        _logger = ConfigLog.getLogger(this.getClass().getName());
-        ActionExecuter.manager = manager;
+    private ActionExecuter( Manager manager ) {
     }
     
     
@@ -126,13 +127,13 @@ public class ActionExecuter {
             ClientNotLoggedIn m = (ClientNotLoggedIn) msg;
             _logger.log(Level.FINEST, "Client not logged in; User: {0}; Auto: {1}", new Object[]{m.getUser().decode(), m.isAuto()?"on":"off"});
             LoginMessage login = new LoginMessage();
-            login.setLogin(new KaiString(JKaiUI.getConfig().getConfigString(TAG)));
-            login.setPassword(new KaiString(JKaiUI.getConfig().getConfigString(PASSWORD)));
+            login.setLogin(new KaiString(KaiConfig.getInstance().getConfigString(TAG)));
+            login.setPassword(new KaiString(KaiConfig.getInstance().getConfigString(PASSWORD)));
             manager.send( login );
         }
         
         else if ( msg instanceof ConnectedArena){
-            JKaiUI.getMainUI().jButtonArenaMode.doClick();
+            MainUI.getInstance().jButtonArenaMode.doClick();
         }
         
         // Engine -> UI -- Status Message
@@ -175,8 +176,8 @@ public class ActionExecuter {
             
             String[] admins = m.getUsers().decode().split("/");
             
-            JKaiUI.ADMINISTRATORS.clear();
-            JKaiUI.ADMINISTRATORS.addAll(Arrays.asList(admins));
+            JKaiUI.getADMINISTRATORS().clear();
+            JKaiUI.getADMINISTRATORS().addAll(Arrays.asList(admins));
             
             _logger.log(Level.CONFIG, "Administrators: {0}", m.getUsers().decode());
             
@@ -191,8 +192,8 @@ public class ActionExecuter {
             
             String[] moderators = m.getUsers().decode().split("/");
             
-            JKaiUI.MODERATORS.clear();
-            JKaiUI.MODERATORS.addAll(Arrays.asList(moderators));
+            JKaiUI.getMODERATORS().clear();
+            JKaiUI.getMODERATORS().addAll(Arrays.asList(moderators));
             
             _logger.log(Level.CONFIG, "Moderators: {0}", m.getUsers().decode());
             
@@ -218,10 +219,10 @@ public class ActionExecuter {
             avatar.setUser(contact.getUser());
             execute(avatar);
 
-            if (JKaiUI.getConfig().getConfigBoolean(ShowFriendLoginInfo)) {
-                JKaiUI.getChatManager().loginFriend(contact);
+            if (KaiConfig.getInstance().getConfigBoolean(ShowFriendLoginInfo)) {
+                ChatManager.getInstance().loginFriend(contact);
             }
-            JKaiUI.getLogFileManager().println(contact);
+            LogFileManager.getInstance().println(contact);
         } // Engine -> UI -- Contact Offline
         else if (msg instanceof ContactOffline) {
 
@@ -235,10 +236,10 @@ public class ActionExecuter {
             user.setOnline(false);
             model.updateElement(user);
 
-            if (JKaiUI.getConfig().getConfigBoolean(ShowFriendLoginInfo)) {
-                JKaiUI.getChatManager().logoutFriend(contact);
+            if (KaiConfig.getInstance().getConfigBoolean(ShowFriendLoginInfo)) {
+                ChatManager.getInstance().logoutFriend(contact);
             }
-            JKaiUI.getLogFileManager().println(contact);
+            LogFileManager.getInstance().println(contact);
         }
         
         // Engine -> UI -- Joins Vector
@@ -254,7 +255,7 @@ public class ActionExecuter {
             user.setOnline(true);
             model.updateElement(user);
 
-            JKaiUI.getLogFileManager().println(contact);
+            LogFileManager.getInstance().println(contact);
 
         }
         
@@ -293,8 +294,8 @@ public class ActionExecuter {
             MessengerModeListModel model = (MessengerModeListModel) JKaiUI.getArenaMode().getListModel();
             model.updateElement(arena);
 
-//            JKaiUI.getChatManager().addGotoArenaMenuItem(arena);
-            JKaiUI.getLogFileManager().println(contact);
+//            ChatManager.getInstance().addGotoArenaMenuItem(arena);
+            LogFileManager.getInstance().println(contact);
         }
         
         // Engine -> UI -- UserSubVector
@@ -313,7 +314,7 @@ public class ActionExecuter {
             arena.setMaxPlayers(contact.getMaxPlayers());
             
             try{
-                if(JKaiUI.getConfig().getConfigBoolean(URLDecode)){
+                if(KaiConfig.getInstance().getConfigBoolean(URLDecode)){
 
                     arena.setDescription(URLDecoder.decode(contact.getDescription().decode(),"utf-8"));
                 }else{
@@ -326,9 +327,9 @@ public class ActionExecuter {
 //           System.out.println("UserSubVector:" + arena.getName());
             model.updateElement(arena);
             
-//            JKaiUI.getChatManager().addGotoArenaMenuItem(arena);
+//            ChatManager.getInstance().addGotoArenaMenuItem(arena);
             
-            JKaiUI.getLogFileManager().println(contact);
+            LogFileManager.getInstance().println(contact);
             
 //             System.out.println("UserSubVectorend");
            
@@ -380,7 +381,7 @@ public class ActionExecuter {
 //            System.out.println("RemoveSubVector:" + arena.getName());
             model.removeElement(arena);
            
-//            JKaiUI.getChatManager().removeGotoArenaMenuItem(arena);
+//            ChatManager.getInstance().removeGotoArenaMenuItem(arena);
  //            System.out.println("RemoveSubVectorend");
            
         }
@@ -445,7 +446,7 @@ public class ActionExecuter {
         
         else if (msg instanceof KaiVectorIn){
             if (KaiVectorOutFlag == false) {
-                if (JKaiUI.getConfig().getConfigBoolean(AutoArenaMoving)) {
+                if (KaiConfig.getInstance().getConfigBoolean(AutoArenaMoving)) {
                     KaiVectorOut vecOut = new KaiVectorOut();
                     vecOut.setVector(new KaiString(CurrentArena));
                     execute(vecOut);
@@ -476,11 +477,11 @@ public class ActionExecuter {
             JKaiUI.getArenaMode().enableCreateArena(vec.isCreatable());
             
             if (vec.getVector().decode().length()>0) {
-                JKaiUI.ARENA = vec.getVector().decode();
+                JKaiUI.setARENA(vec.getVector().decode());
             }
             
             // Enable or disable the "go parent"
-            JKaiUI.getArenaMode().enableGoParentArena(! JKaiUI.ARENA.equals("Arena"));
+            JKaiUI.getArenaMode().enableGoParentArena(! JKaiUI.getARENA().equals("Arena"));
             
             // After entering, we want to get the sub arenas.
             GetVectors info = new GetVectors();
@@ -493,9 +494,9 @@ public class ActionExecuter {
             chat.setRoom((vec.getVector().decode().length() > 0) ? vec.getVector() : new KaiString("General Chat"));
             execute(chat);
 
-            JKaiUI.getManager().send(new GetMetrics());
+            Manager.getInstance().send(new GetMetrics());
 
-            if (JKaiUI.getConfig().getConfigBoolean(AutoHostSetting)) {
+            if (KaiConfig.getInstance().getConfigBoolean(AutoHostSetting)) {
                 //Auto Host Setting when you move
                 ArenaStatusOut statusMsg = new ArenaStatusOut();
                 statusMsg.setStatus(2);
@@ -526,14 +527,14 @@ public class ActionExecuter {
             _msg.setMessage(m.getMessage().decode());
 
             // Dont echo my own messages
-            if (!_msg.getUser().getName().equals(JKaiUI.getConfig().getConfigString(TAG))) {
-                if ((JKaiUI.getConfig().getConfigBoolean(HideServerMessage)) && (_msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh"))) {
+            if (!_msg.getUser().getName().equals(KaiConfig.getInstance().getConfigString(TAG))) {
+                if ((KaiConfig.getInstance().getConfigBoolean(HideServerMessage)) && (_msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh"))) {
                 } else {
-                    JKaiUI.getChatManager().processMessage(_msg);
+                    ChatManager.getInstance().processMessage(_msg);
                 }
                 //kai orbital mesh
                 if(!_msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh")){
-                    JKaiUI.getLogFileManager().println(m, CurrentArena);
+                    LogFileManager.getInstance().println(m, CurrentArena);
                 }
             }
         }
@@ -565,14 +566,14 @@ public class ActionExecuter {
 //                chatbuf = null;
 
                 // Dont echo my own messages
-                if (!_msg.getUser().getName().equals(JKaiUI.getConfig().getConfigString(TAG))) {
-                    if ((JKaiUI.getConfig().getConfigBoolean(HideServerMessage)) && (_msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh"))) {
+                if (!_msg.getUser().getName().equals(KaiConfig.getInstance().getConfigString(TAG))) {
+                    if ((KaiConfig.getInstance().getConfigBoolean(HideServerMessage)) && (_msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh"))) {
                     } else {
-                        JKaiUI.getChatManager().processMessage(_msg);
+                        ChatManager.getInstance().processMessage(_msg);
                     }
                     //kai orbital mesh
                     if (!_msg.getUser().getUser().equalsIgnoreCase("kai orbital mesh")) {
-                        JKaiUI.getLogFileManager().println(m, CurrentArena);
+                        LogFileManager.getInstance().println(m, CurrentArena);
                     }
 
                 }
@@ -590,9 +591,9 @@ public class ActionExecuter {
             _msg.setUser(new User(m.getUser().decode()));
             _msg.setType(ChatMessage.PRIVATE_MESSAGE);
             _msg.setMessage(m.getMessage().decode());
-            JKaiUI.getChatManager().processMessage(_msg);
+            ChatManager.getInstance().processMessage(_msg);
             
-            JKaiUI.getLogFileManager().println(m);
+            LogFileManager.getInstance().println(m);
         }
         
         // Engine -> UI -- Arena PM
@@ -606,9 +607,9 @@ public class ActionExecuter {
             _msg.setUser(new User(m.getUser().decode()));
             _msg.setType(ChatMessage.PRIVATE_MESSAGE);
             _msg.setMessage(m.getMessage().decode());
-            JKaiUI.getChatManager().processMessage(_msg);
+            ChatManager.getInstance().processMessage(_msg);
             
-            JKaiUI.getLogFileManager().println(m);
+            LogFileManager.getInstance().println(m);
         }
         
         
@@ -618,12 +619,12 @@ public class ActionExecuter {
             // just send the message
             manager.send( (I_OutMessage) msg);
             
-            JKaiUI.getLogFileManager().println((PMOut) msg);
+            LogFileManager.getInstance().println((PMOut) msg);
         } else if (msg instanceof ArenaPMOut){
             // just send the message
             manager.send( (I_OutMessage) msg);
             
-            JKaiUI.getLogFileManager().println((ArenaPMOut) msg);
+            LogFileManager.getInstance().println((ArenaPMOut) msg);
         }
         
         // UI -> Engine -- Add and Remove
@@ -660,7 +661,7 @@ public class ActionExecuter {
             
             CurrentArena = vec.getRoom().decode();
             
-            JKaiUI.getChatManager().enterRoom(vec.getRoom().decode());
+            ChatManager.getInstance().enterRoom(vec.getRoom().decode());
             
             manager.send( (I_OutMessage) msg);
         }
@@ -673,7 +674,7 @@ public class ActionExecuter {
             JoinsChat vec = (JoinsChat) msg;
             
             // Notification
-            JKaiUI.getChatManager().joinsRoom(vec.getUser().decode());
+            ChatManager.getInstance().joinsRoom(vec.getUser().decode());
             
             
             // Change user icon. Do that in arena mode only, for now
@@ -686,11 +687,11 @@ public class ActionExecuter {
 
                 user.setChat(true);
                 model.updateElement(user);
-                //JKaiUI.getMainUI().getListModelArenaUsers().addElement(user.getName());
+                //MainUI.getInstance().getListModelArenaUsers().addElement(user.getName());
             } else {
-                if (!JKaiUI.getMainUI().getListModelArenaUsers().contains(user.getName())) {
-                    JKaiUI.getMainUI().getListModelChatUsers().addElement(user.getName());
-                    JKaiUI.getMainUI().UpdateChatUsersQuantity();
+                if (!MainUI.getInstance().getListModelArenaUsers().contains(user.getName())) {
+                    MainUI.getInstance().getListModelChatUsers().addElement(user.getName());
+                    MainUI.getInstance().UpdateChatUsersQuantity();
                 }
             }
         } 
@@ -701,7 +702,7 @@ public class ActionExecuter {
  //           System.out.println("LeavesChatstart");
             
             LeavesChat vec = (LeavesChat) msg;
-            JKaiUI.getChatManager().leavesRoom(vec.getUser().decode());
+            ChatManager.getInstance().leavesRoom(vec.getUser().decode());
 
             // Change user icon. Do that in arena mode only, for now
             User user = new User();
@@ -715,10 +716,10 @@ public class ActionExecuter {
 
                 user.setChat(false);
                 model.updateElement(user);
-                //JKaiUI.getMainUI().getListModelArenaUsers().removeElement(user.getName());
+                //MainUI.getInstance().getListModelArenaUsers().removeElement(user.getName());
             } else {
-                JKaiUI.getMainUI().getListModelChatUsers().removeElement(user.getName());
-                JKaiUI.getMainUI().UpdateChatUsersQuantity();
+                MainUI.getInstance().getListModelChatUsers().removeElement(user.getName());
+                MainUI.getInstance().UpdateChatUsersQuantity();
             }
 //            System.out.println("LeavesChatend");
         }
@@ -728,7 +729,7 @@ public class ActionExecuter {
             
             manager.send( (I_OutMessage) msg);
             
-            JKaiUI.getLogFileManager().println((ChatOut)msg, CurrentArena);
+            LogFileManager.getInstance().println((ChatOut)msg, CurrentArena);
         }
         
         // Engine -> UI -- Arena Status
@@ -795,7 +796,7 @@ public class ActionExecuter {
             
             ImageIcon icon = null;
             
-            File cacheFolder = new File(JKaiUI.getConfig().getConfigString(AVATARCACHE) + File.separator + "users");
+            File cacheFolder = new File(KaiConfig.getInstance().getConfigString(AVATARCACHE) + File.separator + "users");
             if(!cacheFolder.exists()) {
                 cacheFolder.mkdirs();
             }
@@ -803,7 +804,7 @@ public class ActionExecuter {
             File iconLocation = new File(cacheFolder, user.getName().toLowerCase() + ".ii");
             
             // 86400000 milliseconds in a day
-            if(iconLocation.exists() && (JKaiUI.getConfig().getConfigInt(CACHEDAYS) > 0)  && (iconLocation.lastModified() < System.currentTimeMillis() + (86400000 * JKaiUI.getConfig().getConfigInt(CACHEDAYS)))) {
+            if(iconLocation.exists() && (KaiConfig.getInstance().getConfigInt(CACHEDAYS) > 0)  && (iconLocation.lastModified() < System.currentTimeMillis() + (86400000 * KaiConfig.getInstance().getConfigInt(CACHEDAYS)))) {
                 try {
                     ObjectInputStream ois = new ObjectInputStream(new FileInputStream(iconLocation));
                     icon = (ImageIcon) ois.readObject();
@@ -927,7 +928,7 @@ public class ActionExecuter {
             }
         } else if (msg instanceof UserProfile) {
             UserProfile uprof = (UserProfile) msg;
-            InfoPanel infp = JKaiUI.getMainUI().getJPanelInfos();
+            InfoPanel infp = MainUI.getInstance().getJPanelInfos();
             infp.setUser(uprof.GetUser());
             infp.setAge(uprof.GetAge());
             infp.setBandwidth(uprof.GetBandwidth());
@@ -936,7 +937,7 @@ public class ActionExecuter {
             infp.setGames(uprof.GetGames());
             infp.showPanel();
         } else if( msg instanceof RemoteArenaDevice){
-            JKaiUI.getLogFileManager().println(msg);
+            LogFileManager.getInstance().println(msg);
         } else if( msg instanceof CodePage){
         } else if( msg instanceof ArenaStatus){
         } else if( msg instanceof SessionKey){

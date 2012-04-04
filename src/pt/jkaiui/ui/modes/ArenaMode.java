@@ -17,8 +17,10 @@ import pt.jkaiui.JKaiUI;
 import pt.jkaiui.core.*;
 import pt.jkaiui.core.messages.*;
 import pt.jkaiui.manager.ActionExecuter;
+import pt.jkaiui.manager.ChatManager;
 import pt.jkaiui.manager.Manager;
 import pt.jkaiui.tools.log.ConfigLog;
+import pt.jkaiui.ui.MainUI;
 
 /**
  *
@@ -153,7 +155,7 @@ public class ArenaMode extends MainMode {
         c.weightx = 1.0;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(0, 10, 0, 0);
-        JKaiUI.getMainUI().getToolbarPanel().add(arenaModeComboBox, c);
+        MainUI.getInstance().getToolbarPanel().add(arenaModeComboBox, c);
          
          */
         
@@ -190,7 +192,7 @@ public class ArenaMode extends MainMode {
         JPopupMenu popup = new JPopupMenu();
         
         // check for preview mode
-        boolean preview = JKaiUI.CURRENT_MODE != JKaiUI.ARENA_MODE;
+        boolean preview = JKaiUI.getCURRENT_MODE() != JKaiUI.Mode.ARENA_MODE;
         
         // Is it an arena?
         if(obj instanceof Arena){
@@ -227,7 +229,7 @@ public class ArenaMode extends MainMode {
             
             jmiChat.addActionListener(this);
             
-            if (JKaiUI.MODERATORS.contains(JKaiUI.getConfig().getConfigString(KaiConfig.ConfigTag.TAG))) {
+            if (JKaiUI.getMODERATORS().contains(KaiConfig.getInstance().getConfigString(KaiConfig.ConfigTag.TAG))) {
                 
                 popup.addSeparator();
                 
@@ -254,7 +256,7 @@ public class ArenaMode extends MainMode {
         if(!preview) {
             jmiParentArena = new JMenuItem(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_ParentArena"));
             jmiParentArena.setIcon(PARENT_ARENA_ICON);
-            if(JKaiUI.ARENA.equals("Arena")){
+            if(JKaiUI.getARENA().equals("Arena")){
                 jmiParentArena.setEnabled(false);
             } else {
                 jmiParentArena.addActionListener(this);
@@ -271,7 +273,7 @@ public class ArenaMode extends MainMode {
             jmiBookmarkDelete = new JMenuItem(java.util.ResourceBundle.getBundle("pt/jkaiui/ui/Bundle").getString("LBL_DeleteBookmark"));
             jmiBookmarkDelete.setIcon(BOOKMARK_DELETE_ICON);
 
-            if(JKaiUI.getMainUI().isBookmark((Arena) currentlySelectedObject)) {
+            if(MainUI.getInstance().isBookmark((Arena) currentlySelectedObject)) {
                   jmiBookmark.setEnabled(false);
                   jmiBookmarkDelete.addActionListener(this);
             } else {
@@ -316,18 +318,18 @@ public class ArenaMode extends MainMode {
                 
                 // since I know that parent arena never has password,
                 // I can safelly send this message to Executor   
-//                if (JKaiUI.MODERATORS.contains(JKaiUI.getConfig().getConfigString("TAG"))) {
-//                    JKaiUI.MODERATORS.remove(JKaiUI.getConfig().getConfigString("TAG"));
+//                if (JKaiUI.MODERATORS.contains(KaiConfig.getInstance().getConfigString("TAG"))) {
+//                    JKaiUI.MODERATORS.remove(KaiConfig.getInstance().getConfigString("TAG"));
 //                }
 
                 KaiVectorParent vector = new KaiVectorParent();
-                vector.setVector(new KaiString(JKaiUI.ARENA));
+                vector.setVector(new KaiString(JKaiUI.getARENA()));
                 ActionExecuter.execute(vector);
                 
             } else if (source == jmiChat){
                 
                 User user = (User) list.getSelectedValue();
-                JKaiUI.getChatManager().openChat(user);
+                ChatManager.getInstance().openChat(user);
                 
             } else if (source == arenaModeComboBox){
                 
@@ -347,31 +349,31 @@ public class ArenaMode extends MainMode {
             
             else if (source == jmiUserProfile) {
                 User user = (User) list.getSelectedValue();
-                JKaiUI.getManager().send(new GetUserProfile(user.getName()));
+                Manager.getInstance().send(new GetUserProfile(user.getName()));
             }
             
             else if (source == jmiBanUser) {
                 User user = (User) list.getSelectedValue();
-                JKaiUI.getManager().send(new BanUser(user.getName()));
+                Manager.getInstance().send(new BanUser(user.getName()));
             }
             
             else if (source == jmiKickUser) {
                 User user = (User) list.getSelectedValue();
-                JKaiUI.getManager().send(new KickUser(user.getName()));
+                Manager.getInstance().send(new KickUser(user.getName()));
             }
             
             else if (source == jmiDisconnectUser) {
                 User user = (User) list.getSelectedValue();
-                JKaiUI.getManager().send(new DisconnectUser(user.getName()));
+                Manager.getInstance().send(new DisconnectUser(user.getName()));
             }
             
             else if (source == jmiBookmark){
                     Arena arena = (Arena) list.getSelectedValue();
-                    JKaiUI.getMainUI().addBookmark(arena);
+                    MainUI.getInstance().addBookmark(arena);
             }       
             else if (source == jmiBookmarkDelete){
                     Arena arena = (Arena) list.getSelectedValue();
-                    JKaiUI.getMainUI().deleteBookmark(arena);
+                    MainUI.getInstance().deleteBookmark(arena);
             }                         
         } catch (Exception e) {
             System.out.println("ArenaMode:"+e);

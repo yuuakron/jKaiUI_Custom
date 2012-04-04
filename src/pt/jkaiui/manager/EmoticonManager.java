@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import pt.jkaiui.JKaiUI;
+import pt.jkaiui.core.KaiConfig;
 
 /**
  *
@@ -39,7 +40,7 @@ public class EmoticonManager {
 
 //        _logger.log(Level.SEVERE, "url icon:{0}", url);
 
-        String settingfolder = JKaiUI.getConfig().getConfigSettingFolder() + "/";
+        String settingfolder = KaiConfig.getInstance().getConfigSettingFolder() + "/";
 
         //WebUIから抽出        
         tmp.add(":arrr:,file:" + settingfolder + "emoticons/arrr.gif");

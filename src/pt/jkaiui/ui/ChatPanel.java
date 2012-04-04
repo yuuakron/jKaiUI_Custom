@@ -29,6 +29,7 @@ import static pt.jkaiui.core.KaiConfig.ConfigTag.ShowLatestChat;
 import pt.jkaiui.core.*;
 import pt.jkaiui.core.messages.KaiVectorOut;
 import pt.jkaiui.manager.ActionExecuter;
+import pt.jkaiui.manager.ChatManager;
 import pt.jkaiui.manager.Manager;
 import pt.jkaiui.ui.modes.MessengerModeListModel;
 
@@ -319,20 +320,20 @@ public class ChatPanel extends javax.swing.JPanel {
          *
          * }
          *
-         * msg.setMessage(text); JKaiUI.getChatManager().processMessage(msg); }
+         * msg.setMessage(text); ChatManager.getInstance().processMessage(msg); }
          * else if (evt.getKeyChar() == evt.VK_ESCAPE) {
          *
          * if (jTextFieldInput.getText().length() == 0 && isClosable()) { //
-         * close JKaiUI.getChatManager().closeChat(this); } else {
+         * close ChatManager.getInstance().closeChat(this); } else {
          * jTextFieldInput.setText(""); }
          *
          *
          * }else if(evt.getKeyCode() == evt.VK_UP){ System.out.println("keyup");
-         * String historytmp = JKaiUI.getChatManager().previouschathistory(); if
+         * String historytmp = ChatManager.getInstance().previouschathistory(); if
          * (historytmp != null) { System.out.println("keyup");
          * jTextFieldInput.setText(historytmp); } }else if(evt.getKeyCode() ==
          * evt.VK_DOWN){ System.out.println("keydown"); String historytmp =
-         * JKaiUI.getChatManager().nextchathistory(); if (historytmp != null) {
+         * ChatManager.getInstance().nextchathistory(); if (historytmp != null) {
          * System.out.println("keyup"); jTextFieldInput.setText(historytmp); } }
          */
     }//GEN-LAST:event_jTextInputKeyPressed
@@ -387,12 +388,12 @@ public class ChatPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_CutActionPerformed
 
 private void GotoParentArenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GotoParentArenaActionPerformed
-//    if (JKaiUI.MODERATORS.contains(JKaiUI.getConfig().getTag())) {
-//        JKaiUI.MODERATORS.remove(JKaiUI.getConfig().getTag());
+//    if (JKaiUI.MODERATORS.contains(KaiConfig.getInstance().getTag())) {
+//        JKaiUI.MODERATORS.remove(KaiConfig.getInstance().getTag());
 //    }
 //    KaiVectorParent vector = new KaiVectorParent();
 //    vector.setVector(new KaiString(JKaiUI.ARENA));
-//    JKaiUI.getManager().getExecuter().execute(vector);
+//    Manager.getInstance().getExecuter().execute(vector);
     JKaiUI.getArenaMode().clickgoBackButton();
 }//GEN-LAST:event_GotoParentArenaActionPerformed
 
@@ -414,7 +415,7 @@ private void chatPopupMenuPopupMenuWillBecomeVisible(javax.swing.event.PopupMenu
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     KaiVectorOut vecOut = new KaiVectorOut();
                     //               System.out.println("gotoarena:"+JKaiUI.ARENA+"/"+evt.getActionCommand());
-                    vecOut.setVector(new KaiString(JKaiUI.ARENA + "/" + evt.getActionCommand()));
+                    vecOut.setVector(new KaiString(JKaiUI.getARENA() + "/" + evt.getActionCommand()));
                     ActionExecuter.execute(vecOut);
                 }
             });
@@ -422,7 +423,7 @@ private void chatPopupMenuPopupMenuWillBecomeVisible(javax.swing.event.PopupMenu
     }
 
     //setup Bookmarks menu
-    BookmarkVector = JKaiUI.getMainUI().bookmarkVector;
+    BookmarkVector = MainUI.getInstance().bookmarkVector;
     for (int i = 0; i < BookmarkVector.size(); i++) {
         Arena arena = (Arena) BookmarkVector.elementAt(i);
 
@@ -440,8 +441,8 @@ private void chatPopupMenuPopupMenuWillBecomeVisible(javax.swing.event.PopupMenu
                 for (int i = 0; i < BookmarkVector.size(); i++) {
                     arena = (Arena) BookmarkVector.get(i);
                     if (arena.getName().equals(item.getText())) {
-                        if (JKaiUI.CURRENT_MODE != JKaiUI.ARENA_MODE) {
-                            JKaiUI.getMainUI().jButtonArenaMode.doClick();
+                        if (JKaiUI.getCURRENT_MODE() != JKaiUI.Mode.ARENA_MODE) {
+                            MainUI.getInstance().jButtonArenaMode.doClick();
                         }
                         Manager.enterArena(arena);
                         return;
@@ -491,7 +492,7 @@ private void chatPopupMenuPopupMenuWillBecomeVisible(javax.swing.event.PopupMenu
 
                     @Override
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        JKaiUI.getChatManager().openChat((User) FriendsList.get(evt.getActionCommand()));
+                        ChatManager.getInstance().openChat((User) FriendsList.get(evt.getActionCommand()));
                     }
                 });
             }
@@ -521,22 +522,19 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
 
     String tooltipbuf = "";
 
-    if (evt.getEventType() == EventType.ACTIVATED) {	//�N���b�N���ꂽ��
+    if (evt.getEventType() == EventType.ACTIVATED) {
         URL url = evt.getURL();
 
 //        System.err.println(url.toString());
 
-        //�_�~�[�A�h���X�Ȃ�
         if (url.toString().matches("^(https://sites.google.com/site/yuuakron/dummy/)(.*)")) {
-            //���[�U�[�����`���b�g��͗��ɃR�s�[
 //            System.out.print("user");
             try {
                 jTextFieldInput.getDocument().insertString(jTextFieldInput.getCaretPosition(), url.toString().replace("https://sites.google.com/site/yuuakron/dummy/", ""), null);
             } catch (Exception e) {
                 System.out.println("hyperlink user:" + e);
             }
-        } else {//�ʏ�̃A�h���X�Ȃ�
-            //�f�t�H���g�̃u���E�U�[���g���ă����N���\��
+        } else {
             Desktop dp = Desktop.getDesktop();
             try {
                 dp.browse(url.toURI());
@@ -544,22 +542,21 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
                 System.out.println("hyperlink:" + ex);
             }
         }
-    } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {//�����N��ɂ����Ƃ�
+    } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
         tooltipbuf = jEditorPane.getToolTipText();
         jEditorPane.setToolTipText(null);
         URL url = evt.getURL();
 
-        //�A�h���X���摜�Ȃ�
-        if (url.toString().matches("(.*)\\.(jpg|jpeg|gif|png|bmp)$") && JKaiUI.getConfig().getConfigBoolean(ShowImageMouseoverLink)) {
+        if (url.toString().matches("(.*)\\.(jpg|jpeg|gif|png|bmp)$") && KaiConfig.getInstance().getConfigBoolean(ShowImageMouseoverLink)) {
             jEditorPane.setToolTipText("<html><img src=\"" + url.toExternalForm() + "\"></html>");
-        } else if (url.toString().matches("^(https://sites.google.com/site/yuuakron/dummy/)(.*)")) {//�_�~�[�A�h���X�Ȃ�
+        } else if (url.toString().matches("^(https://sites.google.com/site/yuuakron/dummy/)(.*)")) {
             try {
                 hyperlinkbuf = url.toString().replace("https://sites.google.com/site/yuuakron/dummy/", "");
             } catch (Exception e) {
                 System.out.println("hyperlink user entered:" + e);
             }
             jEditorPane.setToolTipText(hyperlinkbuf);
-        } else {//���ʂ̃A�h���X�Ȃ�
+        } else {
             hyperlinkbuf = url.toString();
             /*
              * try { JEditorPane urlopen = new JEditorPane();
@@ -571,7 +568,6 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
             jEditorPane.setToolTipText(url.toString());
         }
 
-        //�����N��ł̃|�b�v�A�b�v���j���[��ݒ�
         CopytoClipboard.removeActionListener(CopytoClipboard.getActionListeners()[0]);
         CopytoClipboard.addActionListener(new java.awt.event.ActionListener() {
 
@@ -699,12 +695,12 @@ private void jTextFieldInputKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST
         }
 
         msg.setMessage(text);
-        JKaiUI.getChatManager().processMessage(msg);
+        ChatManager.getInstance().processMessage(msg);
     } else if (evt.getKeyChar() == KeyEvent.VK_ESCAPE) {
 
         if (jTextFieldInput.getText().length() == 0 && isClosable()) {
             // close
-            JKaiUI.getChatManager().closeChat(this);
+            ChatManager.getInstance().closeChat(this);
         } else {
             jTextFieldInput.setText("");
         }
@@ -712,14 +708,14 @@ private void jTextFieldInputKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
     } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
 //        System.out.println("keyup");
-        String historytmp = JKaiUI.getChatManager().previouschathistory();
+        String historytmp = ChatManager.getInstance().previouschathistory();
         if (historytmp != null) {
 //            System.out.println("keyup");
             jTextFieldInput.setText(historytmp);
         }
     } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
 //        System.out.println("keydown");
-        String historytmp = JKaiUI.getChatManager().nextchathistory();
+        String historytmp = ChatManager.getInstance().nextchathistory();
         if (historytmp != null) {
 //            System.out.println("keyup");
             jTextFieldInput.setText(historytmp);
@@ -736,16 +732,16 @@ private void CreatePrivateArenaActionPerformed(java.awt.event.ActionEvent evt) {
 }//GEN-LAST:event_CreatePrivateArenaActionPerformed
 
 private void jToggleButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MousePressed
-    if (JKaiUI.getMainUI().jPanel2.isVisible()) {
-        JKaiUI.getMainUI().resetEmotIconPane();//�\���ɂb�o�t���\�[�X��H�����߃p�l����\�����̓p�l���̃e�L�X�g�̓��Z�b�g���Ă���
-    } else if (!JKaiUI.getMainUI().jPanel2.isVisible()) {
-        JKaiUI.getMainUI().initEmotIconPane();
+    if (MainUI.getInstance().jPanel2.isVisible()) {
+        MainUI.getInstance().resetEmotIconPane();//�\���ɂb�o�t���\�[�X��H�����߃p�l����\�����̓p�l���̃e�L�X�g�̓��Z�b�g���Ă���
+    } else if (!MainUI.getInstance().jPanel2.isVisible()) {
+        MainUI.getInstance().initEmotIconPane();
     }
-    JKaiUI.getMainUI().jPanel2.setVisible(!JKaiUI.getMainUI().jPanel2.isVisible());
+    MainUI.getInstance().jPanel2.setVisible(!MainUI.getInstance().jPanel2.isVisible());
 }//GEN-LAST:event_jToggleButton1MousePressed
 
 private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
-    JKaiUI.getChatManager().closeChat(this);
+    ChatManager.getInstance().closeChat(this);
 }//GEN-LAST:event_jButtonCloseActionPerformed
 
 private void jEditorPaneAncestorResized(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_jEditorPaneAncestorResized
@@ -833,7 +829,7 @@ private void jEditorPaneAncestorResized(java.awt.event.HierarchyEvent evt) {//GE
 
     public void addToMainUI() {
 
-        MainUI mainUI = JKaiUI.getMainUI();
+        MainUI mainUI = MainUI.getInstance();
         if (!isClosable()) {
             jButtonClose.setEnabled(false);
         }
@@ -842,7 +838,7 @@ private void jEditorPaneAncestorResized(java.awt.event.HierarchyEvent evt) {//GE
 
     public void removeFromMainUI() {
 
-        MainUI mainUI = JKaiUI.getMainUI();
+        MainUI mainUI = MainUI.getInstance();
 
         mainUI.jTabbedPane.remove(this);
 
@@ -850,9 +846,9 @@ private void jEditorPaneAncestorResized(java.awt.event.HierarchyEvent evt) {//GE
 
     public boolean containMainUI() {
 
-        MainUI mainUI = JKaiUI.getMainUI();
+        MainUI mainUI = MainUI.getInstance();
 
-        Component[] children = JKaiUI.getMainUI().jTabbedPane.getComponents();
+        Component[] children = MainUI.getInstance().jTabbedPane.getComponents();
         for (int i = 0; i < children.length; i++) {
             if (children[i] instanceof ChatPanel) {
                 ChatPanel pane = (ChatPanel) children[i];
@@ -888,7 +884,7 @@ private void jEditorPaneAncestorResized(java.awt.event.HierarchyEvent evt) {//GE
         Document _doc = this.jEditorPane.getDocument();
         try {
             this.jEditorPane.getEditorKit().read(new java.io.StringReader(s), _doc, _doc.getLength());
-            if (JKaiUI.getConfig().getConfigBoolean(ShowLatestChat)) {
+            if (KaiConfig.getInstance().getConfigBoolean(ShowLatestChat)) {
                 this.jEditorPane.setCaretPosition(_doc.getLength());
             }
         } catch (Exception ex) {

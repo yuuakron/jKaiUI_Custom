@@ -84,6 +84,7 @@ public class Connection extends Thread {
             System.out.println("Connection close:"+e);
         }
     }
+    
     @Override
     public void finalize(){
         close();
@@ -107,7 +108,7 @@ public class Connection extends Thread {
 //                if (str!=""){
                 if(receiveData.length > 0){
                     // Pass string to Manager
-                    JKaiUI.getManager().process(receivePacket.getData());
+                    Manager.getInstance().process(receivePacket.getData());
                 
                 }
             }

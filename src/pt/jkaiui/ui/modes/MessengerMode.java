@@ -21,7 +21,10 @@ import pt.jkaiui.core.messages.GetUserProfile;
 import pt.jkaiui.core.messages.Message;
 import pt.jkaiui.core.messages.RemoveContactOut;
 import pt.jkaiui.manager.ActionExecuter;
+import pt.jkaiui.manager.ChatManager;
+import pt.jkaiui.manager.Manager;
 import pt.jkaiui.tools.log.ConfigLog;
+import pt.jkaiui.ui.MainUI;
 
 
 /**
@@ -139,14 +142,14 @@ public class MessengerMode extends MainMode implements ActionListener {
             
         } else if (ev.getSource() == jmiChat){
             
-            JKaiUI.getChatManager().openChat(user);
+            ChatManager.getInstance().openChat(user);
             
         }
         
         else if (ev.getSource() == jmiUserProfile){
             
             /* Debuged By Stephen */
-            JKaiUI.getManager().send( new GetUserProfile(user.getName()));
+            Manager.getInstance().send( new GetUserProfile(user.getName()));
             
             
         }
@@ -160,13 +163,13 @@ public class MessengerMode extends MainMode implements ActionListener {
 //                arena.setVector(vectorLocation);
                 //System.out.println(arena);
                 
-                ActionListener[] als = JKaiUI.getMainUI().jButtonArenaMode.getActionListeners();
+                ActionListener[] als = MainUI.getInstance().jButtonArenaMode.getActionListeners();
                 
-                JKaiUI.ARENA = vectorLocation;
+                JKaiUI.setARENA(vectorLocation);
                 if(als.length == 1) {
                     als[0].actionPerformed(new ActionEvent(new Object(), 0, ""));
                 }
-//                JKaiUI.getManager().enterArena(arena);
+//                Manager.getInstance().enterArena(arena);
             }
         }
     }

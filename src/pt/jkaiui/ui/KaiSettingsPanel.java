@@ -19,6 +19,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import pt.jkaiui.JKaiUI;
 import pt.jkaiui.core.KaiConfig;
 import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.filelog.LogFileManager;
+import pt.jkaiui.manager.ChatManager;
+import pt.jkaiui.manager.SoundManager;
 import pt.jkaiui.tools.log.ConfigLog;
 
 /**
@@ -34,7 +37,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
     public KaiSettingsPanel() {
         initComponents();
 
-        kaiConfig = JKaiUI.getConfig();
+        kaiConfig = KaiConfig.getInstance();
 
         ActionListener radioListener = new ActionListener() {
 
@@ -54,7 +57,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
 
         resetValues();
         
-        if (!(JKaiUI.develflag)) {
+        if (!(JKaiUI.isDevel())) {
             radioAllLogger.setVisible(false);
             radioUserLogger.setVisible(false);
             radioRoomLogger.setVisible(false);
@@ -1213,7 +1216,7 @@ public class KaiSettingsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_radioManualConnectionActionPerformed
 
     private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
-        JKaiUI.getMainUI().jTabbedPane.remove(this);
+        MainUI.getInstance().jTabbedPane.remove(this);
     }//GEN-LAST:event_jButtonCloseActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
@@ -1277,7 +1280,7 @@ private void buttonSaveSettingFileActionPerformed(java.awt.event.ActionEvent evt
     JFileChooser fc = new JFileChooser();
 
     fc.setFileFilter(new FileNameExtensionFilter("*.conf", "conf"));
-    File cd = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/setting");
+    File cd = new File(KaiConfig.getInstance().getConfigSettingFolder()+"/setting");
     fc.setCurrentDirectory(cd);
 
 //    File conffile = new File("");
@@ -1300,7 +1303,7 @@ private void buttonSaveSettingFileActionPerformed(java.awt.event.ActionEvent evt
             if (conffile.isFile() && conffile.canWrite()) {
                 conffilepw = new PrintWriter(new BufferedWriter(new FileWriter(conffile)), true);
 
-                conffilepw.print(JKaiUI.getConfig().savetoFileConfig());
+                conffilepw.print(KaiConfig.getInstance().savetoFileConfig());
 
                 conffilepw.close();
             }
@@ -1314,7 +1317,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
     JFileChooser fc = new JFileChooser();
 
     fc.setFileFilter(new FileNameExtensionFilter("*.conf", "conf"));
-    File cd = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/setting");
+    File cd = new File(KaiConfig.getInstance().getConfigSettingFolder()+"/setting");
     fc.setCurrentDirectory(cd);
     
     if (fc.showOpenDialog(panelCommonFooter) == JFileChooser.APPROVE_OPTION) {
@@ -1337,7 +1340,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
                 while ((line = conffilebr.readLine()) != null) {
                     //phrase.add(line);
                     //PhraseEditorPane.append(line + "\n");
-                    JKaiUI.getConfig().loadtoFileConfig(line);
+                    KaiConfig.getInstance().loadtoFileConfig(line);
                 }
 
                 conffilebr.close();
@@ -1345,7 +1348,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
         } catch (Exception e) {
             System.out.println("loadconffile:" + e);
         }
-        JKaiUI.getConfig().saveConfig();
+        KaiConfig.getInstance().saveConfig();
         resetValues();
     }
 }//GEN-LAST:event_buttonLoadSettingFileActionPerformed
@@ -1538,7 +1541,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
         fieldChatLog.setText(kaiConfig.getConfigString(ChatLogFile));
         fieldChatLogPattern.setText(kaiConfig.getConfigString(ChatLogPattern));
 
-        if (JKaiUI.develflag) {
+        if (JKaiUI.isDevel()) {
             radioAllLogger.setSelected(kaiConfig.getConfigBoolean(AllLog));
             radioUserLogger.setSelected(kaiConfig.getConfigBoolean(UserLog));
             radioRoomLogger.setSelected(kaiConfig.getConfigBoolean(RoomLog));
@@ -1604,7 +1607,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
         comboModeratorChat.setSelectedItem("default");
         comboSend.setSelectedItem("default");
         
-        File dir = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/sound");
+        File dir = new File(KaiConfig.getInstance().getConfigSettingFolder()+"/sound");
         if(dir.exists()){
             File[] soundfiles = dir.listFiles();
             for (int i = 0; i < soundfiles.length; i++) {
@@ -1679,7 +1682,7 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
         kaiConfig.setConfig(ChatLogFile, fieldChatLog.getText());
         kaiConfig.setConfig(ChatLogPattern, fieldChatLogPattern.getText());
 
-        if (JKaiUI.develflag) {
+        if (JKaiUI.isDevel()) {
             kaiConfig.setConfig(AllLog, radioAllLogger.isSelected());
             kaiConfig.setConfig(UserLog, radioUserLogger.isSelected());
             kaiConfig.setConfig(RoomLog, radioRoomLogger.isSelected());
@@ -1734,12 +1737,12 @@ private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt
         
         // Ensure everything's saved
         kaiConfig.saveConfig();
-        JKaiUI.getLogFileManager().updateAll();
-        JKaiUI.getSoundManager().init();
+        LogFileManager.getInstance().updateAll();
+        SoundManager.getInstance().reset();
         JKaiUI.getArenaMode().setRoomFontSize(((Integer) spinnerRoomFontSize.getValue()).intValue());
         JKaiUI.getDiagMode().setRoomFontSize(((Integer) spinnerRoomFontSize.getValue()).intValue());
         JKaiUI.getMessengerMode().setRoomFontSize(((Integer) spinnerRoomFontSize.getValue()).intValue());
-        JKaiUI.getChatManager().setInputFieldFontSize(((Integer)spinnerInputFieldFontSize.getValue()).intValue());
+        ChatManager.getInstance().setInputFieldFontSize(((Integer)spinnerInputFieldFontSize.getValue()).intValue());
     }
 
     @Override

@@ -24,6 +24,12 @@ import pt.jkaiui.JKaiUI;
  */
 public class KaiConfig {
     
+    private final static KaiConfig INSTANCE = new KaiConfig();
+    
+    public static KaiConfig getInstance(){
+        return INSTANCE;
+    }
+    
     private static final String PREFERENCES = "/pt/jkaiui";    
     private static Preferences preferences;
     private static String settingfolder;
@@ -31,8 +37,8 @@ public class KaiConfig {
     private HashMap configs;
     private HashMap initconfigs;
    
-    public static enum ConfigAttri{ NON, ORIGINAL, OTHER, LOG, CHATPM, ROOMUSER, SOUND }
-    public static enum ConfigTag {
+    public enum ConfigAttri{ NON, ORIGINAL, OTHER, LOG, CHATPM, ROOMUSER, SOUND }
+    public enum ConfigTag {
         TAG,
         PASSWORD,
         BOOKMARKS,
@@ -141,7 +147,7 @@ public class KaiConfig {
     }
     
     /** Creates a new instance of KaiConfig */
-    public KaiConfig() {
+    private KaiConfig() {
         initConfig();
     }
     
@@ -175,7 +181,7 @@ public class KaiConfig {
         initconfigs.put(ConfigTag.ChatLogFile, new Pair(ConfigAttri.LOG, "log/Chatlog-%Y%M%D.txt"));
         initconfigs.put(ConfigTag.ChatLogPattern, new Pair(ConfigAttri.LOG, "%T;%K;%R;%S;%M"));
         
-        if (JKaiUI.develflag) {
+        if (JKaiUI.isDevel()) {
             initconfigs.put(ConfigTag.AllLog, new Pair(ConfigAttri.LOG, false));
             initconfigs.put(ConfigTag.UserLog, new Pair(ConfigAttri.LOG, false));
             initconfigs.put(ConfigTag.RoomLog, new Pair(ConfigAttri.LOG, false));
@@ -237,6 +243,8 @@ public class KaiConfig {
         String url = classPath.replace("/" + className + ".class", "");
         settingfolder = (new File(url).getParent()).replaceFirst("jar:", "").replaceFirst("file:", "");
 //        System.out.println("setting folder"+settingfolder);
+        
+        readConfig();
     }
     
     
@@ -311,7 +319,7 @@ public class KaiConfig {
     }
     
     public void readConfig() {
-        preferences = Preferences.userRoot().node(PREFERENCES + JKaiUI.getVersion2());
+        preferences = Preferences.userRoot().node(PREFERENCES + JKaiUI.Info.getShortVersion());
         
         Iterator initconfigsiter = initconfigs.keySet().iterator();
         while (initconfigsiter.hasNext()) {
@@ -364,7 +372,7 @@ public class KaiConfig {
         if (kinds.equalsIgnoreCase("all")) {
 
             strbuf.append("Setting information \n\n");
-            strbuf.append(JKaiUI.getVersion()).append("\n");
+            strbuf.append(JKaiUI.Info.getLongVersion()).append("\n");
 
             strbuf.append(copyconfig("original"));
             strbuf.append(copyconfig("other"));
@@ -443,7 +451,6 @@ public class KaiConfig {
             }
         }
         
-        //�Ō�̈��
         ConfigTag key = keys[keys.length - 1];
         if (configs.containsKey(key)) {
             Pair pair = (Pair) initconfigs.get(key);

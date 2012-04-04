@@ -17,19 +17,22 @@ import java.util.Date;
  * @author yuu@akron
  */
 
-public class Log {
+public abstract class Log {
     protected File logfile;
     protected PrintWriter logfilepw;
-    protected Calendar logdate; 
+    protected String pattern;
+    private Calendar logdate = Calendar.getInstance();
+    private String filepath;
     
-    public Log() {
-        logdate = Calendar.getInstance();
+    protected Log() {
     }
     
-    protected void init(){
+    protected void init(String file, String pattern) {
+        filepath = file;
+        logfile = new File(format(filepath));
+        this.pattern = pattern;
+        
         File LogHolder = new File(logfile.getParent());
-
-//        System.out.println("log");
         
         try {
             if (!LogHolder.exists()) {
@@ -46,9 +49,15 @@ public class Log {
         } catch (Exception e) {
             System.out.println("fileopen err:"+e);
         }
+        readlog();
     }
     
+    @Override
     public void finalize(){
+        this.close();
+    }
+    
+    public void close(){
         logfilepw.close();
     }
     
@@ -65,12 +74,16 @@ public class Log {
     public void println(Object printobject, Object option){
     }
     
+    protected void readlog(){
+    }
+    
     protected String format(String str){
-        str = str.replace("%Y", String.format("%02d", logdate.get(Calendar.YEAR)));
-        str = str.replace("%M", String.format("%02d", logdate.get(Calendar.MONTH)+1));
-        str = str.replace("%D", String.format("%02d", logdate.get(Calendar.DAY_OF_MONTH)));
+        
+        String tmp = str.replace("%Y", String.format("%02d", logdate.get(Calendar.YEAR)));
+        tmp = tmp.replace("%M", String.format("%02d", logdate.get(Calendar.MONTH)+1));
+        tmp = tmp.replace("%D", String.format("%02d", logdate.get(Calendar.DAY_OF_MONTH)));
 
-        return str;
+        return tmp;
     }
 
     protected String now() {
@@ -91,7 +104,7 @@ public class Log {
 
     protected void update() {
         logdate = Calendar.getInstance();
-        finalize();
-        init();
+        close();
+        init(filepath, pattern);
     }
 }

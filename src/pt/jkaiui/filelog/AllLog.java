@@ -4,39 +4,25 @@
  */
 package pt.jkaiui.filelog;
 
-import java.io.File;
-import pt.jkaiui.JKaiUI;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.AllLogFile;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.AllLogPattern;
-
 /**
  *
  * @author yuu@akron
  */
-public class AllLog extends Log{
-    public AllLog(){
-        this.init();
+public class AllLog extends Log {
+
+    public AllLog(String file, String pattern) {
+        super.init(file, pattern);
     }
-    
+
     @Override
-    protected void init(){  
-        
-//        System.out.println("alllog");
-        
-        logfile = new File(format(JKaiUI.getConfig().getConfigFile(AllLogFile)));
-        super.init();
-    }
-    
-    @Override
-    public void println(String s){
-        if(!datecheck()){
+    public void println(String s) {
+        if (!datecheck()) {
             update();
         }
-                
-        String pattern =  JKaiUI.getConfig().getConfigString(AllLogPattern);
-        pattern = pattern.replace("%T", now());
-        pattern = pattern.replace("%M", s);
-        
-        logfilepw.println(pattern);
+
+        String p = pattern.replace("%T", now());
+        p = p.replace("%M", s);
+
+        logfilepw.println(p);
     }
 }

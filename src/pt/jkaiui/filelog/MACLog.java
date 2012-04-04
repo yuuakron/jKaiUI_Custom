@@ -1,15 +1,13 @@
 package pt.jkaiui.filelog;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.util.HashSet;
+import java.util.NavigableMap;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import pt.jkaiui.JKaiUI;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.MACLogFile;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.MACLogPattern;
 import pt.jkaiui.core.messages.RemoteArenaDevice;
 /*
  * To change this template, choose Tools | Templates
@@ -21,18 +19,11 @@ import pt.jkaiui.core.messages.RemoteArenaDevice;
  */
 public class MACLog extends Log {
 
-    HashSet macset;
+    private Set<String> macset;
 
-    public MACLog() {
-        this.init();
-    }
-
-    @Override
-    protected void init() {
-        logfile = new File(format(JKaiUI.getConfig().getConfigFile(MACLogFile)));
-        macset = new HashSet();
-        super.init();
-        readlog();
+    public MACLog(String file, String pattern) {
+        macset = new HashSet<String>();
+        super.init(file, pattern);
     }
 
     @Override
@@ -49,10 +40,9 @@ public class MACLog extends Log {
 
         if (!this.contains(mac)) {
             this.add(mac);
-            String pattern = JKaiUI.getConfig().getConfigString(MACLogPattern);
-            pattern = pattern.replace("%N", mac.getUser().decode());
-            pattern = pattern.replace("%A", mac.getMac().decode());
-            logfilepw.println(pattern);
+            String p = pattern.replace("%N", mac.getUser().decode());
+            p = p.replace("%A", mac.getMac().decode());
+            logfilepw.println(p);
         }
     }
 
@@ -64,7 +54,8 @@ public class MACLog extends Log {
         macset.add(mac.getUser().decode() + ";" + mac.getMac().decode());
     }
 
-    private void readlog() {
+    @Override
+    protected void readlog() {
         /*        try {
         BufferedReader logfilebr = new BufferedReader(new FileReader(logfile));
         String line;
@@ -83,10 +74,10 @@ public class MACLog extends Log {
             Pattern[] p = {Pattern.compile("%N"), Pattern.compile("%A")};
             Matcher m;
 
-            TreeMap tm = new TreeMap();
+            NavigableMap<Integer, Integer> tm = new TreeMap<Integer, Integer>();
 
             for (int i = 0; i < p.length; i++) {
-                m = p[i].matcher(JKaiUI.getConfig().getConfigString(MACLogPattern));
+                m = p[i].matcher(pattern);
                 if (m.find()) {
                     tm.put(new Integer(m.start()), new Integer(i));
                 }
@@ -96,8 +87,8 @@ public class MACLog extends Log {
             int usernum = -1, macnum = -1;
             Integer keytmp = new Integer(-1);
             for (int i = 0; i < tm.size(); i++) {
-                Integer tmp = (Integer) tm.higherEntry(keytmp).getValue();
-                keytmp = (Integer) tm.higherKey(keytmp);
+                Integer tmp = tm.higherEntry(keytmp).getValue();
+                keytmp = tm.higherKey(keytmp);
 
                 if (tmp.equals(new Integer(0))) {//tmp.intValue() == 0
                     usernum = i;
@@ -107,7 +98,7 @@ public class MACLog extends Log {
                 }
             }
 
-            String ps = JKaiUI.getConfig().getConfigString(MACLogPattern);
+            String ps = pattern;
             ps = ps.replace("%N", "(.*)");
             ps = ps.replace("%A", "(.*)");
             Pattern rp = Pattern.compile(ps);

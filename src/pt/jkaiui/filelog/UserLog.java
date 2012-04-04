@@ -5,12 +5,9 @@
 package pt.jkaiui.filelog;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.util.HashSet;
-import pt.jkaiui.JKaiUI;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.UserLogFile;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.UserLogPattern;
+import java.util.Set;
 import pt.jkaiui.core.messages.JoinsVector;
 /**
  *
@@ -18,19 +15,11 @@ import pt.jkaiui.core.messages.JoinsVector;
  */
 public class UserLog  extends Log{
 
-    HashSet userset;
+    private Set<String> userset;
     
-    public UserLog() {
-        this.init();
-    }
-    
-    @Override
-    protected void init() {
-//        System.out.println("userlog");
-        logfile = new File(format(JKaiUI.getConfig().getConfigFile(UserLogFile)));
-        userset = new HashSet();
-        super.init();
-        readlog();
+    public UserLog(String file, String pattern) {
+        userset = new HashSet<String>();
+        super.init(file, pattern);
     }
     
     @Override
@@ -47,9 +36,8 @@ public class UserLog  extends Log{
 
         if (!this.contains(user)) {
             this.add(user);
-            String pattern = JKaiUI.getConfig().getConfigString(UserLogPattern);
-            pattern = pattern.replace("%N", user.getUser().decode());
-            logfilepw.println(pattern);
+            String p = pattern.replace("%N", user.getUser().decode());
+            logfilepw.println(p);
         }
     }
     
@@ -61,7 +49,9 @@ public class UserLog  extends Log{
         userset.add(user.getUser().decode());
     }
     
-    private void readlog(){
+    
+    @Override
+    protected void readlog(){
         try {
             BufferedReader logfilebr = new BufferedReader(new FileReader(logfile));
             String line;

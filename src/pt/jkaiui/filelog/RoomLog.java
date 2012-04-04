@@ -4,17 +4,17 @@
  */
 package pt.jkaiui.filelog;
 
-import pt.jkaiui.JKaiUI;
-import pt.jkaiui.core.messages.*;
-
-import java.io.File;
-import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.HashSet;
+import java.util.NavigableMap;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
+import pt.jkaiui.core.messages.SubVector;
+import pt.jkaiui.core.messages.UserSubVector;
 
 /**
  *
@@ -22,19 +22,11 @@ import static pt.jkaiui.core.KaiConfig.ConfigTag.*;
  */
 public class RoomLog  extends Log{
 
-    HashSet roomset;
+    private Set<String> roomset;
     
-    public RoomLog() {
-        this.init();
-    }
-    
-    @Override
-    protected void init(){
-//        System.out.println("roomlog");
-        logfile = new File(format(JKaiUI.getConfig().getConfigFile(RoomLogFile)));
-        roomset = new HashSet();
-        super.init();
-        readlog();
+    public RoomLog(String file, String pattern) {
+        roomset = new HashSet<String>();
+        super.init(file, pattern);
     }
     
     @Override
@@ -46,41 +38,41 @@ public class RoomLog  extends Log{
         if (!this.contains(room)) {
             this.add(room);
 
-            String pattern = JKaiUI.getConfig().getConfigString(RoomLogPattern);
-
+            String p = "";
+            
             if (room instanceof UserSubVector) {
                 UserSubVector roomtmp = (UserSubVector) room;
-                pattern = pattern.replace("%V", roomtmp.getVector().decode());
-                pattern = pattern.replace("%C", Integer.toString(roomtmp.getCount()));
-                pattern = pattern.replace("%S", Integer.toString(roomtmp.getSubs()));
+                p = pattern.replace("%V", roomtmp.getVector().decode());
+                p = p.replace("%C", Integer.toString(roomtmp.getCount()));
+                p = p.replace("%S", Integer.toString(roomtmp.getSubs()));
                 if (roomtmp.isPass()) {
-                    pattern = pattern.replace("%P", "1");
+                    p = p.replace("%P", "1");
                 } else {
-                    pattern = pattern.replace("%P", "0");
+                    p = p.replace("%P", "0");
                 }
-                pattern = pattern.replace("%M", Integer.toString(roomtmp.getMaxPlayers()));
+                p = p.replace("%M", Integer.toString(roomtmp.getMaxPlayers()));
                 try {
                     //default
-                    pattern = pattern.replace("%D", new String(URLDecoder.decode(roomtmp.getDescription().decode(), "utf-8").getBytes("Shift-JIS"), "Shift-JIS"));
+                    p = p.replace("%D", new String(URLDecoder.decode(roomtmp.getDescription().decode(), "utf-8").getBytes("Shift-JIS"), "Shift-JIS"));
                 } catch (Exception e) {
                     System.out.println("RoomLog println error:"+e);
                 }
             }
             if (room instanceof SubVector) {
                 SubVector roomtmp = (SubVector) room;
-                pattern = pattern.replace("%V", roomtmp.getVector().decode());
-                pattern = pattern.replace("%C", Integer.toString(roomtmp.getCount()));
-                pattern = pattern.replace("%S", Integer.toString(roomtmp.getSubs()));
+                p = pattern.replace("%V", roomtmp.getVector().decode());
+                p = p.replace("%C", Integer.toString(roomtmp.getCount()));
+                p = p.replace("%S", Integer.toString(roomtmp.getSubs()));
                 if (roomtmp.isPass()) {
-                    pattern = pattern.replace("%P", "1");
+                    p = p.replace("%P", "1");
                 } else {
-                    pattern = pattern.replace("%P", "0");
+                    p = p.replace("%P", "0");
                 }
-                pattern = pattern.replace("%M", Integer.toString(roomtmp.getMaxPlayers()));
-                pattern = pattern.replace("%D", "");
+                p = p.replace("%M", Integer.toString(roomtmp.getMaxPlayers()));
+                p = p.replace("%D", "");
 
             }
-            logfilepw.println(pattern);
+            logfilepw.println(p);
         }
     }
     
@@ -121,15 +113,16 @@ public class RoomLog  extends Log{
         }
     }
  
-    private void readlog() {
+    @Override
+    protected void readlog() {
         try {            
             Pattern[] p = {Pattern.compile("%V"), Pattern.compile("%C"), Pattern.compile("%S"), Pattern.compile("%P"), Pattern.compile("%M"), Pattern.compile("%D")};
             Matcher m;
             
-            TreeMap tm = new TreeMap();
+            NavigableMap<Integer, Integer> tm = new TreeMap<Integer, Integer>();
             
             for(int i=0; i < p.length; i++){
-                m = p[i].matcher(JKaiUI.getConfig().getConfigString(RoomLogPattern));
+                m = p[i].matcher(pattern);
                 if (m.find()) {
                     tm.put(new Integer(m.start()), new Integer(i));
                 }
@@ -138,8 +131,8 @@ public class RoomLog  extends Log{
             int vectnum=-1, descnum=-1;
             Integer keytmp = new Integer(-1);
             for (int i = 0; i < tm.size(); i++) {
-                Integer tmp = (Integer)tm.higherEntry(keytmp).getValue();
-                keytmp = (Integer)tm.higherKey(keytmp);
+                Integer tmp = tm.higherEntry(keytmp).getValue();
+                keytmp = tm.higherKey(keytmp);
                 
                 if(tmp.equals(new Integer(0))){//tmp.intValue() == 0
                     vectnum = i;
@@ -149,7 +142,7 @@ public class RoomLog  extends Log{
                 }
             }
             
-            String ps = JKaiUI.getConfig().getConfigString(RoomLogPattern);
+            String ps = pattern;
             ps = ps.replace("%V", "(.*)" );
             ps = ps.replace("%C", "(.*)" );
             ps = ps.replace("%S", "(.*)" );

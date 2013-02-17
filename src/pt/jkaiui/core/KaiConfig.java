@@ -10,10 +10,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 import java.util.prefs.Preferences;
 import pt.jkaiui.JKaiUI;
 
@@ -34,8 +31,8 @@ public class KaiConfig {
     private static Preferences preferences;
     private static String settingfolder;
 
-    private HashMap configs;
-    private HashMap initconfigs;
+    private Map<ConfigTag, Pair<ConfigAttri, ?>> configs;
+    private Map<ConfigTag, Pair<ConfigAttri, ?>> initconfigs;
    
     public enum ConfigAttri{ NON, ORIGINAL, OTHER, LOG, CHATPM, ROOMUSER, SOUND }
     public enum ConfigTag {
@@ -144,6 +141,14 @@ public class KaiConfig {
             }
             return false;
         }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 47 * hash + (this.first != null ? this.first.hashCode() : 0);
+            hash = 47 * hash + (this.second != null ? this.second.hashCode() : 0);
+            return hash;
+        }
     }
     
     /** Creates a new instance of KaiConfig */
@@ -152,8 +157,8 @@ public class KaiConfig {
     }
     
     private void initConfig(){
-        initconfigs = new HashMap();
-        configs = new HashMap();
+        initconfigs = new EnumMap<ConfigTag, Pair<ConfigAttri, ?>>(ConfigTag.class);
+        configs = new EnumMap<ConfigTag, Pair<ConfigAttri, ?>>(ConfigTag.class);
 
         initconfigs.put(ConfigTag.TAG, new Pair(ConfigAttri.NON,""));
         initconfigs.put(ConfigTag.PASSWORD, new Pair(ConfigAttri.NON, ""));
@@ -235,7 +240,7 @@ public class KaiConfig {
         initconfigs.put(ConfigTag.ModeratorChatSoundFile, new Pair(ConfigAttri.SOUND, "default"));
         initconfigs.put(ConfigTag.SendSoundFile, new Pair(ConfigAttri.SOUND, "default"));
                
-        configs = (HashMap)initconfigs.clone();
+        configs = ((EnumMap)initconfigs).clone();
         
         //settingfoler
         String className = this.getClass().getName().replace('.', '/');
@@ -248,45 +253,45 @@ public class KaiConfig {
     }
     
     
-    public Object getConfig(Enum ConfigTag){
+    public Object getConfig(ConfigTag tag){
         try {
-            return ((Pair)configs.get(ConfigTag)).second;
+            return configs.get(tag).second;
         } catch (Exception e) {
-            System.out.println("setting error1:" + ConfigTag);
+            System.out.println("setting error1:" + tag);
             return null;
         }
     }
     
-    public String getConfigString(Enum ConfigTag) {
+    public String getConfigString(ConfigTag tag) {
         try {
-            return (String)((Pair)configs.get(ConfigTag)).second;
+            return (String)configs.get(tag).second;
         } catch (Exception e) {
-            System.out.println("setting error2:" + ConfigTag);
+            System.out.println("setting error2:" + tag);
             return null;
         }
     }
 
-    public boolean getConfigBoolean(Enum ConfigTag) {
+    public boolean getConfigBoolean(ConfigTag tag) {
         try {
-            return ((Boolean) ((Pair)configs.get(ConfigTag)).second).booleanValue();
+            return ((Boolean)configs.get(tag).second).booleanValue();
         } catch (Exception e) {
-            System.out.println("setting error3:" +ConfigTag);
+            System.out.println("setting error3:" +tag);
             return false;
         }
     }
 
-    public int getConfigInt(Enum ConfigTag) {
+    public int getConfigInt(ConfigTag tag) {
         try {
-            return ((Integer) ((Pair)configs.get(ConfigTag)).second).intValue();
+            return ((Integer)configs.get(tag).second).intValue();
         } catch (Exception e) {
-            System.out.println("setting error4:" + ConfigTag);
+            System.out.println("setting error4:" + tag);
             return 0;
         }
     }
     
     public String getConfigSettingFolder() {
         try {
-          String folder = (String)((Pair)configs.get(ConfigTag.SettingFolder)).second;
+          String folder = (String)configs.get(ConfigTag.SettingFolder).second;
           if(folder.equalsIgnoreCase("default:")){
               return settingfolder;
           }else{
@@ -298,20 +303,20 @@ public class KaiConfig {
         }
     }
     
-    public String getConfigFile(Enum ConfigTag) {
+    public String getConfigFile(ConfigTag tag) {
         try {
-            return getConfigSettingFolder()+"/"+((String)((Pair)configs.get(ConfigTag)).second);
-        } catch (Exception e) {
-            System.out.println("setting error6:" + ConfigTag);
+            return getConfigSettingFolder()+"/"+(String)configs.get(tag).second;
+        }catch (Exception e) {
+            System.out.println("setting error6:" + tag);
             return null;
         }
     }
     
-    public void setConfig(Enum configtag, Object setting){
-        if(configs.containsKey(configtag)){
-            configs.remove(configtag);
+    public void setConfig(ConfigTag tag, Object setting){
+        if(configs.containsKey(tag)){
+            configs.remove(tag);
         }
-        configs.put(configtag, new Pair(((Pair)initconfigs.get(configtag)).first ,setting));
+        configs.put(tag, new Pair(initconfigs.get(tag).first ,setting));
     }
     
     private void setConfig(String configtag, Object setting){
@@ -356,7 +361,7 @@ public class KaiConfig {
 
     public void resetConfig() {
 //        configs = new HashMap(initconfigs);
-        configs = (HashMap) initconfigs.clone();
+        configs = ((EnumMap)initconfigs).clone();
         saveConfig();
     }
 
@@ -413,7 +418,7 @@ public class KaiConfig {
             for (int i = 0; i < keys.length; i++) {
                 ConfigTag key = keys[i];
                 if (configs.containsKey(key)) {
-                    Pair pair = (Pair) initconfigs.get(key);
+                    Pair pair = initconfigs.get(key);
                     if (pair.first.equals(tmp)) {
                         if (pair.second instanceof String) {
                             strbuf.append(key).append(":").append(preferences.get(key.name(), (String) pair.second)).append("\n");
@@ -490,7 +495,7 @@ public class KaiConfig {
         }
     }
     
-    public void saveBookmarks(Vector Bookmarks) {
+    public void saveBookmarks(List Bookmarks) {
         Collections.sort(Bookmarks);
         
         String tmp = Bookmarks.get(0).toString();

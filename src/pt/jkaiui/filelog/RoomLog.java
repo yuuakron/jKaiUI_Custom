@@ -121,7 +121,7 @@ public class RoomLog  extends Log{
     }
  
     private void readlog() {
-        try {            
+/*        try {            
             //ファイル書き込みパターンの解析
             Pattern[] p = {Pattern.compile("%V"), Pattern.compile("%C"), Pattern.compile("%S"), Pattern.compile("%P"), Pattern.compile("%M"), Pattern.compile("%D")};
             Matcher m;
@@ -173,5 +173,7 @@ public class RoomLog  extends Log{
         } catch (Exception e) {
             System.out.println("RoomLog"+e);
         }
+        * 
+        */
     }
 }

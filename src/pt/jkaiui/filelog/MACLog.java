@@ -74,7 +74,7 @@ public class MACLog extends Log {
         System.out.println("MAClog:"+e);
         }
          */
-
+/*
         try {
             //ファイル書き込みパターンの解析
             Pattern[] p = {Pattern.compile("%N"), Pattern.compile("%A")};
@@ -93,8 +93,8 @@ public class MACLog extends Log {
             int usernum = -1, macnum = -1;
             Integer keytmp = new Integer(-1);
             for (int i = 0; i < tm.size(); i++) {
-                Integer tmp = (Integer) tm.higherEntry(keytmp).getValue();
-                keytmp = (Integer) tm.higherKey(keytmp);
+                Integer tmp = tm.higherEntry(keytmp).getValue();
+                keytmp = tm.higherKey(keytmp);
 
                 if (tmp.equals(new Integer(0))) {//tmp.intValue() == 0
                     usernum = i;
@@ -123,5 +123,7 @@ public class MACLog extends Log {
         } catch (Exception e) {
             System.out.println("MACLog:" + e);
         }
+        * 
+        */
     }
 }

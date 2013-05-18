@@ -16,7 +16,7 @@ import pt.jkaiui.JKaiUI;
 import pt.jkaiui.core.KaiConfig;
 import pt.jkaiui.tools.log.ConfigLog;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
+//import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
@@ -1280,7 +1280,7 @@ private void buttonSaveSettingFileActionPerformed(java.awt.event.ActionEvent evt
     
     JFileChooser fc = new JFileChooser();
 
-    fc.setFileFilter(new FileNameExtensionFilter("*.conf", "conf"));
+//    fc.setFileFilter(new FileNameExtensionFilter("*.conf", "conf"));
     File cd = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/setting");
     fc.setCurrentDirectory(cd);
 
@@ -1318,7 +1318,7 @@ private void buttonSaveSettingFileActionPerformed(java.awt.event.ActionEvent evt
 private void buttonLoadSettingFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoadSettingFileActionPerformed
     JFileChooser fc = new JFileChooser();
 
-    fc.setFileFilter(new FileNameExtensionFilter("*.conf", "conf"));
+//    fc.setFileFilter(new FileNameExtensionFilter("*.conf", "conf"));
     File cd = new File(JKaiUI.getConfig().getConfigSettingFolder()+"/setting");
     fc.setCurrentDirectory(cd);
     

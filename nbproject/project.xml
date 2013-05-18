@@ -3,7 +3,8 @@
     <type>org.netbeans.modules.java.j2seproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
-            <name>jKaiUI_Custom_ver.0.5.1</name>
+            <name>jKaiUI_Custom_ver.0.5.1-jdk5</name>
+            <explicit-platform explicit-source-supported="true"/>
             <source-roots>
                 <root id="src.updateplan.dir"/>
                 <root id="src.dir"/>

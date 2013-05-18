@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.awt.Desktop;
+//import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -72,8 +72,6 @@ public class ChatPanel extends javax.swing.JPanel {
         chatPopupMenu = new javax.swing.JPopupMenu();
         CopytoClipboard = new javax.swing.JMenuItem();
         CopytoChatfield = new javax.swing.JMenuItem();
-        SearchwithGoogle = new javax.swing.JMenuItem();
-        OpenUrl = new javax.swing.JMenuItem();
         AllSelect = new javax.swing.JMenuItem();
         GotoParentArena = new javax.swing.JMenuItem();
         CreatePrivateArena = new javax.swing.JMenuItem();
@@ -98,13 +96,13 @@ public class ChatPanel extends javax.swing.JPanel {
         jEditorPane = new javax.swing.JEditorPane();
 
         chatPopupMenu.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                chatPopupMenuPopupMenuWillBecomeVisible(evt);
             }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 chatPopupMenuPopupMenuWillBecomeInvisible(evt);
             }
-            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
-                chatPopupMenuPopupMenuWillBecomeVisible(evt);
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
         });
 
@@ -123,22 +121,6 @@ public class ChatPanel extends javax.swing.JPanel {
             }
         });
         chatPopupMenu.add(CopytoChatfield);
-
-        SearchwithGoogle.setText("Serach with Google");
-        SearchwithGoogle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SearchwithGoogleActionPerformed(evt);
-            }
-        });
-        chatPopupMenu.add(SearchwithGoogle);
-
-        OpenUrl.setText("Open URL");
-        OpenUrl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OpenUrlActionPerformed(evt);
-            }
-        });
-        chatPopupMenu.add(OpenUrl);
 
         AllSelect.setText("All Select");
         AllSelect.addActionListener(new java.awt.event.ActionListener() {
@@ -223,7 +205,7 @@ public class ChatPanel extends javax.swing.JPanel {
         jPanelInput.add(jToggleButton1);
 
         jTextFieldInput.setColumns(30);
-        jTextFieldInput.setFont(new java.awt.Font("Dialog", 0, 12));
+        jTextFieldInput.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jTextFieldInput.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 jTextInputKeyPressed(evt);
@@ -376,23 +358,6 @@ public class ChatPanel extends javax.swing.JPanel {
     private void AllSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AllSelectActionPerformed
         jEditorPane.selectAll();
     }//GEN-LAST:event_AllSelectActionPerformed
-
-    private void SearchwithGoogleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchwithGoogleActionPerformed
-        try {
-//            System.out.println(URLEncoder.encode(jEditorPane.getSelectedText(), "utf-8" ));
-            Desktop.getDesktop().browse(new URI("http://www.google.co.jp/search?q=" + URLEncoder.encode(jEditorPane.getSelectedText(), "utf-8")));
-        } catch (Exception e) {
-            System.out.println("SearchwithGoogle:" + e);
-        }
-    }//GEN-LAST:event_SearchwithGoogleActionPerformed
-
-    private void OpenUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenUrlActionPerformed
-        try {
-            Desktop.getDesktop().browse(new URI(jEditorPane.getSelectedText()));
-        } catch (Exception e) {
-            System.out.println("OpenURL:" + e);
-        }
-    }//GEN-LAST:event_OpenUrlActionPerformed
 
     private void CopytoClipboardInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CopytoClipboardInputActionPerformed
         jTextFieldInput.copy();
@@ -556,7 +521,9 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
             } catch (Exception e) {
                 System.out.println("hyperlink user:" + e);
             }
-        } else {//通常のアドレスなら
+        }
+        /*
+        else {//通常のアドレスなら
             //デフォルトのブラウザーを使ってリンク先を表示
             Desktop dp = Desktop.getDesktop();
             try {
@@ -565,6 +532,8 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
                 System.out.println("hyperlink:" + ex);
             }
         }
+        * 
+        */
     } else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {//リンク上にきたとき
         tooltipbuf = jEditorPane.getToolTipText();
         jEditorPane.setToolTipText(null);
@@ -614,6 +583,7 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
                 }
             }
         });
+/*
         SearchwithGoogle.removeActionListener(SearchwithGoogle.getActionListeners()[0]);
         SearchwithGoogle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -634,6 +604,8 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
                 }
             }
         });
+        * 
+        */
     } else if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) {//リンク上から離れたとき
         jEditorPane.setToolTipText(tooltipbuf);
 
@@ -652,6 +624,7 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
                 CopytoChatfieldActionPerformed(evt);
             }
         });
+        /*
         SearchwithGoogle.removeActionListener(SearchwithGoogle.getActionListeners()[0]);
         SearchwithGoogle.addActionListener(new java.awt.event.ActionListener() {
 
@@ -666,6 +639,8 @@ private void jEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {/
                 OpenUrlActionPerformed(evt);
             }
         });
+        * 
+        */
     }
 }//GEN-LAST:event_jEditorPaneHyperlinkUpdate
 
@@ -821,9 +796,7 @@ this.jScrollPane1.getVerticalScrollBar().setValue(this.jScrollPane1.getVerticalS
     private javax.swing.JMenu GotoArena;
     private javax.swing.JMenuItem GotoParentArena;
     private javax.swing.JMenu OpenPM;
-    private javax.swing.JMenuItem OpenUrl;
     private javax.swing.JMenuItem Paste;
-    private javax.swing.JMenuItem SearchwithGoogle;
     public javax.swing.JButton buttonReset;
     private javax.swing.JPopupMenu chatInputPopupMenu;
     private javax.swing.JPopupMenu chatPopupMenu;

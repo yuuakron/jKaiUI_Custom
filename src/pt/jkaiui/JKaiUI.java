@@ -64,8 +64,8 @@ public class JKaiUI {
     private static LogFileManager logFileManager;
     
     private static final String uiname = "JKaiUI Custom";
-    private static final String version = " ver.0.5.1(2012/1/15)";
-    private static final String version2 = "0.5.1";
+    private static final String version = " ver.0.5.1-jdk5(2013/5/19)";
+    private static final String version2 = "0.5.1-jdk5";
     private static String KaiEngineVersion;
     public static boolean develflag = false;//true: devel verion false:normal version
     
